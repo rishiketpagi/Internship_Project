@@ -1,0 +1,39 @@
+Rishiket Pagi
+Goa, India
+rishiket@example.com
+github.com/rishiketpagi
+linkedin.com/in/rishiketpagi
+
+I am a final year Computer Engineering student interested in
+backend and full-stack development.
+
+EDUCATION
+Goa College of Engineering
+Bachelor of Engineering in Computer Engineering
+2022 - 2026
+
+SKILLS
+JavaScript, React, Node.js, Express.js, Firebase, Git, HTML, CSS
+
+PROJECTS
+Resume Generator
+Built a web application using React and Firebase that allows
+users to create job-specific resumes from existing resume data.
+
+Expense Tracker
+Built an expense tracking application using React and Firebase.
+Users can add, edit and delete expenses and view their spending.
+
+EXPERIENCE
+Software Development Intern
+ABC Technologies
+June 2026 - August 2026
+
+Worked on React applications and implemented REST API integrations.
+
+CERTIFICATIONS
+JavaScript Web Development Course
+Completed an online JavaScript and web development course.
+
+ACHIEVEMENTS
+Participated in two hackathons.
