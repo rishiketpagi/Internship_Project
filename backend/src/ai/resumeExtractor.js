@@ -1,4 +1,5 @@
 import Groq from "groq-sdk";
+import resumeSchema from "../data/resumeSchema.json" with { type: "json" };
 import { extractionSystemPrompt } from "../prompts/extractionPrompt.js";
 
 const groq = new Groq({
@@ -7,6 +8,8 @@ const groq = new Groq({
 
 export async function extractResumeData(text) {
     const completion = await groq.chat.completions.create({
+        model: process.env.GROQ_MODEL,
+
         messages: [
             {
                 role: "system",
@@ -18,9 +21,16 @@ export async function extractResumeData(text) {
             },
         ],
 
-        model: process.env.GROQ_MODEL,
-
         temperature: 0,
+
+        response_format: {
+            type: "json_schema",
+            json_schema: {
+                name: "resume_data",
+                strict: true,
+                schema: resumeSchema,
+            },
+        },
     });
 
     const result = completion.choices[0].message.content;

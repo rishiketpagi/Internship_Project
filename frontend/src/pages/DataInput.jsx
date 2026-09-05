@@ -2,6 +2,7 @@ import { useState } from "react";
 import ResumeTextInput from "../components/input/TextInput";
 import ResumeFileUpload from "../components/input/FileUpload";
 import "../styles/DataInput.css";
+
 function DataInput() {
     const [rawText, setRawText] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);

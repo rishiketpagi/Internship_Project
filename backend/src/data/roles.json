@@ -1,0 +1,55 @@
+{
+    "Frontend Developer": {
+        "skills": [
+            "HTML",
+            "CSS",
+            "JavaScript",
+            "React",
+            "TypeScript",
+            "Git"
+        ]
+    },
+    "Backend Developer": {
+        "skills": [
+            "Node.js",
+            "Express.js",
+            "REST APIs",
+            "Databases",
+            "Authentication",
+            "Git"
+        ]
+    },
+    "Full Stack Developer": {
+        "skills": [
+            "HTML",
+            "CSS",
+            "JavaScript",
+            "React",
+            "Node.js",
+            "Express.js",
+            "REST APIs",
+            "Databases",
+            "Git"
+        ]
+    },
+    "Data Analyst": {
+        "skills": [
+            "Excel",
+            "SQL",
+            "Python",
+            "Statistics",
+            "Data Visualization",
+            "Power BI"
+        ]
+    },
+    "UI/UX Designer": {
+        "skills": [
+            "Figma",
+            "Wireframing",
+            "Prototyping",
+            "User Research",
+            "UI Design",
+            "UX Design"
+        ]
+    }
+}
