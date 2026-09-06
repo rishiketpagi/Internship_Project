@@ -4,15 +4,27 @@ function PersonalInfoEditor({ value = {}, onChange = () => { } }) {
     };
 
     return (
-        <section>
-            <h2>Personal information</h2>
-            <input value={value.name || ""} onChange={updateField("name")} placeholder="Full name" />
-            <input value={value.email || ""} onChange={updateField("email")} placeholder="Email" type="email" />
-            <input value={value.phone || ""} onChange={updateField("phone")} placeholder="Phone" />
-            <input value={value.location || ""} onChange={updateField("location")} placeholder="Location" />
-            <input value={value.linkedin || ""} onChange={updateField("linkedin")} placeholder="LinkedIn URL" />
-            <input value={value.website || ""} onChange={updateField("website")} placeholder="Portfolio URL" />
-        </section>
+        <div className="resume-editor-fields">
+            {[
+                ["name", "Name", "text"],
+                ["email", "Email", "email"],
+                ["phone", "Phone", "tel"],
+                ["location", "Location", "text"],
+                ["linkedin", "LinkedIn", "url"],
+                ["github", "GitHub", "url"],
+                ["portfolio", "Portfolio", "url"],
+            ].map(([field, label, type]) => (
+                <label key={field} className="resume-editor-field">
+                    <span className="resume-editor-label">{label}</span>
+                    <input
+                        type={type}
+                        value={value[field] || ""}
+                        onChange={updateField(field)}
+                        className="resume-editor-input"
+                    />
+                </label>
+            ))}
+        </div>
     );
 }
 

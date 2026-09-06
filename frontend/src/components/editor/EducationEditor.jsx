@@ -1,17 +1,56 @@
 function EducationEditor({ value = [], onChange = () => { } }) {
+    const emptyEducation = {
+        institution: "",
+        degree: "",
+        field: "",
+        startDate: "",
+        endDate: "",
+        grade: "",
+    };
+
     return (
-        <section>
-            <h2>Education</h2>
+        <div className="resume-editor-education-list">
             {value.map((entry, index) => (
-                <fieldset key={entry.id || index}>
-                    <input value={entry.school || ""} onChange={(event) => updateEntry(value, onChange, index, "school", event.target.value)} placeholder="School or university" />
-                    <input value={entry.degree || ""} onChange={(event) => updateEntry(value, onChange, index, "degree", event.target.value)} placeholder="Degree or qualification" />
-                    <input value={entry.startDate || ""} onChange={(event) => updateEntry(value, onChange, index, "startDate", event.target.value)} placeholder="Start date" />
-                    <input value={entry.endDate || ""} onChange={(event) => updateEntry(value, onChange, index, "endDate", event.target.value)} placeholder="End date" />
-                </fieldset>
+                <div key={index} className="resume-editor-education-card">
+                    <div className="resume-editor-fields">
+                        {[
+                            ["institution", "Institution"],
+                            ["degree", "Degree"],
+                            ["field", "Field of Study"],
+                            ["startDate", "Start Date"],
+                            ["endDate", "End Date"],
+                            ["grade", "Grade"],
+                        ].map(([field, label]) => (
+                            <label key={field} className="resume-editor-field">
+                                <span className="resume-editor-label">{label}</span>
+                                <input
+                                    type="text"
+                                    value={entry[field] || ""}
+                                    onChange={(event) => updateEntry(value, onChange, index, field, event.target.value)}
+                                    className="resume-editor-input"
+                                />
+                            </label>
+                        ))}
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={() => onChange(value.filter((_, entryIndex) => entryIndex !== index))}
+                        className="resume-editor-delete-button"
+                    >
+                        Delete
+                    </button>
+                </div>
             ))}
-            <button type="button" onClick={() => onChange([...value, {}])}>Add education</button>
-        </section>
+
+            <button
+                type="button"
+                onClick={() => onChange([...value, { ...emptyEducation }])}
+                className="resume-editor-add-button"
+            >
+                + Add Education
+            </button>
+        </div>
     );
 }
 
