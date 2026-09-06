@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import ModernTemplate from "../components/templates/ModernTemplate";
 import ProfessionalTemplate from "../components/templates/ProfessionalTemplate";
@@ -12,7 +12,6 @@ import SkillsEditor from "../components/editor/SkillsEditor";
 import CertificationsEditor from "../components/editor/CertificationsEditor";
 import AchievementsEditor from "../components/editor/AchievementsEditor";
 import { sampleResumeData } from "../data/sampleResumeData";
-import { templates } from "../data/templates";
 import "../styles/ResumeEditor.css";
 
 const templateComponents = {
@@ -22,10 +21,13 @@ const templateComponents = {
 };
 
 export default function ResumeEditor() {
+    const location = useLocation();
     const [searchParams] = useSearchParams();
     const templateId = searchParams.get("template") || "modern";
     const TemplateComponent = templateComponents[templateId] || ModernTemplate;
-    const [resumeData, setResumeData] = useState(sampleResumeData);
+    const [resumeData, setResumeData] = useState(
+        location.state?.resumeData || sampleResumeData
+    );
     const [previewScale, setPreviewScale] = useState(0.55);
 
     const updateSection = (sectionName, value) => {

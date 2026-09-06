@@ -56,4 +56,7 @@ export const sampleResumeData = {
         "Firebase",
         "Git",
     ],
+
+    certifications: [],
+    achievements: [],
 };

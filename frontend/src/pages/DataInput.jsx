@@ -1,21 +1,20 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ResumeTextInput from "../components/input/TextInput";
 import ResumeFileUpload from "../components/input/FileUpload";
 import "../styles/DataInput.css";
 
 function DataInput() {
+    const navigate = useNavigate();
     const [rawText, setRawText] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [response, setResponse] = useState(null);
     const [error, setError] = useState("");
 
     const handleTextContinue = async () => {
         try {
             setLoading(true);
             setError("");
-            setResponse(null);
-
             const response = await fetch("http://localhost:5000/extract-resume", {
                 method: "POST",
                 headers: {
@@ -31,7 +30,11 @@ function DataInput() {
                 throw new Error(data.message || "Something went wrong");
             }
 
-            setResponse(data);
+            navigate("/editor?template=modern", {
+                state: {
+                    resumeData: data.resumeData,
+                },
+            });
         } catch (error) {
             setError(error.message);
         } finally {
@@ -47,8 +50,6 @@ function DataInput() {
         try {
             setLoading(true);
             setError("");
-            setResponse(null);
-
             const formData = new FormData();
             formData.append("resume", selectedFile);
 
@@ -62,7 +63,11 @@ function DataInput() {
                 throw new Error(data.message || "Something went wrong");
             }
 
-            setResponse(data);
+            navigate("/editor?template=modern", {
+                state: {
+                    resumeData: data.resumeData,
+                },
+            });
         } catch (error) {
             setError(error.message);
         } finally {
@@ -96,12 +101,6 @@ function DataInput() {
 
             {error && <p className="status-error">{error}</p>}
 
-            {response && (
-                <div className="response-box">
-                    <h2>Backend Response</h2>
-                    <pre>{JSON.stringify(response, null, 2)}</pre>
-                </div>
-            )}
         </div>
     );
 }
