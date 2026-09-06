@@ -1,0 +1,128 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8) var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .auth-page {
+    padding: var(--space-12) var(--space-6);
+  }
+}
+
+.auth__container {
+  width: 100%;
+  max-width: 420px;
+}
+
+.auth__card {
+  width: 100%;
+}
+
+.auth__header {
+  text-align: center;
+  margin-bottom: var(--space-8);
+}
+
+.auth__logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--space-4);
+}
+
+.auth__logo svg {
+  width: 100%;
+  height: 100%;
+}
+
+.auth__title {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text);
+  margin: 0 0 var(--space-2);
+}
+
+.auth__subtitle {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.auth__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.auth__error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-error-light);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-md);
+  color: var(--color-error);
+  font-size: var(--text-sm);
+  animation: shake var(--transition-base) ease-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.auth__field-group {
+  width: 100%;
+}
+
+.auth__input {
+  width: 100%;
+}
+
+.auth__forgot {
+  text-align: right;
+}
+
+.auth__forgot-link {
+  font-size: var(--text-sm);
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: var(--font-medium);
+}
+
+.auth__forgot-link:hover {
+  text-decoration: underline;
+}
+
+.auth__submit {
+  margin-top: var(--space-2);
+}
+
+.auth__footer {
+  margin-top: var(--space-6);
+  text-align: center;
+}
+
+.auth__footer-text {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.auth__footer-link {
+  color: var(--color-primary);
+  font-weight: var(--font-medium);
+  text-decoration: none;
+  margin-left: var(--space-1);
+}
+
+.auth__footer-link:hover {
+  text-decoration: underline;
+}

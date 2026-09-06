@@ -1,0 +1,52 @@
+.spinner {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.spinner__svg {
+  animation: spinner-rotate 1s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes spinner-rotate {
+  to { transform: rotate(360deg); }
+}
+
+.spinner__track {
+  stroke: var(--color-border);
+}
+
+.spinner__indicator {
+  stroke: var(--color-primary);
+  stroke-dashoffset: 0;
+  animation: spinner-dash 1.5s ease-in-out infinite;
+}
+
+@keyframes spinner-dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+.spinner--xs .spinner__svg { width: 16px; height: 16px; }
+.spinner--sm .spinner__svg { width: 24px; height: 24px; }
+.spinner--md .spinner__svg { width: 32px; height: 32px; }
+.spinner--lg .spinner__svg { width: 48px; height: 48px; }
+.spinner--xl .spinner__svg { width: 64px; height: 64px; }
+
+.spinner--primary .spinner__indicator { stroke: var(--color-primary); }
+.spinner--secondary .spinner__indicator { stroke: var(--color-secondary); }
+.spinner--success .spinner__indicator { stroke: var(--color-success); }
+.spinner--error .spinner__indicator { stroke: var(--color-error); }
+.spinner--warning .spinner__indicator { stroke: var(--color-warning); }
+.spinner--white .spinner__indicator { stroke: var(--color-text-inverse); }
+.spinner--white .spinner__track { stroke: rgba(255, 255, 255, 0.3); }

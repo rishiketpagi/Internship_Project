@@ -1,0 +1,214 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  background-color: var(--color-bg-elevated);
+  border-bottom: 1px solid var(--color-border);
+  z-index: var(--z-sticky);
+  transition: all var(--transition-base);
+}
+
+.header--scrolled {
+  box-shadow: var(--shadow-sm);
+  background-color: var(--color-bg-elevated);
+  backdrop-filter: blur(8px);
+  background-color: rgba(var(--color-bg-elevated-rgb, 255, 255, 255), 0.9);
+}
+
+@media (prefers-color-scheme: dark) {
+  .header--scrolled {
+    background-color: rgba(30, 41, 59, 0.9);
+  }
+}
+
+.header__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .header__container {
+    padding: 0 var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .header__container {
+    padding: 0 var(--space-8);
+  }
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  text-decoration: none;
+  color: var(--color-text);
+  flex-shrink: 0;
+}
+
+.header__logo:hover {
+  color: var(--color-primary);
+}
+
+.header__logo-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.header__logo-text {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  letter-spacing: -0.02em;
+}
+
+.header__nav {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .header__nav {
+    display: block;
+  }
+}
+
+.header__nav-list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  list-style: none;
+}
+
+.header__nav-link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.header__nav-link:hover {
+  color: var(--color-text);
+  background-color: var(--color-bg-hover);
+}
+
+.header__nav-link--active {
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.header__nav-link--active:hover {
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.header__theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  background-color: transparent;
+  transition: all var(--transition-fast);
+}
+
+.header__theme-toggle:hover {
+  background-color: var(--color-bg-hover);
+  color: var(--color-text);
+}
+
+.header__theme-toggle:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+.header__menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  background-color: transparent;
+  transition: all var(--transition-fast);
+}
+
+@media (min-width: 768px) {
+  .header__menu-btn {
+    display: none;
+  }
+}
+
+.header__menu-btn:hover {
+  background-color: var(--color-bg-hover);
+  color: var(--color-text);
+}
+
+.header__menu-btn:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+.header__mobile-menu {
+  position: absolute;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  background-color: var(--color-bg-elevated);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--transition-base);
+}
+
+.header__mobile-menu--open {
+  max-height: 300px;
+}
+
+.header__mobile-nav-list {
+  list-style: none;
+  padding: var(--space-2);
+}
+
+.header__mobile-nav-link {
+  display: block;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.header__mobile-nav-link:hover {
+  color: var(--color-text);
+  background-color: var(--color-bg-hover);
+}
+
+.header__mobile-nav-link--active {
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}

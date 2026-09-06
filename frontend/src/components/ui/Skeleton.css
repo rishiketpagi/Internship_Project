@@ -1,0 +1,50 @@
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg) 25%,
+    var(--color-bg-hover) 50%,
+    var(--color-bg) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+@keyframes skeleton-pulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton--text {
+  height: 1rem;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton--circular {
+  border-radius: var(--radius-full);
+}
+
+.skeleton--rectangular {
+  border-radius: var(--radius-lg);
+}
+
+.skeleton--card {
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-elevated);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+}
+
+.skeleton__line {
+  height: 1rem;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--color-bg) 25%,
+    var(--color-bg-hover) 50%,
+    var(--color-bg) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
