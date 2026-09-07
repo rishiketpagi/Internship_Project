@@ -1,3 +1,37 @@
-serviceAccountKey.json
-.env
+# Dependencies
 node_modules/
+
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+serviceAccountKey.json
+serviceAccountKey*.json
+*-firebase-adminsdk-*.json
+
+# Build / coverage output
+dist/
+build/
+coverage/
+.nyc_output/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pino-pretty.log
+
+# Editor / OS junk
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+Thumbs.db
+
+# Uploaded / generated files (never commit)
+uploads/
+exports/
+storage/
+tmp/

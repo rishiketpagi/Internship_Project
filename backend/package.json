@@ -1,24 +1,53 @@
 {
-  "name": "backend",
+  "name": "resume-generator-backend",
   "version": "1.0.0",
-  "description": "",
-  "type": "commonjs",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js"
+  "description": "Production-grade backend for the Resume Generator — REST API, AI extraction, analysis, generation, and PDF export.",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=20.0.0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --runInBand",
+    "lint": "eslint src --ext .js",
+    "seed": "node src/scripts/seed.js",
+    "smoke": "node tests/smoke.js"
+  },
   "dependencies": {
-    "cors": "^2.8.6",
+    "bluebird": "^3.7.2",
+    "compression": "^1.7.5",
+    "cors": "^2.8.5",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "firebase-admin": "^14.3.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "firebase-admin": "^13.0.2",
     "groq-sdk": "^1.6.0",
-    "mammoth": "^1.12.2",
-    "multer": "^2.3.0",
-    "pdf-parse": "^2.4.5"
-  }
+    "helmet": "^8.0.0",
+    "joi": "^17.13.3",
+    "mammoth": "^1.8.0",
+    "multer": "^2.0.1",
+    "pdf-parse": "^1.1.1",
+    "pdfkit": "^0.15.0",
+    "pino": "^9.5.0",
+    "pino-http": "^10.3.0",
+    "pino-pretty": "^11.3.0",
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  },
+  "keywords": [
+    "resume",
+    "ai",
+    "express",
+    "node",
+    "groq"
+  ],
+  "license": "MIT"
 }

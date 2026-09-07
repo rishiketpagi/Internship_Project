@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Resume Generator — Backend Console</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #0b0d12;
+    --bg-2: #11151c;
+    --fg: #e5e7eb;
+    --muted: #94a3b8;
+    --accent: #60a5fa;
+    --accent-2: #34d399;
+    --danger: #f87171;
+    --warn: #fbbf24;
+    --line: #1f2937;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#f8fafc;--bg-2:#fff;--fg:#0f172a;--muted:#475569;--line:#e2e8f0; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); }
+  header { padding: 18px 24px; border-bottom: 1px solid var(--line); display:flex;align-items:center;gap:16px;flex-wrap:wrap; }
+  header h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  header .pill { padding: 2px 8px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+  main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px; min-height: calc(100vh - 60px); }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  section { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 16px; overflow: hidden; }
+  section h2 { margin: 0 0 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+  label { display: block; font-size: 12px; color: var(--muted); margin: 12px 0 4px; }
+  input, textarea, select, button { font: inherit; color: inherit; }
+  input, textarea, select { width: 100%; padding: 8px 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; }
+  textarea { min-height: 200px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+  .row { display:flex; gap: 8px; align-items: center; }
+  .row > * { flex: 1; }
+  button { cursor: pointer; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #0b1220; font-weight: 600; }
+  button.success { background: var(--accent-2); border-color: var(--accent-2); color: #04221a; font-weight: 600; }
+  button.danger  { background: var(--danger);  border-color: var(--danger);  color: #21060a; font-weight: 600; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  pre { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px; overflow: auto; font-size: 11.5px; max-height: 50vh; }
+  .log { white-space: pre-wrap; }
+  .tag { display:inline-block; padding: 1px 6px; border-radius: 6px; font-size: 11px; background: var(--line); color: var(--muted); margin-right: 6px; }
+  .ok  { color: var(--accent-2); }
+  .err { color: var(--danger); }
+  .muted { color: var(--muted); }
+  .step { padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; margin: 6px 0; background: var(--bg); }
+  .step.active { border-color: var(--accent); }
+  .step.done   { border-color: var(--accent-2); }
+  .step.failed { border-color: var(--danger); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Resume Generator — Backend Console</h1>
+  <span class="pill" id="health-pill">checking…</span>
+  <span class="pill" id="ai-pill"></span>
+  <span class="pill"><a href="/docs" style="color:inherit;text-decoration:none">API docs → /docs</a></span>
+  <span class="pill"><a href="/openapi.json" style="color:inherit;text-decoration:none">openapi.json</a></span>
+</header>
+
+<main>
+  <section>
+    <h2>1. Source</h2>
+    <label>Target role</label>
+    <input id="role" placeholder="e.g. Senior Backend Engineer" />
+    <label>Job description (optional)</label>
+    <textarea id="jd" placeholder="Paste the job description here…"></textarea>
+    <label>Resume text (optional — paste or upload)</label>
+    <textarea id="text" placeholder="Paste raw resume text here…"></textarea>
+    <label>Or upload PDF / DOCX</label>
+    <input type="file" id="file" accept=".pdf,.docx" />
+    <div class="row" style="margin-top: 12px;">
+      <button class="primary" id="extract-btn">Extract from text</button>
+      <button id="extract-file-btn">Extract from file</button>
+    </div>
+    <h2 style="margin-top:24px">2. Project</h2>
+    <label>Project id (auto-created on first run)</label>
+    <div class="row">
+      <input id="projectId" placeholder="—" />
+      <button id="create-project">Create</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button id="set-role">Set role</button>
+      <button id="set-jd">Set JD</button>
+      <button id="attach">Attach resume</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. AI pipeline</h2>
+    <div id="steps">
+      <div class="step" data-step="role">Role analysis</div>
+      <div class="step" data-step="gap">Skill gap</div>
+      <div class="step" data-step="blueprint">Blueprint</div>
+      <div class="step" data-step="generate">Generate</div>
+      <div class="step" data-step="preview">Preview</div>
+    </div>
+    <div class="row" style="margin-top: 8px">
+      <button class="primary" id="run-all">Run all</button>
+      <button class="success" id="export-pdf">Export PDF</button>
+    </div>
+    <label style="margin-top:16px">Latest response</label>
+    <pre id="out" class="log">—</pre>
+  </section>
+</main>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const out = (data) => { $("#out").textContent = typeof data === "string" ? data : JSON.stringify(data, null, 2); };
+const err = (e) => out({ error: e?.message || String(e), stack: e?.stack });
+
+async function api(path, opts = {}) {
+  const res = await fetch(path, {
+    headers: { "Content-Type": "application/json", ...(opts.headers || {}) },
+    ...opts,
+  });
+  const text = await res.text();
+  let body;
+  try { body = text ? JSON.parse(text) : null; } catch { body = text; }
+  if (!res.ok) {
+    const message = body?.error?.message || `HTTP ${res.status}`;
+    const e = new Error(message);
+    e.body = body;
+    e.status = res.status;
+    throw e;
+  }
+  return body;
+}
+
+function setStep(name, status) {
+  const el = document.querySelector(`.step[data-step="${name}"]`);
+  el.classList.remove("active","done","failed");
+  el.classList.add(status);
+}
+
+function getProjectId() { return $("#projectId").value.trim(); }
+function setProjectId(id) { $("#projectId").value = id; }
+
+async function loadHealth() {
+  try {
+    const { data } = await api("/health");
+    $("#health-pill").textContent = `health: ${data.status}`;
+    $("#health-pill").style.color = data.status === "ok" ? "var(--accent-2)" : "var(--warn)";
+    $("#ai-pill").textContent = `ai: ${data.checks.ai.mode}`;
+  } catch (e) { $("#health-pill").textContent = "health: error"; }
+}
+
+$("#extract-btn").onclick = async () => {
+  try {
+    const { data } = await api("/api/extract/text", { method: "POST", body: JSON.stringify({ text: $("#text").value }) });
+    out(data);
+  } catch (e) { err(e); }
+};
+
+$("#extract-file-btn").onclick = async () => {
+  const f = $("#file").files[0];
+  if (!f) return err(new Error("Pick a file first"));
+  const fd = new FormData();
+  fd.append("resume", f);
+  try {
+    const res = await fetch("/api/extract/file", { method: "POST", body: fd });
+    const body = await res.json();
+    if (!res.ok) { out(body); return; }
+    out(body);
+  } catch (e) { err(e); }
+};
+
+$("#create-project").onclick = async () => {
+  try {
+    const { data } = await api("/api/projects", { method: "POST", body: JSON.stringify({}) });
+    setProjectId(data.id);
+    out(data);
+  } catch (e) { err(e); }
+};
+
+const needProject = () => {
+  if (!getProjectId()) throw new Error("Create / paste a project id first");
+};
+
+$("#set-role").onclick = async () => {
+  try { needProject();
+    const { data } = await api(`/api/projects/${getProjectId()}/target-role`, { method:"POST", body: JSON.stringify({ role: $("#role").value }) });
+    out(data);
+  } catch (e) { err(e); }
+};
+
+$("#set-jd").onclick = async () => {
+  try { needProject();
+    const { data } = await api(`/api/projects/${getProjectId()}/job-description`, { method:"POST", body: JSON.stringify({ jobDescription: $("#jd").value }) });
+    out(data);
+  } catch (e) { err(e); }
+};
+
+$("#attach").onclick = async () => {
+  try { needProject();
+    const text = $("#text").value;
+    if (!text) return err(new Error("Paste resume text first"));
+    const { data } = await api(`/api/projects/${getProjectId()}/resume`, { method:"POST", body: JSON.stringify({ rawText: text }) });
+    out(data);
+  } catch (e) { err(e); }
+};
+
+const stepFns = {
+  role: async () => {
+    setStep("role","active");
+    const { data } = await api(`/api/projects/${getProjectId()}/role-analysis`, { method:"POST", body: JSON.stringify({}) });
+    setStep("role","done"); out(data);
+  },
+  gap: async () => {
+    setStep("gap","active");
+    const { data } = await api(`/api/projects/${getProjectId()}/skill-gap`, { method:"POST", body: JSON.stringify({}) });
+    setStep("gap","done"); out(data);
+  },
+  blueprint: async () => {
+    setStep("blueprint","active");
+    const { data } = await api(`/api/projects/${getProjectId()}/blueprint`, { method:"POST", body: JSON.stringify({}) });
+    setStep("blueprint","done"); out(data);
+  },
+  generate: async () => {
+    setStep("generate","active");
+    const { data } = await api(`/api/projects/${getProjectId()}/generate`, { method:"POST", body: JSON.stringify({}) });
+    setStep("generate","done"); out(data);
+  },
+  preview: async () => {
+    setStep("preview","active");
+    const res = await fetch(`/api/projects/${getProjectId()}/preview`);
+    const html = await res.text();
+    setStep("preview","done");
+    const w = window.open("","_blank");
+    if (w) { w.document.write(html); w.document.close(); }
+    out({ preview: "opened in new tab" });
+  },
+};
+
+$("#run-all").onclick = async () => {
+  try {
+    needProject();
+    for (const k of ["role","gap","blueprint","generate","preview"]) {
+      try { await stepFns[k](); } catch (e) { setStep(k,"failed"); err(e); return; }
+    }
+  } catch (e) { err(e); }
+};
+
+$("#export-pdf").onclick = async () => {
+  try { needProject();
+    const res = await fetch(`/api/projects/${getProjectId()}/export/pdf`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({}) });
+    if (!res.ok) { const t = await res.text(); err(new Error("HTTP " + res.status + " " + t)); return; }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `resume-${getProjectId()}.pdf`; a.click();
+    URL.revokeObjectURL(url);
+    out({ ok: true, bytes: blob.size });
+  } catch (e) { err(e); }
+};
+
+loadHealth();
+setInterval(loadHealth, 15000);
+</script>
+</body>
+</html>
