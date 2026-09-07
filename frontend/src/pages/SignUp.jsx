@@ -5,7 +5,7 @@ import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Input from "../components/ui/Input";
 import Spinner from "../components/ui/Spinner";
-import "../../styles/Auth.css";
+import "../styles/Auth.css";
 
 function SignUp() {
   const [name, setName] = useState("");

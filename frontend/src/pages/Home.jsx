@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
-import "../../styles/Home.css";
+import "../styles/Home.css";
 
 function Home() {
   return (
