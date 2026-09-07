@@ -160,39 +160,39 @@
             "items": {
                 "type": "string"
             }
-        }
-    },
-    "certifications": {
-        "type": "array",
-        "items": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
+        },
+        "certifications": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "issuer": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string"
+                    },
+                    "url": {
+                        "type": "string"
+                    }
                 },
-                "issuer": {
-                    "type": "string"
-                },
-                "date": {
-                    "type": "string"
-                },
-                "url": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "name",
-                "issuer",
-                "date",
-                "url"
-            ],
-            "additionalProperties": false
-        }
-    },
-    "achievements": {
-        "type": "array",
-        "items": {
-            "type": "string"
+                "required": [
+                    "name",
+                    "issuer",
+                    "date",
+                    "url"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "achievements": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
         }
     },
     "required": [

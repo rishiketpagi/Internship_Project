@@ -3,15 +3,22 @@ import { useNavigate } from "react-router-dom";
 import ResumeTextInput from "../components/input/TextInput";
 import ResumeFileUpload from "../components/input/FileUpload";
 import "../styles/DataInput.css";
+import { roles } from "../data/roles";
 
 function DataInput() {
     const navigate = useNavigate();
     const [rawText, setRawText] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
+    const [targetRole, setTargetRole] = useState(roles[0]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
     const handleTextContinue = async () => {
+        if (!targetRole) {
+            setError("Please select a target role.");
+            return;
+        }
+
         try {
             setLoading(true);
             setError("");
@@ -22,6 +29,7 @@ function DataInput() {
                 },
                 body: JSON.stringify({
                     text: rawText,
+                    targetRole,
                 }),
             });
 
@@ -43,6 +51,11 @@ function DataInput() {
     };
 
     const handleFileContinue = async () => {
+        if (!targetRole) {
+            setError("Please select a target role.");
+            return;
+        }
+
         if (!selectedFile) {
             return;
         }
@@ -52,6 +65,7 @@ function DataInput() {
             setError("");
             const formData = new FormData();
             formData.append("resume", selectedFile);
+            formData.append("targetRole", targetRole);
 
             const response = await fetch("http://localhost:5000/extract-resume", {
                 method: "POST",
@@ -79,6 +93,20 @@ function DataInput() {
         <div className="data-input-container">
             <h1>Create Your Resume</h1>
             <p>Provide your information using either method.</p>
+
+            <label className="target-role">
+                <span>Target Role</span>
+                <select
+                    value={targetRole}
+                    onChange={(event) => setTargetRole(event.target.value)}
+                >
+                    {roles.map((role) => (
+                        <option key={role} value={role}>
+                            {role}
+                        </option>
+                    ))}
+                </select>
+            </label>
 
             <ResumeTextInput
                 value={rawText}

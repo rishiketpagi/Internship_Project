@@ -27,6 +27,30 @@
     text-align: center;
 }
 
+.target-role {
+    display: block;
+    margin-bottom: 24px;
+}
+
+.target-role span {
+    display: block;
+    margin-bottom: 6px;
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.target-role select {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #1f2937;
+    font: inherit;
+}
+
 /* Divider (Replaces basic hr) */
 .divider {
     position: relative;
