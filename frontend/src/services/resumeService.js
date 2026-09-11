@@ -63,6 +63,18 @@ export function renameResume(userId, resumeId, title) {
     });
 }
 
+export async function duplicateResume(userId, resume) {
+    const resumeToCopy = { ...resume };
+    delete resumeToCopy.resumeId;
+    delete resumeToCopy.createdAt;
+    delete resumeToCopy.updatedAt;
+
+    return createResume(userId, {
+        ...resumeToCopy,
+        title: `Copy of ${resume.title || "Untitled Resume"}`,
+    });
+}
+
 export function deleteResume(userId, resumeId) {
     return deleteDoc(resumeDocument(userId, resumeId));
 }

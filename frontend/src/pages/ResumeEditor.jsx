@@ -1,7 +1,10 @@
 import { Link, useLocation, useSearchParams } from "react-router-dom";
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import html2pdf from "html2pdf.js";
 import { AuthContext } from "../components/auth/AuthContext";
+import EditorSection from "../components/editor/EditorSection";
+import ResumeEditorHeader from "../components/editor/ResumeEditorHeader";
+import ResumePreviewPanel from "../components/editor/ResumePreviewPanel";
 import PersonalInfoEditor from "../components/editor/PersonalInfoEditor";
 import SummaryEditor from "../components/editor/SummaryEditor";
 import EducationEditor from "../components/editor/EducationEditor";
@@ -19,44 +22,6 @@ import "../styles/ResumeEditor.css";
 function safeFilename(name) {
     if (!name) return "Resume";
     return name.trim().replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g, "_");
-}
-
-function EditorSection({ title, sectionKey, isOpen, onToggle, children, isMovable, onDragStart, onDragOver, onDrop, onMove }) {
-    return (
-        <section
-            className={`resume-editor-card${isOpen ? " is-open" : ""}`}
-            draggable={isMovable}
-            onDragStart={onDragStart}
-            onDragOver={onDragOver}
-            onDrop={onDrop}
-        >
-            <div className="resume-editor-card-header">
-                {isMovable && (
-                    <span className="resume-editor-drag-handle" aria-label={`Drag ${title} section`} title="Drag to reorder">
-                        ⋮⋮
-                    </span>
-                )}
-                <button
-                    type="button"
-                    className="resume-editor-card-toggle"
-                    onClick={() => onToggle(sectionKey)}
-                    aria-expanded={isOpen}
-                >
-                    <span className="resume-editor-card-title">{title}</span>
-                    <span className="resume-editor-card-toggle-icon" aria-hidden="true">
-                        {isOpen ? "−" : "+"}
-                    </span>
-                </button>
-                {isMovable && (
-                    <div className="resume-editor-reorder-actions">
-                        <button type="button" onClick={() => onMove(sectionKey, -1)} aria-label={`Move ${title} up`} title="Move up">↑</button>
-                        <button type="button" onClick={() => onMove(sectionKey, 1)} aria-label={`Move ${title} down`} title="Move down">↓</button>
-                    </div>
-                )}
-            </div>
-            {isOpen && <div className="resume-editor-card-content">{children}</div>}
-        </section>
-    );
 }
 
 export default function ResumeEditor() {
@@ -311,39 +276,26 @@ export default function ResumeEditor() {
         }
     };
 
+    useEffect(() => {
+        const downloadFormat = location.state?.downloadFormat;
+        if (!downloadFormat || !resumeRef.current) return;
+
+        const download = downloadFormat === "pdf" ? handleDownloadPdf : handleDownloadDocx;
+        const timer = window.setTimeout(download, 0);
+        return () => window.clearTimeout(timer);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location.state?.downloadFormat, resumeData]);
+
     return (
         <main className="resume-editor-page">
-            <header className="resume-editor-header">
-                <h1 className="resume-editor-title">Resume Editor</h1>
-
-                <div className="resume-editor-actions">
-                    <button
-                        className="resume-editor-save-button"
-                        onClick={handleSave}
-                        disabled={isSaving || isDownloadingPdf || isDownloadingDocx}
-                    >
-                        {isSaving ? "Saving..." : "Save"}
-                    </button>
-
-                    <button
-                        className="resume-editor-download-button"
-                        onClick={handleDownloadPdf}
-                        disabled={isDownloadingPdf || isDownloadingDocx}
-                        aria-label="Download resume as PDF"
-                    >
-                        {isDownloadingPdf ? "Generating PDF…" : "Download PDF"}
-                    </button>
-
-                    <button
-                        className="resume-editor-download-button"
-                        onClick={handleDownloadDocx}
-                        disabled={isDownloadingPdf || isDownloadingDocx}
-                        aria-label="Download resume as DOCX"
-                    >
-                        {isDownloadingDocx ? "Generating DOCX…" : "Download DOCX"}
-                    </button>
-                </div>
-            </header>
+            <ResumeEditorHeader
+                isSaving={isSaving}
+                isDownloadingPdf={isDownloadingPdf}
+                isDownloadingDocx={isDownloadingDocx}
+                onSave={handleSave}
+                onDownloadPdf={handleDownloadPdf}
+                onDownloadDocx={handleDownloadDocx}
+            />
 
             {downloadError && (
                 <div className="resume-editor-download-error" role="alert">
@@ -425,38 +377,18 @@ export default function ResumeEditor() {
                     </div>
                 </section>
 
-                <section className="resume-editor-preview-panel" onWheel={handlePreviewWheel}>
-                    <div className="resume-editor-preview-controls">
-                        <div className="resume-editor-template-switcher" aria-label="Template selection">
-                            <span className="resume-editor-control-label">Template</span>
-                            <button type="button" onClick={() => changeTemplate(-1)} className="resume-editor-template-button" aria-label="Previous template">&lt;</button>
-                            <span className="resume-editor-template-name" aria-live="polite">{selectedTemplate.name}</span>
-                            <button type="button" onClick={() => changeTemplate(1)} className="resume-editor-template-button" aria-label="Next template">&gt;</button>
-                        </div>
-                        <div className="resume-editor-preview-toolbar" aria-label="Preview zoom controls">
-                            <span className="resume-editor-control-label">Zoom</span>
-                            <button type="button" onClick={() => setPreviewScale((s) => Math.max(0.35, s - 0.05))} className="resume-editor-zoom-button" aria-label="Zoom out preview">-</button>
-                            <span className="resume-editor-zoom-value">{Math.round(previewScale * 100)}%</span>
-                            <button type="button" onClick={() => setPreviewScale((s) => Math.min(1.2, s + 0.05))} className="resume-editor-zoom-button" aria-label="Zoom in preview">+</button>
-                            <button type="button" onClick={() => setPreviewScale(0.55)} className="resume-editor-zoom-reset">Reset</button>
-                        </div>
-                    </div>
-
-                    {/* The outer div applies the CSS zoom for preview only */}
-                    <div className="resume-editor-preview" style={{ "--preview-scale": previewScale }}>
-                        {/* The inner div is what we ref for PDF export — zoom is managed inline */}
-                        <div ref={resumeRef}>
-                            <TemplateComponent
-                                roleResumeData={
-                                    roleResumeData
-                                        ? { ...roleResumeData, candidateProfile: resumeData }
-                                        : undefined
-                                }
-                                resumeData={resumeData}
-                            />
-                        </div>
-                    </div>
-                </section>
+                <ResumePreviewPanel
+                    selectedTemplate={selectedTemplate}
+                    TemplateComponent={TemplateComponent}
+                    roleResumeData={roleResumeData}
+                    resumeData={resumeData}
+                    resumeRef={resumeRef}
+                    previewScale={previewScale}
+                    onPreviewWheel={handlePreviewWheel}
+                    onChangeTemplate={changeTemplate}
+                    onZoomChange={(amount) => setPreviewScale((scale) => Math.min(1.2, Math.max(0.35, scale + amount)))}
+                    onResetZoom={() => setPreviewScale(0.55)}
+                />
             </div>
         </main>
     );

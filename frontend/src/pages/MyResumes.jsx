@@ -1,22 +1,15 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../components/auth/AuthContext";
+import DownloadResumeDialog from "../components/dashboard/DownloadResumeDialog";
+import ResumeCard from "../components/dashboard/ResumeCard";
 import {
     deleteResume,
+    duplicateResume,
     getResumes,
     renameResume,
 } from "../services/resumeService";
 import "../styles/MyResumes.css";
-
-function formatUpdatedAt(timestamp) {
-    if (!timestamp?.toDate) return "Not saved yet";
-
-    return timestamp.toDate().toLocaleDateString(undefined, {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-    });
-}
 
 export default function MyResumes() {
     const { user } = useContext(AuthContext);
@@ -26,6 +19,7 @@ export default function MyResumes() {
     const [error, setError] = useState("");
     const [editingId, setEditingId] = useState(null);
     const [editingTitle, setEditingTitle] = useState("");
+    const [downloadResume, setDownloadResume] = useState(null);
 
     useEffect(() => {
         let active = true;
@@ -71,6 +65,35 @@ export default function MyResumes() {
             console.error("Failed to delete resume:", deleteError);
             setError("Unable to delete this resume.");
         }
+    };
+
+    const handleDuplicate = async (resume) => {
+        try {
+            const resumeId = await duplicateResume(user.uid, resume);
+            setResumes((currentResumes) => [
+                {
+                    ...resume,
+                    resumeId,
+                    title: `Copy of ${resume.title || "Untitled Resume"}`,
+                    createdAt: null,
+                    updatedAt: null,
+                },
+                ...currentResumes,
+            ]);
+        } catch (duplicateError) {
+            console.error("Failed to duplicate resume:", duplicateError);
+            setError("Unable to duplicate this resume.");
+        }
+    };
+
+    const handleDownload = (resume, format) => {
+        navigate(`/editor?template=${resume.templateId || "modern"}`, {
+            state: {
+                savedResume: resume,
+                downloadFormat: format,
+            },
+        });
+        setDownloadResume(null);
     };
 
     const startRename = (resume) => {
@@ -130,40 +153,31 @@ export default function MyResumes() {
                 ) : (
                     <section className="my-resumes-grid" aria-label="Saved resumes">
                         {resumes.map((resume) => (
-                            <article className="my-resume-card" key={resume.resumeId}>
-                                {editingId === resume.resumeId ? (
-                                    <div className="my-resume-title-editor">
-                                        <input
-                                            value={editingTitle}
-                                            onChange={(event) => setEditingTitle(event.target.value)}
-                                            aria-label="Resume title"
-                                            autoFocus
-                                        />
-                                        <button type="button" onClick={() => handleRename(resume.resumeId)}>
-                                            Save Title
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="my-resume-title-row">
-                                        <h2>{resume.title || "Untitled Resume"}</h2>
-                                        <button type="button" onClick={() => startRename(resume)} aria-label="Rename resume">
-                                            Edit Title
-                                        </button>
-                                    </div>
-                                )}
-                                <p>Template: <strong>{resume.templateId || "modern"}</strong></p>
-                                <p>Updated: {formatUpdatedAt(resume.updatedAt)}</p>
-                                <div className="my-resume-actions">
-                                    <button type="button" onClick={() => handleEdit(resume)}>Edit</button>
-                                    <button type="button" onClick={() => handleDelete(resume.resumeId)} className="my-resume-delete-button">
-                                        Delete
-                                    </button>
-                                </div>
-                            </article>
+                            <ResumeCard
+                                key={resume.resumeId}
+                                resume={resume}
+                                isEditing={editingId === resume.resumeId}
+                                editingTitle={editingTitle}
+                                onEditingTitleChange={setEditingTitle}
+                                onSaveTitle={() => handleRename(resume.resumeId)}
+                                onStartRename={() => startRename(resume)}
+                                onEdit={() => handleEdit(resume)}
+                                onDownload={() => setDownloadResume(resume)}
+                                onDuplicate={() => handleDuplicate(resume)}
+                                onDelete={() => handleDelete(resume.resumeId)}
+                            />
                         ))}
                     </section>
                 )}
             </div>
+
+            {downloadResume && (
+                <DownloadResumeDialog
+                    resume={downloadResume}
+                    onDownload={(format) => handleDownload(downloadResume, format)}
+                    onClose={() => setDownloadResume(null)}
+                />
+            )}
         </main>
     );
 }
