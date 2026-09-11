@@ -9,6 +9,7 @@ import { extractTextFromDOCX } from "./parsers/docxParser.js";
 import { extractResumeData } from "./ai/resumeExtractor.js";
 import { generateRoleSpecificResume } from "./ai/resumeGenerator.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
+import { validateAIConfig } from "./config/aiConfig.js";
 
 const app = express();
 
@@ -122,12 +123,18 @@ app.post("/extract-resume", upload.single("resume"), async (req, res) => {
 
         res.status(500).json({
             success: false,
-            message: "Failed to extract resume information.",
+            message: error.message || "Failed to extract resume information.",
         });
     }
 });
 
 const PORT = 5000;
+
+try {
+    validateAIConfig();
+} catch (error) {
+    console.error(`AI configuration error: ${error.message}`);
+}
 
 app.listen(PORT, () => {
     console.log(`Backend running on http://localhost:${PORT}`);
