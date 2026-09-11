@@ -1,0 +1,126 @@
+.auth-form {
+    width: 100%;
+    max-width: 28rem;
+    display: grid;
+    gap: 1.25rem;
+}
+
+.auth-form h1 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 2rem;
+    line-height: 1.15;
+}
+
+.auth-form p {
+    margin: 0;
+    color: #64748b;
+}
+
+.auth-eyebrow {
+    color: #0284c7 !important;
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+}
+
+.auth-fields {
+    display: grid;
+    gap: 1rem;
+}
+
+.auth-field {
+    display: grid;
+    gap: .45rem;
+    color: #334155;
+    font-size: .875rem;
+    font-weight: 600;
+}
+
+.auth-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: .75rem .9rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    color: #0f172a;
+    outline: none;
+}
+
+.auth-input:focus {
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 4px #e0f2fe;
+}
+
+.auth-error {
+    padding: .75rem .9rem;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    background: #fef2f2;
+    color: #b91c1c !important;
+    font-size: .875rem;
+}
+
+.auth-primary-button,
+.auth-google-button {
+    min-height: 46px;
+    padding: .75rem 1rem;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.auth-primary-button {
+    border: 0;
+    background: #0ea5e9;
+    color: white;
+}
+
+.auth-primary-button:hover {
+    background: #0284c7;
+}
+
+.auth-google-button {
+    border: 1px solid #cbd5e1;
+    background: white;
+    color: #334155;
+}
+
+.auth-google-button:hover {
+    border-color: #7dd3fc;
+    background: #f0f9ff;
+}
+
+.auth-primary-button:disabled,
+.auth-google-button:disabled {
+    cursor: not-allowed;
+    opacity: .6;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    color: #94a3b8 !important;
+    font-size: .8rem;
+    text-transform: uppercase;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background: #e2e8f0;
+}
+
+.auth-footer {
+    text-align: center;
+    font-size: .9rem;
+}
+
+.auth-footer a {
+    color: #0284c7;
+    font-weight: 700;
+}

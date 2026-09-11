@@ -1,30 +1,13 @@
-function ResumeTextInput({ value, onChange, onContinue }) {
+function ResumeTextInput({ value, onChange }) {
     return (
-        <div>
-            <h2>Enter Your Information</h2>
-
-            <p>
-                Tell us about your education, experience, projects,
-                skills, certifications, achievements, and anything
-                else you want included in your resume.
-            </p>
-
+        <div className="text-input-wrapper">
             <textarea
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
                 placeholder="Example: I am a final year computer engineering student. I built..."
-                rows={15}
+                rows={10}
             />
-
-            <p>Characters: {value.length}</p>
-
-            <button
-                type="button"
-                onClick={onContinue}
-                disabled={!value.trim()}
-            >
-                Continue
-            </button>
+            <p className="char-count">Characters: {value.length}</p>
         </div>
     );
 }

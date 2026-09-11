@@ -15,32 +15,27 @@
 .data-input-container h1 {
     font-size: 1.5rem;
     font-weight: 600;
-    margin: 0 0 6px 0;
+    margin: 0 0 24px 0;
     text-align: center;
     color: #111827;
 }
 
-.data-input-container>p {
-    font-size: 0.875rem;
-    color: #6b7280;
-    margin: 0 0 24px 0;
-    text-align: center;
+/* Input Labels */
+.input-label {
+    display: block;
+    margin-bottom: 20px;
 }
 
-.target-role {
+.input-label > span {
     display: block;
-    margin-bottom: 24px;
-}
-
-.target-role span {
-    display: block;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     color: #374151;
     font-size: 0.875rem;
     font-weight: 600;
 }
 
-.target-role select {
+.input-label select,
+.input-label textarea {
     box-sizing: border-box;
     width: 100%;
     padding: 10px 12px;
@@ -49,6 +44,51 @@
     background-color: #ffffff;
     color: #1f2937;
     font: inherit;
+    font-size: 0.875rem;
+}
+
+.input-label textarea {
+    resize: vertical;
+}
+
+.input-label select:focus,
+.input-label textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* File Upload Styles */
+.file-upload-wrapper input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px dashed #d1d5db;
+    border-radius: 6px;
+    background-color: #f9fafb;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: #4b5563;
+}
+
+.file-upload-wrapper input[type="file"]:hover {
+    border-color: #9ca3af;
+}
+
+.file-details {
+    margin-top: 8px;
+    font-size: 0.8125rem;
+    color: #6b7280;
+}
+.file-details p {
+    margin: 4px 0;
+}
+
+/* Text Input Styles */
+.char-count {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-align: right;
+    margin: 4px 0 0 0;
 }
 
 /* Divider (Replaces basic hr) */
@@ -79,6 +119,31 @@
     letter-spacing: 0.05em;
 }
 
+/* Button */
+.generate-button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-top: 32px;
+    background-color: #111827;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.generate-button:hover {
+    background-color: #374151;
+}
+
+.generate-button:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
 /* Feedback States */
 .status-loading {
     margin-top: 20px;
@@ -101,45 +166,8 @@
     text-align: center;
 }
 
-/* Response Section */
-.response-box {
-    margin-top: 24px;
-    padding: 16px;
-    background-color: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-}
-
-.response-box h2 {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #6b7280;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin: 0 0 8px 0;
-}
-
-.response-box pre {
-    margin: 0;
-    padding: 12px;
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 0.8125rem;
-    color: #374151;
-    overflow-x: auto;
-}
-
 /* Pulse animation for loading */
 @keyframes pulse {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.5;
-    }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
 }

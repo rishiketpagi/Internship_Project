@@ -1,6 +1,6 @@
 import "dotenv/config";
 import Groq from "groq-sdk";
-import resumeSchema from "../data/resumeSchema.json" with { type: "json" };
+import roleResumeSchema from "../data/roleResumeSchema.json" with { type: "json" };
 import { resumeGenerationSystemPrompt } from "../prompts/resumeGenerationPrompt.js";
 
 const groq = new Groq({
@@ -10,12 +10,12 @@ const groq = new Groq({
 export async function generateRoleSpecificResume(
     resumeData,
     targetRole,
-    roleAnalysis
+    jobDescription
 ) {
     const userInput = JSON.stringify({
         targetRole,
+        jobDescription,
         resumeData,
-        roleAnalysis,
     });
 
     const completion = await groq.chat.completions.create({
@@ -37,14 +37,18 @@ export async function generateRoleSpecificResume(
         response_format: {
             type: "json_schema",
             json_schema: {
-                name: "role_specific_resume",
+                name: "role_resume",
                 strict: true,
-                schema: resumeSchema,
+                schema: roleResumeSchema,
             },
         },
     });
 
     const result = completion.choices[0].message.content;
+    const roleResumeData = JSON.parse(result);
 
-    return JSON.parse(result);
+    console.log("Generated role resume from resumeGenerator.js:");
+    console.log(JSON.stringify(roleResumeData, null, 2));
+
+    return roleResumeData;
 }

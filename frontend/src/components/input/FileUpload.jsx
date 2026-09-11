@@ -1,4 +1,4 @@
-function ResumeFileUpload({ file, onFileChange, onContinue }) {
+function ResumeFileUpload({ file, onFileChange }) {
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
 
@@ -21,14 +21,7 @@ function ResumeFileUpload({ file, onFileChange, onContinue }) {
     };
 
     return (
-        <div>
-            <h2>Upload Your Existing Resume</h2>
-
-            <p>
-                Upload your existing resume and we'll extract the
-                information from it.
-            </p>
-
+        <div className="file-upload-wrapper">
             <input
                 type="file"
                 accept=".pdf,.docx"
@@ -36,16 +29,9 @@ function ResumeFileUpload({ file, onFileChange, onContinue }) {
             />
 
             {file && (
-                <div>
+                <div className="file-details">
                     <p>Selected file: {file.name}</p>
                     <p>Size: {(file.size / 1024 / 1024).toFixed(2)} MB</p>
-
-                    <button
-                        type="button"
-                        onClick={onContinue}
-                    >
-                        Continue
-                    </button>
                 </div>
             )}
         </div>
