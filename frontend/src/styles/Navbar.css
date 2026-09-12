@@ -1,0 +1,238 @@
+/* ================================================
+   Navbar.css — ResumeAI Navbar Styles
+   ================================================ */
+
+/* ---- Base navbar ---- */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    height: 68px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-container {
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+}
+
+/* ---- Logo ---- */
+.navbar-logo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #0284c7;
+    text-decoration: none;
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.navbar-logo:hover {
+    color: #0369a1;
+}
+
+/* ---- Desktop nav links ---- */
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+}
+
+.nav-link {
+    position: relative;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #475569;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: color 0.15s ease;
+    white-space: nowrap;
+}
+
+/* Underline bar — hidden by default */
+.nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 12px;
+    right: 12px;
+    height: 2px;
+    background-color: #0ea5e9;
+    border-radius: 1px;
+    width: 0;
+    transition: width 0.2s ease;
+}
+
+.nav-link:hover {
+    color: #0284c7;
+}
+
+.nav-link:hover::after {
+    width: calc(100% - 24px);
+}
+
+/* Active state */
+.nav-link.active {
+    color: #0284c7;
+    font-weight: 600;
+}
+
+.nav-link.active::after {
+    width: calc(100% - 24px);
+}
+
+/* ---- Right-side actions ---- */
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* Create Resume CTA button */
+.navbar-create {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #0ea5e9;
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: background-color 0.15s ease;
+}
+
+.navbar-create:hover {
+    background-color: #0284c7;
+    color: #ffffff;
+}
+
+/* ---- Hamburger (mobile) ---- */
+.mobile-menu-button {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: background-color 0.15s ease;
+}
+
+.mobile-menu-button:hover {
+    background-color: #f1f5f9;
+}
+
+.hamburger-bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: #475569;
+    border-radius: 1px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Hamburger → X animation */
+.mobile-menu-button.open .hamburger-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+.mobile-menu-button.open .hamburger-bar:nth-child(2) {
+    opacity: 0;
+}
+.mobile-menu-button.open .hamburger-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ---- Mobile dropdown menu ---- */
+.mobile-menu {
+    display: none;
+    position: absolute;
+    top: 68px;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 12px 24px 16px;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    z-index: 99;
+}
+
+.mobile-menu.open {
+    display: flex;
+}
+
+.mobile-nav-link {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #475569;
+    text-decoration: none;
+    padding: 10px 8px;
+    border-radius: 6px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.mobile-nav-link:last-child {
+    border-bottom: none;
+}
+
+.mobile-nav-link:hover {
+    color: #0284c7;
+    background-color: #f0f9ff;
+}
+
+.mobile-nav-link.active {
+    color: #0284c7;
+    font-weight: 600;
+    background-color: #f0f9ff;
+}
+
+/* Create Resume in mobile */
+.mobile-nav-link.mobile-create {
+    margin-top: 8px;
+    background-color: #0ea5e9;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 8px;
+    border-bottom: none;
+    font-weight: 600;
+}
+
+.mobile-nav-link.mobile-create:hover {
+    background-color: #0284c7;
+    color: #ffffff;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+    .navbar-links {
+        display: none;
+    }
+
+    .navbar-actions .navbar-create {
+        display: none;
+    }
+
+    .mobile-menu-button {
+        display: flex;
+    }
+}

@@ -1,0 +1,226 @@
+{
+    "type": "object",
+    "properties": {
+        "targetRole": {
+            "type": "string"
+        },
+        "jobDescription": {
+            "type": "string"
+        },
+        "candidateProfile": {
+            "type": "object",
+            "properties": {
+                "personalInfo": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "email": {
+                            "type": "string"
+                        },
+                        "phone": {
+                            "type": "string"
+                        },
+                        "location": {
+                            "type": "string"
+                        },
+                        "linkedin": {
+                            "type": "string"
+                        },
+                        "github": {
+                            "type": "string"
+                        },
+                        "portfolio": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "name",
+                        "email",
+                        "phone",
+                        "location",
+                        "linkedin",
+                        "github",
+                        "portfolio"
+                    ],
+                    "additionalProperties": false
+                },
+                "professionalSummary": {
+                    "type": "string"
+                },
+                "education": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "institution": {
+                                "type": "string"
+                            },
+                            "degree": {
+                                "type": "string"
+                            },
+                            "field": {
+                                "type": "string"
+                            },
+                            "startDate": {
+                                "type": "string"
+                            },
+                            "endDate": {
+                                "type": "string"
+                            },
+                            "grade": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "institution",
+                            "degree",
+                            "field",
+                            "startDate",
+                            "endDate",
+                            "grade"
+                        ],
+                        "additionalProperties": false
+                    }
+                },
+                "workExperience": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "jobTitle": {
+                                "type": "string"
+                            },
+                            "company": {
+                                "type": "string"
+                            },
+                            "location": {
+                                "type": "string"
+                            },
+                            "startDate": {
+                                "type": "string"
+                            },
+                            "endDate": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "responsibilities": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": [
+                            "jobTitle",
+                            "company",
+                            "location",
+                            "startDate",
+                            "endDate",
+                            "description",
+                            "responsibilities"
+                        ],
+                        "additionalProperties": false
+                    }
+                },
+                "projects": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "technologies": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "url": {
+                                "type": "string"
+                            },
+                            "startDate": {
+                                "type": "string"
+                            },
+                            "endDate": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "description",
+                            "technologies",
+                            "url",
+                            "startDate",
+                            "endDate"
+                        ],
+                        "additionalProperties": false
+                    }
+                },
+                "skills": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "certifications": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "issuer": {
+                                "type": "string"
+                            },
+                            "date": {
+                                "type": "string"
+                            },
+                            "url": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "name",
+                            "issuer",
+                            "date",
+                            "url"
+                        ],
+                        "additionalProperties": false
+                    }
+                },
+                "achievements": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "personalInfo",
+                "professionalSummary",
+                "education",
+                "workExperience",
+                "projects",
+                "skills",
+                "certifications",
+                "achievements"
+            ],
+            "additionalProperties": false
+        }
+    },
+    "required": [
+        "targetRole",
+        "jobDescription",
+        "candidateProfile"
+    ],
+    "additionalProperties": false
+}
