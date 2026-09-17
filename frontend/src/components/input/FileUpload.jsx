@@ -1,4 +1,16 @@
-function ResumeFileUpload({ file, onFileChange }) {
+function ResumeFileUpload({
+    file,
+    onFileChange,
+    accept = ".pdf,.docx,.png,.jpg,.jpeg,.webp",
+    allowedTypes = [
+        "application/pdf",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "image/png",
+        "image/jpeg",
+        "image/webp",
+    ],
+    invalidMessage = "Please upload a PDF, DOCX, PNG, JPG, or WEBP file.",
+}) {
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
 
@@ -6,13 +18,8 @@ function ResumeFileUpload({ file, onFileChange }) {
             return;
         }
 
-        const allowedTypes = [
-            "application/pdf",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        ];
-
         if (!allowedTypes.includes(selectedFile.type)) {
-            alert("Please upload a PDF or DOCX file.");
+            alert(invalidMessage);
             event.target.value = "";
             return;
         }
@@ -24,7 +31,7 @@ function ResumeFileUpload({ file, onFileChange }) {
         <div className="file-upload-wrapper">
             <input
                 type="file"
-                accept=".pdf,.docx"
+                accept={accept}
                 onChange={handleFileChange}
             />
 

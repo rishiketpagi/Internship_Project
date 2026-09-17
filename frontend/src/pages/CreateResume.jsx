@@ -9,6 +9,7 @@ function DataInput() {
     const navigate = useNavigate();
     const [rawText, setRawText] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
+    const [jobDescriptionImage, setJobDescriptionImage] = useState(null);
     const [targetRole, setTargetRole] = useState(roles[0]);
     const [jobDescription, setJobDescription] = useState("");
     const [loading, setLoading] = useState(false);
@@ -31,12 +32,15 @@ function DataInput() {
 
             let response;
 
-            if (selectedFile) {
+            if (selectedFile || jobDescriptionImage) {
                 const formData = new FormData();
-                formData.append("resume", selectedFile);
+                if (selectedFile) formData.append("resume", selectedFile);
                 formData.append("targetRole", targetRole);
                 if (jobDescription.trim()) {
                     formData.append("jobDescription", jobDescription.trim());
+                }
+                if (jobDescriptionImage) {
+                    formData.append("jobDescriptionImage", jobDescriptionImage);
                 }
 
                 response = await fetch("http://localhost:5000/extract-resume", {
@@ -99,6 +103,13 @@ function DataInput() {
                     onChange={(event) => setJobDescription(event.target.value)}
                     placeholder="Paste the job description here..."
                     rows={4}
+                />
+                <ResumeFileUpload
+                    file={jobDescriptionImage}
+                    onFileChange={setJobDescriptionImage}
+                    accept=".png,.jpg,.jpeg,.webp"
+                    allowedTypes={["image/png", "image/jpeg", "image/webp"]}
+                    invalidMessage="Please upload a PNG, JPG, or WEBP image."
                 />
             </label>
 
