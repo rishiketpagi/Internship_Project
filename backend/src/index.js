@@ -5,6 +5,7 @@ import "dotenv/config";
 
 import { extractTextFromPDF } from "./parsers/pdfParser.js";
 import { extractTextFromDOCX } from "./parsers/docxParser.js";
+import { extractTextFromImage } from "./parsers/imageParser.js";
 
 import { extractResumeData } from "./ai/resumeExtractor.js";
 import { generateRoleSpecificResume } from "./ai/resumeGenerator.js";
@@ -13,20 +14,28 @@ import { validateAIConfig } from "./config/aiConfig.js";
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+}));
+app.use(express.json({ limit: "1mb" }));
 app.use("/api/resumes", resumeRoutes);
 
 const upload = multer({
     storage: multer.memoryStorage(),
+    limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-app.post("/extract-resume", upload.single("resume"), async (req, res) => {
+app.post("/extract-resume", upload.fields([
+    { name: "resume", maxCount: 1 },
+    { name: "jobDescriptionImage", maxCount: 1 },
+]), async (req, res) => {
     try {
         let extractedText = "";
 
         const targetRole = req.body.targetRole;
-        const jobDescription = req.body.jobDescription?.trim() || "";
+        let jobDescription = req.body.jobDescription?.trim() || "";
+        const resumeFile = req.files?.resume?.[0];
+        const jobDescriptionImage = req.files?.jobDescriptionImage?.[0];
 
         if (!targetRole) {
             return res.status(400).json({
@@ -45,8 +54,8 @@ app.post("/extract-resume", upload.single("resume"), async (req, res) => {
         // -------------------------
         // FILE INPUT
         // -------------------------
-        else if (req.file) {
-            const file = req.file;
+        else if (resumeFile) {
+            const file = resumeFile;
 
             if (file.mimetype === "application/pdf") {
                 extractedText = await extractTextFromPDF(file.buffer);
@@ -59,25 +68,38 @@ app.post("/extract-resume", upload.single("resume"), async (req, res) => {
                 extractedText = await extractTextFromDOCX(file.buffer);
             }
 
+            else if (file.mimetype.startsWith("image/")) {
+                extractedText = await extractTextFromImage(file.buffer);
+            }
+
             else {
                 return res.status(400).json({
                     success: false,
-                    message: "Only PDF and DOCX files are supported.",
+                    message: "Only PDF, DOCX, PNG, JPG, and WEBP files are supported.",
                 });
             }
 
-            console.log("Extracted text from file:");
-            console.log(extractedText);
         }
 
-        // -------------------------
-        // NO INPUT
-        // -------------------------
         else {
             return res.status(400).json({
                 success: false,
                 message: "Please provide text or upload a PDF/DOCX file.",
             });
+        }
+
+        if (jobDescriptionImage) {
+            if (!jobDescriptionImage.mimetype.startsWith("image/")) {
+                return res.status(400).json({
+                    success: false,
+                    message: "The job description upload must be an image.",
+                });
+            }
+
+            const imageText = await extractTextFromImage(jobDescriptionImage.buffer);
+            jobDescription = [jobDescription, imageText.trim()]
+                .filter(Boolean)
+                .join("\n\n");
         }
 
         // -------------------------
@@ -114,9 +136,6 @@ app.post("/extract-resume", upload.single("resume"), async (req, res) => {
         });
 
         console.log("Resume extraction completed successfully.");
-        console.log("Target Role:", targetRole);
-        console.log("Resume Data:", resumeData);
-        console.log("Role Resume Data:", roleResumeData);
 
     } catch (error) {
         console.error("Resume extraction error:", error);

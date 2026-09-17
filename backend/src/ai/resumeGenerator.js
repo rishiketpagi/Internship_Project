@@ -1,6 +1,7 @@
 import "dotenv/config";
 import Groq from "groq-sdk";
 import roleResumeSchema from "../data/roleResumeSchema.json" with { type: "json" };
+import roles from "../data/roles.json" with { type: "json" };
 import { resumeGenerationSystemPrompt } from "../prompts/resumeGenerationPrompt.js";
 import { groqModel } from "../config/aiConfig.js";
 
@@ -13,9 +14,11 @@ export async function generateRoleSpecificResume(
     targetRole,
     jobDescription
 ) {
+    const roleRequirements = roles[targetRole] || { skills: [] };
     const userInput = JSON.stringify({
         targetRole,
         jobDescription,
+        roleRequirements,
         resumeData,
     });
 
