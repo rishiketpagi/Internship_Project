@@ -1,132 +1,139 @@
 /*
  * Base styles — reset, defaults, motion guardrails.
- * Pairs with tokens.css. Imports first; tailwind comes after.
+ * Wrapped in @layer base so Tailwind's @layer utilities can override.
  */
 
-/* hard reset of motion for users who opt out */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+@layer base {
+  /* hard reset of motion for users who opt out */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
-}
 
-/* default page bg + text color, no pure black, no pure white */
-html,
-body {
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-sans);
-  font-size: var(--t-body);
-  line-height: var(--lh-body);
-  letter-spacing: var(--ls-tight);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-/* selection */
-::selection {
-  background: var(--accent-soft);
-  color: var(--ink);
-}
-
-/* focus ring — never default browser blue */
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* keyboard focus only on interactive, not on mouse */
-:focus:not(:focus-visible) {
-  outline: none;
-}
-
-/* common element defaults */
-button {
-  font-family: inherit;
-  font-size: inherit;
-  color: inherit;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
-
-input,
-textarea,
-select {
-  font-family: inherit;
-  font-size: inherit;
-  color: inherit;
-}
-
-a {
-  color: var(--accent);
-  text-decoration: none;
-  text-underline-offset: 2px;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-hr {
-  border: 0;
-  border-top: 1px solid var(--rule);
-  margin: 0;
-}
-
-/* utility: hairline horizontal rule */
-.rule {
-  display: block;
-  width: 100%;
-  height: 1px;
-  background: var(--rule);
-}
-
-.rule-strong {
-  background: var(--rule-strong);
-}
-
-/* utility: page paper-tone background, sticks under sticky chrome */
-.page-bg {
-  background: var(--paper);
-  color: var(--ink);
-  min-height: 100dvh;
-}
-
-/* screen-reader-only text */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* respect no-hover devices */
-@media (hover: none) {
-  .hover-only {
-    display: none !important;
+  /* default page bg + text color, no pure black, no pure white */
+  html,
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--t-body);
+    line-height: var(--lh-body);
+    letter-spacing: var(--ls-tight);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
-}
 
-/* focus ring for keyboard users only */
-.mouse-user :focus {
-  outline: none;
-}
+  /* selection */
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--ink);
+  }
 
-.mouse-user :focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  /* focus ring — never default browser blue */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* keyboard focus only on interactive, not on mouse */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* common element defaults */
+  button {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+  }
+
+  /*
+   * Link defaults — only for plain text links inside paragraphs / lists.
+   * Buttons-styled-as-<a> should set their own color via Tailwind utilities
+   * (text-ink-inverse, text-ink, etc.).
+   */
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    text-underline-offset: 2px;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--rule);
+    margin: 0;
+  }
+
+  /* utility: hairline horizontal rule */
+  .rule {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .rule-strong {
+    background: var(--rule-strong);
+  }
+
+  /* utility: page paper-tone background, sticks under sticky chrome */
+  .page-bg {
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100dvh;
+  }
+
+  /* screen-reader-only text */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* respect no-hover devices */
+  @media (hover: none) {
+    .hover-only {
+      display: none !important;
+    }
+  }
+
+  /* focus ring for keyboard users only */
+  .mouse-user :focus {
+    outline: none;
+  }
+
+  .mouse-user :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
 }

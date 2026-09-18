@@ -103,6 +103,19 @@
     margin-top: 1.5mm !important;
 }
 
+.resume-entry-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8mm;
+}
+
+.resume-entry-dates {
+    color: #64748b;
+    font-size: 9pt;
+    white-space: nowrap;
+}
+
 .resume-list {
     margin-top: 1.5mm !important;
     padding-left: 5mm;
@@ -116,6 +129,36 @@
     line-height: 1.7;
 }
 
+.resume-skills-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.resume-skills-list li {
+    margin-bottom: 1mm;
+    font-size: 10pt;
+}
+
+.resume-contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 9.5pt;
+    color: #475569;
+}
+
+.resume-contact-list li {
+    margin-bottom: 0.8mm;
+    word-break: break-word;
+}
+
+.dot {
+    color: #94a3b8;
+    margin: 0 4px;
+}
+
+/* ── Modern ───────────────────────────────────────── */
 .resume-template-modern {
     border-top: 10mm solid #1e3a5f;
 }
@@ -136,6 +179,7 @@
     color: #0369a1;
 }
 
+/* ── Classic (Professional) ───────────────────────── */
 .resume-template-professional {
     font-family: Georgia, "Times New Roman", serif;
     color: #111827;
@@ -163,6 +207,7 @@
     letter-spacing: 0.1em;
 }
 
+/* ── ATS-Plain (Minimal) ──────────────────────────── */
 .resume-template-minimal {
     padding: 16mm 21mm;
     color: #1f2937;
@@ -192,6 +237,94 @@
     color: #4b5563;
     font-size: 9pt;
     letter-spacing: 0.14em;
+}
+
+/* ── Compact ──────────────────────────────────────── */
+.resume-template-compact {
+    padding: 14mm 16mm;
+    font-size: 9.5pt;
+    line-height: 1.38;
+}
+
+.resume-template-compact h1 {
+    font-size: 21pt;
+}
+
+.resume-template-compact h2 {
+    font-size: 10.5pt;
+    margin-bottom: 3mm;
+}
+
+.resume-template-compact h3 {
+    font-size: 9.5pt;
+}
+
+.resume-template-compact .resume-header {
+    margin-bottom: 6mm;
+}
+
+.resume-template-compact .resume-section {
+    margin-bottom: 5mm;
+}
+
+.resume-template-compact .resume-entry {
+    margin-bottom: 3.5mm;
+}
+
+.resume-template-compact .resume-section-heading {
+    border-bottom-color: #94a3b8;
+    color: #0f172a;
+}
+
+/* ── Two-Column ───────────────────────────────────── */
+.resume-template-two-col {
+    padding: 0;
+}
+
+.resume-two-col-grid {
+    display: grid;
+    grid-template-columns: 70mm 1fr;
+    min-height: 297mm;
+}
+
+.resume-two-col-left {
+    background: #f1f5f9;
+    padding: 17mm 12mm;
+    color: #1e293b;
+}
+
+.resume-two-col-left .resume-header {
+    margin-bottom: 8mm;
+}
+
+.resume-two-col-left h1 {
+    font-size: 18pt;
+    line-height: 1.15;
+    color: #0f172a;
+}
+
+.resume-two-col-left .resume-section-heading {
+    color: #475569;
+    font-size: 9.5pt;
+    border-bottom-color: #cbd5e1;
+}
+
+.resume-two-col-left .resume-section {
+    margin-bottom: 6mm;
+}
+
+.resume-two-col-left .resume-entry-meta {
+    color: #64748b;
+    font-size: 9pt;
+}
+
+.resume-two-col-right {
+    padding: 17mm 14mm;
+}
+
+.resume-two-col-right .resume-section-heading {
+    color: #0f172a;
+    border-bottom-color: #1e3a5f;
 }
 
 @media print {

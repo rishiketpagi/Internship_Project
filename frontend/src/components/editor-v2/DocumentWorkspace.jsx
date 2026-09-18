@@ -1,17 +1,19 @@
 /*
  * DocumentWorkspace — the v2 editor shell.
- * Topbar (64px) + SectionRail (collapsible) + ResumeDocument (preview = hero).
+ * Topbar + TemplatePicker + SectionRail + ResumeDocument.
  * Chrome recedes. The preview is the work surface.
  */
 import { useState } from "react";
 import SectionRail from "./SectionRail";
 import ResumeDocument from "./ResumeDocument";
 import EditorTopbar from "./EditorTopbar";
+import TemplatePicker from "./TemplatePicker";
 
 export default function DocumentWorkspace({
     TemplateComponent,
     resumeData,
     templateName,
+    templateId,
     templates,
     onChangeTemplate,
     isSaving,
@@ -36,14 +38,18 @@ export default function DocumentWorkspace({
             <EditorTopbar
                 resumeTitle={resumeData?.personalInfo?.name ? `${resumeData.personalInfo.name} — ${targetRole || "Resume"}` : "Untitled resume"}
                 templateName={templateName}
-                templates={templates}
-                onChangeTemplate={onChangeTemplate}
                 isSaving={isSaving}
                 saveLabel={saveLabel}
                 onSave={onSave}
                 onExportPdf={onExportPdf}
                 onExportDocx={onExportDocx}
                 onBack={onBack}
+            />
+
+            <TemplatePicker
+                templates={templates}
+                activeId={templateId}
+                onChange={onChangeTemplate}
             />
 
             <div className="flex flex-1 min-h-0">

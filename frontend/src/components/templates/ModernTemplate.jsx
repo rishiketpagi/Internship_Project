@@ -1,12 +1,13 @@
 import { getDateRange, getText } from "./templateUtils";
+import InlineEditSection from "../editor-v2/InlineEditSection";
 import "./Template.css";
 
-export default function ModernTemplate({ roleResumeData, resumeData = {}, variant = "modern" }) {
+export default function ModernTemplate({ roleResumeData, resumeData = {}, variant = "modern", onSectionEdit }) {
     const data = roleResumeData?.candidateProfile || resumeData;
-    return <ResumeContent data={data} className={`resume-template-${variant}`} />;
+    return <ResumeContent data={data} className={`resume-template-${variant}`} onSectionEdit={onSectionEdit} />;
 }
 
-function ResumeContent({ data, className }) {
+function ResumeContent({ data, className, onSectionEdit }) {
     const {
         personalInfo = {},
         professionalSummary,
@@ -20,16 +21,21 @@ function ResumeContent({ data, className }) {
     } = data;
     const experiences = [...workExperience, ...internships];
 
+    const handle = (key, title) => () => onSectionEdit?.(key, title);
+
     return (
         <article className={`resume-template ${className}`}>
-            <header className="resume-header">
-                <h1>{personalInfo.name || "Your Name"}</h1>
-                <p className="resume-contact">
-                    {[personalInfo.email, personalInfo.phone, personalInfo.location, personalInfo.linkedin, personalInfo.github, personalInfo.portfolio]
-                        .filter(Boolean)
-                        .map((item) => <span key={item}>{item}</span>)}
-                </p>
-            </header>
+            <InlineEditSection sectionKey="personalInfo" title="Personal" onEdit={onSectionEdit}>
+                <header className="resume-header">
+                    <h1>{personalInfo.name || "Your Name"}</h1>
+                    <p className="resume-contact">
+                        {[personalInfo.email, personalInfo.phone, personalInfo.location, personalInfo.linkedin, personalInfo.github, personalInfo.portfolio]
+                            .filter(Boolean)
+                            .map((item) => <span key={item}>{item}</span>)}
+                    </p>
+                </header>
+            </InlineEditSection>
+
             <ResumeSections
                 professionalSummary={professionalSummary}
                 experiences={experiences}
@@ -38,20 +44,93 @@ function ResumeContent({ data, className }) {
                 skills={skills}
                 certifications={certifications}
                 achievements={achievements}
+                onSectionEdit={onSectionEdit}
             />
         </article>
     );
 }
 
-function ResumeSections({ professionalSummary, experiences, projects, education, skills, certifications, achievements }) {
+function ResumeSections({
+    professionalSummary,
+    experiences,
+    projects,
+    education,
+    skills,
+    certifications,
+    achievements,
+    onSectionEdit,
+}) {
     return <>
-        {professionalSummary && <section className="resume-section"><h2 className="resume-section-heading">Professional Summary</h2><p>{professionalSummary}</p></section>}
-        {skills.length > 0 && <section className="resume-section"><h2 className="resume-section-heading">Skills</h2><p className="resume-skills">{skills.map(getText).filter(Boolean).join(" | ")}</p></section>}
-        {experiences.length > 0 && <section className="resume-section"><h2 className="resume-section-heading">Work Experience</h2>{experiences.map((entry, index) => <Entry key={`${entry.company}-${entry.jobTitle}-${index}`} entry={entry} />)}</section>}
-        {projects.length > 0 && <section className="resume-section"><h2 className="resume-section-heading">Projects</h2>{projects.map((project, index) => <Entry key={`${project.name}-${index}`} entry={project} project />)}</section>}
-        {education.length > 0 && <section className="resume-section"><h2 className="resume-section-heading">Education</h2>{education.map((entry, index) => <Entry key={`${entry.institution}-${index}`} entry={entry} education />)}</section>}
-        {certifications.length > 0 && <section className="resume-section"><h2 className="resume-section-heading">Certifications</h2><ul className="resume-list">{certifications.map((item, index) => <li key={`${getText(item)}-${index}`}>{getText(item)}</li>)}</ul></section>}
-        {achievements.length > 0 && <section className="resume-section"><h2 className="resume-section-heading">Achievements</h2><ul className="resume-list">{achievements.map((item, index) => <li key={`${getText(item)}-${index}`}>{getText(item)}</li>)}</ul></section>}
+        {professionalSummary && (
+            <InlineEditSection sectionKey="summary" title="Summary" onEdit={onSectionEdit}>
+                <section className="resume-section">
+                    <h2 className="resume-section-heading">Professional Summary</h2>
+                    <p>{professionalSummary}</p>
+                </section>
+            </InlineEditSection>
+        )}
+        {skills.length > 0 && (
+            <InlineEditSection sectionKey="skills" title="Skills" onEdit={onSectionEdit}>
+                <section className="resume-section">
+                    <h2 className="resume-section-heading">Skills</h2>
+                    <p className="resume-skills">{skills.map(getText).filter(Boolean).join(" | ")}</p>
+                </section>
+            </InlineEditSection>
+        )}
+        {experiences.length > 0 && (
+            <InlineEditSection sectionKey="experience" title="Experience" onEdit={onSectionEdit}>
+                <section className="resume-section">
+                    <h2 className="resume-section-heading">Work Experience</h2>
+                    {experiences.map((entry, index) => (
+                        <Entry key={`${entry.company}-${entry.jobTitle}-${index}`} entry={entry} />
+                    ))}
+                </section>
+            </InlineEditSection>
+        )}
+        {projects.length > 0 && (
+            <InlineEditSection sectionKey="projects" title="Projects" onEdit={onSectionEdit}>
+                <section className="resume-section">
+                    <h2 className="resume-section-heading">Projects</h2>
+                    {projects.map((project, index) => (
+                        <Entry key={`${project.name}-${index}`} entry={project} project />
+                    ))}
+                </section>
+            </InlineEditSection>
+        )}
+        {education.length > 0 && (
+            <InlineEditSection sectionKey="education" title="Education" onEdit={onSectionEdit}>
+                <section className="resume-section">
+                    <h2 className="resume-section-heading">Education</h2>
+                    {education.map((entry, index) => (
+                        <Entry key={`${entry.institution}-${index}`} entry={entry} education />
+                    ))}
+                </section>
+            </InlineEditSection>
+        )}
+        {certifications.length > 0 && (
+            <InlineEditSection sectionKey="certifications" title="Certifications" onEdit={onSectionEdit}>
+                <section className="resume-section">
+                    <h2 className="resume-section-heading">Certifications</h2>
+                    <ul className="resume-list">
+                        {certifications.map((item, index) => (
+                            <li key={`${getText(item)}-${index}`}>{getText(item)}</li>
+                        ))}
+                    </ul>
+                </section>
+            </InlineEditSection>
+        )}
+        {achievements.length > 0 && (
+            <InlineEditSection sectionKey="achievements" title="Achievements" onEdit={onSectionEdit}>
+                <section className="resume-section">
+                    <h2 className="resume-section-heading">Achievements</h2>
+                    <ul className="resume-list">
+                        {achievements.map((item, index) => (
+                            <li key={`${getText(item)}-${index}`}>{getText(item)}</li>
+                        ))}
+                    </ul>
+                </section>
+            </InlineEditSection>
+        )}
     </>;
 }
 

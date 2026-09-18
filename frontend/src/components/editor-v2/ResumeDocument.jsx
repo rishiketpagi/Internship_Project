@@ -1,8 +1,8 @@
 /*
  * ResumeDocument — the preview pane that IS the workspace.
  * Renders the template (existing React tree).
- * Wraps each section with an InlineEditSection so hover → hairline + edit button,
- * click → in-place expansion (sheet anchored to section).
+ * The template itself wraps each section with InlineEditSection, so hover
+ * affordance + click-to-expand already work without extra DOM surgery here.
  *
  * Per v2 plan: the preview is the document. No motion on typing.
  * Template-switch uses crossfade with 2px blur bridge (the ONLY motion moment).
@@ -44,7 +44,7 @@ const ResumeDocument = forwardRef(function ResumeDocument(
         }
     }, [onActiveChange]);
 
-    const handleEdit = useCallback((key) => {
+    const handleEdit = useCallback((key, title) => {
         setEditingKey(key);
     }, []);
 
@@ -54,7 +54,6 @@ const ResumeDocument = forwardRef(function ResumeDocument(
 
     return (
         <div className="relative flex-1 min-w-0 overflow-auto bg-[var(--paper)]">
-            {/* ref attaches to the printable surface, used by html2pdf in the page */}
             <div
                 ref={ref}
                 className="mx-auto my-8 transition-[filter,opacity] duration-[var(--d-template)] ease-[var(--ease-in-out)]"
@@ -63,16 +62,10 @@ const ResumeDocument = forwardRef(function ResumeDocument(
                     background: "var(--paper)",
                 }}
             >
-                <TemplateComponent resumeData={resumeData} />
-
-                {/* overlay markers for each section (used for inline edit anchors) */}
-                {Object.keys(SECTION_TITLES).map((key) => (
-                    <span
-                        key={key}
-                        data-section-key={key}
-                        className="sr-only"
-                    />
-                ))}
+                <TemplateComponent
+                    resumeData={resumeData}
+                    onSectionEdit={handleEdit}
+                />
             </div>
 
             {editingKey && renderSectionEditor && (

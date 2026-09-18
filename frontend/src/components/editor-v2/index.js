@@ -7,3 +7,4 @@ export { default as ResumeDocument } from "./ResumeDocument";
 export { default as InlineEditSection } from "./InlineEditSection";
 export { default as SectionEditSheet } from "./SectionEditSheet";
 export { default as EditorTopbar } from "./EditorTopbar";
+export { default as TemplatePicker } from "./TemplatePicker";

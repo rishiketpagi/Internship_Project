@@ -11,6 +11,7 @@ import Templates from "./pages/Templates";
 import ResumeEditor from "./pages/ResumeEditor";
 import ResumeEditorV2 from "./pages/ResumeEditorV2";
 import MyResumes from "./pages/MyResumes";
+import Onboarding from "./pages/Onboarding";
 import { ProtectedRoute } from "./components/auth/AuthRoute";
 
 function App() {
@@ -45,8 +46,9 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/create" element={<CreateResume />} />
-        <Route path="/create-resume" element={<CreateResume />} />
+        <Route path="/create" element={<Onboarding />} />
+        <Route path="/create-resume" element={<Onboarding />} />
+        <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/templates" element={<Templates />} />
         <Route path="/editor" element={<ResumeEditor />} />
         <Route path="/editor-v2" element={<ResumeEditorV2 />} />

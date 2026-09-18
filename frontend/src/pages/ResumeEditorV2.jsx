@@ -190,6 +190,7 @@ export default function ResumeEditorV2() {
             TemplateComponent={TemplateComponent}
             resumeData={resumeData}
             templateName={selectedTemplate.name}
+            templateId={selectedTemplate.id}
             templates={templates}
             onChangeTemplate={handleChangeTemplate}
             isSaving={isSaving}
