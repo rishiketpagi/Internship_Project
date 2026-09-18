@@ -4,6 +4,7 @@ import ResumeTextInput from "../components/input/TextInput";
 import ResumeFileUpload from "../components/input/FileUpload";
 import "../styles/CreateResume.css";
 import { roles } from "../data/roles";
+import { apiUrl } from "../config/api";
 
 function DataInput() {
     const navigate = useNavigate();
@@ -39,12 +40,12 @@ function DataInput() {
                     formData.append("jobDescription", jobDescription.trim());
                 }
 
-                response = await fetch("http://localhost:5000/extract-resume", {
+                response = await fetch(apiUrl("/extract-resume"), {
                     method: "POST",
                     body: formData,
                 });
             } else {
-                response = await fetch("http://localhost:5000/extract-resume", {
+                response = await fetch(apiUrl("/extract-resume"), {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

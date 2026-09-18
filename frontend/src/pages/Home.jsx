@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { HomeHeroVisual, TemplateThumb } from "../components/common/HomeVisuals";
 import { templates } from "../data/templates";
@@ -106,16 +107,16 @@ export default function Home() {
 
                     <ol className="steps-row" aria-label="Steps to create a resume">
                         {steps.map((step, i) => (
-                            <>
-                                <li key={step.num} className="step-item">
+                            <Fragment key={step.num}>
+                                <li className="step-item">
                                     <div className="step-number" aria-hidden="true">{step.num}</div>
                                     <h3 className="step-title">{step.title}</h3>
                                     <p className="step-desc">{step.desc}</p>
                                 </li>
                                 {i < steps.length - 1 && (
-                                    <div key={`conn-${i}`} className="step-connector" aria-hidden="true" />
+                                    <div className="step-connector" aria-hidden="true" />
                                 )}
-                            </>
+                            </Fragment>
                         ))}
                     </ol>
                 </div>

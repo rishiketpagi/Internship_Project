@@ -2,6 +2,7 @@ import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { useContext, useState, useRef, useEffect } from "react";
 import html2pdf from "html2pdf.js";
 import { AuthContext } from "../components/auth/AuthContext";
+import { apiUrl } from "../config/api";
 import EditorSection from "../components/editor/EditorSection";
 import ResumeEditorHeader from "../components/editor/ResumeEditorHeader";
 import ResumePreviewPanel from "../components/editor/ResumePreviewPanel";
@@ -249,7 +250,7 @@ export default function ResumeEditor() {
         setDownloadError("");
 
         try {
-            const response = await fetch("http://localhost:5000/api/resumes/generate-docx", {
+            const response = await fetch(apiUrl("/api/resumes/generate-docx"), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ resumeData }),

@@ -1,0 +1,61 @@
+{
+    "type": "object",
+    "properties": {
+        "targetRole": {
+            "type": "string"
+        },
+        "requiredSkills": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "relevantSkills": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "relevantProjects": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "relevantExperience": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "relevantCertifications": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "relevantAchievements": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "skillGaps": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "required": [
+        "targetRole",
+        "requiredSkills",
+        "relevantSkills",
+        "relevantProjects",
+        "relevantExperience",
+        "relevantCertifications",
+        "relevantAchievements",
+        "skillGaps"
+    ],
+    "additionalProperties": false
+}
