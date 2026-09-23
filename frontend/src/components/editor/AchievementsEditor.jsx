@@ -18,9 +18,9 @@ function AchievementsEditor({ value = [], onChange = () => { } }) {
     };
 
     return (
-        <div className="resume-editor-skills-list">
+        <div className="resume-editor-simple-list">
             {value.map((achievement, index) => (
-                <div key={index} className="resume-editor-skill-row">
+                <div key={index} className="resume-editor-simple-row">
                     <textarea
                         value={achievement || ""}
                         onChange={(event) => updateAchievement(index, event.target.value)}
@@ -38,7 +38,7 @@ function AchievementsEditor({ value = [], onChange = () => { } }) {
                 </div>
             ))}
 
-            <div className="resume-editor-skill-row">
+            <div className="resume-editor-simple-row">
                 <textarea
                     value={draft}
                     onChange={(event) => setDraft(event.target.value)}

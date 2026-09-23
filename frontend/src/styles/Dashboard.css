@@ -68,7 +68,7 @@
     white-space: nowrap;
     flex-shrink: 0;
     align-self: center;
-    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25);
+    box-shadow: var(--shadow-primary);
 }
 
 .dashboard-create-btn:hover {
@@ -162,7 +162,7 @@
     border-radius: var(--radius-md);
     text-decoration: none;
     transition: background-color var(--ease-fast), box-shadow var(--ease-fast);
-    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.22);
+    box-shadow: var(--shadow-primary);
 }
 
 .btn-empty-cta:hover {
@@ -284,7 +284,7 @@
 
 .quick-action-card:hover {
     border-color: var(--clr-primary-border);
-    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.10);
+    box-shadow: var(--shadow-primary);
     transform: translateY(-2px);
 }
 

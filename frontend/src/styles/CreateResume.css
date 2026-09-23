@@ -1,192 +1,125 @@
-/* ================================================
-   CreateResume.css — Data Input / Create Resume Page
-   ================================================ */
+/* =====================================================
+   CreateResume.css — Multi-step wizard wrapper styles
+   ===================================================== */
 
-/* Container & Base Styles */
-.data-input-container {
-    box-sizing: border-box;
-    width: calc(100% - 48px);
-    max-width: 560px;
-    margin: 40px auto;
-    padding: 32px;
-    background-color: var(--clr-surface);
-    border: 1px solid var(--clr-border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
+.create-resume-page {
+    min-height: calc(100vh - var(--navbar-h));
+    background: var(--clr-bg);
+    color: var(--clr-ink);
     font-family: var(--font-sans);
-    color: var(--clr-navy);
+    padding: 20px 24px 40px;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Header */
-.data-input-container h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0 0 24px 0;
+.create-resume-container {
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.create-resume-header {
     text-align: center;
-    color: var(--clr-navy);
-}
-
-/* Input Labels */
-.input-label {
-    display: block;
     margin-bottom: 20px;
 }
 
-.input-label>span {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--clr-text);
-    font-size: 0.875rem;
-    font-weight: 600;
+.create-resume-header h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--clr-ink);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 6px;
 }
 
-.input-label select,
-.input-label textarea {
-    box-sizing: border-box;
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--clr-border3);
-    border-radius: var(--radius-sm);
-    background-color: var(--clr-surface);
-    color: var(--clr-navy);
-    font: inherit;
-    font-size: 0.875rem;
-    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
-}
-
-.input-label textarea {
-    resize: vertical;
-}
-
-.input-label select:focus,
-.input-label textarea:focus {
-    outline: none;
-    border-color: var(--clr-primary);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
-}
-
-/* File Upload Styles */
-.file-upload-wrapper input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px dashed var(--clr-border3);
-    border-radius: var(--radius-sm);
-    background-color: var(--clr-bg);
-    cursor: pointer;
-    font-size: 0.875rem;
+.create-resume-header p {
+    font-size: 0.95rem;
     color: var(--clr-muted);
-    transition: border-color var(--ease-fast);
-}
-
-.file-upload-wrapper input[type="file"]:hover {
-    border-color: var(--clr-primary-muted);
-}
-
-.file-details {
-    margin-top: 8px;
-    font-size: 0.8125rem;
-    color: var(--clr-muted);
-}
-
-.file-details p {
-    margin: 4px 0;
-}
-
-/* Text Input Styles */
-.char-count {
-    font-size: 0.75rem;
-    color: var(--clr-muted);
-    text-align: right;
-    margin: 4px 0 0 0;
-}
-
-/* Divider */
-.divider {
-    position: relative;
-    text-align: center;
-    margin: 24px 0;
-}
-
-.divider hr {
-    border: none;
-    border-top: 1px solid var(--clr-border);
     margin: 0;
 }
 
-.divider p {
+/* ── Progress Bar ── */
+.create-resume-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto 24px;
+    padding: 0 40px;
+}
+
+.progress-line {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--clr-surface);
-    padding: 0 12px;
-    margin: 0;
-    font-size: 0.75rem;
+    transform: translateY(-50%);
+    left: 52px;
+    right: 52px;
+    height: 2px;
+    background: var(--clr-border2);
+    z-index: 1;
+}
+
+.progress-line-fill {
+    height: 100%;
+    background: var(--clr-primary);
+    transition: width var(--ease-base);
+}
+
+.progress-step {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.progress-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--clr-surface);
+    border: 2px solid var(--clr-border3);
+    transition: all var(--ease-base);
+}
+
+.progress-step.active .progress-dot {
+    border-color: var(--clr-primary);
+    background: var(--clr-primary);
+    box-shadow: 0 0 0 4px var(--clr-primary-light);
+}
+
+.progress-step.completed .progress-dot {
+    border-color: var(--clr-primary);
+    background: var(--clr-primary);
+}
+
+.progress-label {
+    font-size: 0.85rem;
     font-weight: 600;
-    color: var(--clr-subtle);
+    color: var(--clr-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
-/* Button */
-.generate-button {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    margin-top: 32px;
-    background-color: var(--clr-primary);
-    color: var(--clr-surface);
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color var(--ease-fast), box-shadow var(--ease-fast);
-    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.22);
+.progress-step.active .progress-label {
+    color: var(--clr-ink);
+    font-weight: 700;
 }
 
-.generate-button:hover {
-    background-color: var(--clr-primary-dark);
-    box-shadow: var(--shadow-primary);
-}
-
-.generate-button:disabled {
-    background-color: var(--clr-subtle);
-    box-shadow: none;
-    cursor: not-allowed;
-}
-
-/* Feedback States */
-.status-loading {
-    margin-top: 20px;
-    padding: 12px;
-    background-color: var(--clr-primary-light);
-    color: var(--clr-primary-dark);
-    border-radius: var(--radius-sm);
-    font-size: 0.875rem;
-    text-align: center;
-    animation: pulse 1.5s infinite;
-}
-
-.status-error {
-    margin-top: 20px;
-    padding: 12px;
-    background-color: var(--clr-danger-light);
-    color: var(--clr-danger-dark);
-    border-radius: var(--radius-sm);
-    font-size: 0.875rem;
-    text-align: center;
-}
-
-/* Pulse animation for loading */
-@keyframes pulse {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.5;
-    }
+/* ── Content Area ── */
+.create-resume-content {
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border2);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }

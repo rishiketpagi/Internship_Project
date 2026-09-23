@@ -68,7 +68,7 @@
     font-weight: 600;
     font-size: 0.9rem;
     text-decoration: none;
-    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+    box-shadow: var(--shadow-primary);
     transition: box-shadow var(--ease-base), transform var(--ease-base);
     white-space: nowrap;
     flex-shrink: 0;
@@ -76,7 +76,7 @@
 
 .my-resumes-create-button:hover,
 .my-resumes-empty-button:hover {
-    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.45);
+    box-shadow: var(--shadow-primary-hover);
     transform: translateY(-1px);
     color: var(--clr-surface);
 }

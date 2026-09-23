@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../components/auth/AuthContext";
 import { ProfileSectionList } from "../components/profile/profileSections";
 import { PROFILE_SECTIONS } from "../components/profile/profileSectionConfig";
@@ -89,20 +89,39 @@ export default function Profile() {
               <h1>{user.displayName || "Your Profile"}</h1>
               <p className="profile-hero-email">{user.email}</p>
             </div>
-            <button
-              type="button"
-              className="profile-signout-button"
-              onClick={handleSignOut}
-              id="profile-signout-btn"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <polyline points="16 17 21 12 16 7" />
-                <line x1="21" y1="12" x2="9" y2="12" />
-              </svg>
-              Sign Out
-            </button>
+            <div className="profile-hero-actions">
+              <Link
+                to="/about"
+                className="profile-signout-button"
+                style={{ 
+                  color: 'var(--clr-primary-dark)', 
+                  borderColor: 'var(--clr-primary-border)',
+                  background: 'var(--clr-primary-light)' 
+                }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                About Us
+              </Link>
+              <button
+                type="button"
+                className="profile-signout-button"
+                onClick={handleSignOut}
+                id="profile-signout-btn"
+                style={{ margin: 0 }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Sign Out
+              </button>
+            </div>
           </div>
         </header>
 
