@@ -5,13 +5,14 @@
 /* ---- Page shell ---- */
 .my-resumes-page {
     min-height: calc(100vh - var(--navbar-h));
-    padding: 48px 24px 80px;
+    padding: 48px clamp(24px, 5vw, 64px) 80px;
     background: var(--clr-bg2);
     color: var(--clr-ink);
 }
 
 .my-resumes-container {
-    max-width: 1100px;
+    width: 100%;
+    max-width: 1180px;
     margin: 0 auto;
 }
 
@@ -240,6 +241,18 @@
     font-weight: 700;
     letter-spacing: 0.03em;
     text-transform: uppercase;
+}
+
+.my-resume-ats-score {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border: 1px solid var(--clr-success-border);
+    border-radius: var(--radius-full);
+    background: var(--clr-success-light);
+    color: var(--clr-success);
+    font-size: 0.72rem;
+    font-weight: 700;
 }
 
 .my-resume-date {

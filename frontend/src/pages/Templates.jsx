@@ -16,9 +16,10 @@ export default function Templates() {
             state: {
                 roleResumeData,
                 resumeData,
-                targetRole: roleResumeData?.targetRole || "",
+                targetRole: location.state?.targetRole || roleResumeData?.targetRole || "",
                 atsAnalysis: location.state?.atsAnalysis,
                 jobDescription: location.state?.jobDescription,
+                prompt: location.state?.prompt,
             },
         });
     };

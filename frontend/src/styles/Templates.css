@@ -4,11 +4,12 @@
 
 .templates-page {
     min-height: calc(100vh - var(--navbar-h));
-    padding: 48px 24px 72px;
+    padding: 48px clamp(24px, 5vw, 64px) 72px;
     background: var(--clr-bg);
 }
 
 .templates-container {
+    width: 100%;
     max-width: 1180px;
     margin: 0 auto;
 }

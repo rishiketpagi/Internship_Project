@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { AuthContext } from "../components/auth/AuthContext";
 import DownloadResumeDialog from "../components/dashboard/DownloadResumeDialog";
 import DeleteConfirmDialog from "../components/dashboard/DeleteConfirmDialog";
-import { deleteResume, duplicateResume } from "../services/resumeService";
+import { createResume, deleteResume, duplicateResume, updateResume } from "../services/resumeService";
 import { templates } from "../data/templates";
 import "../styles/ResumePreview.css";
 
@@ -20,13 +20,20 @@ export default function ResumePreview() {
     const [showDownload, setShowDownload] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
     const [busy, setBusy] = useState(false);
+    const [resumeId, setResumeId] = useState(savedResume?.resumeId || null);
+    const [saveMessage, setSaveMessage] = useState("");
 
-    const resume = savedResume || {
-        title: location.state?.title || "Untitled Resume",
-        templateId,
-        resumeData,
-        targetRole: location.state?.targetRole || "",
-        atsAnalysis: location.state?.atsAnalysis,
+    const resume = {
+        ...(savedResume || {
+            title: location.state?.title || "Untitled Resume",
+            templateId,
+            resumeData,
+            targetRole: location.state?.targetRole || "",
+            jobDescription: location.state?.jobDescription || "",
+            prompt: location.state?.prompt || "",
+            atsAnalysis: location.state?.atsAnalysis,
+        }),
+        resumeId: resumeId || savedResume?.resumeId,
     };
 
     if (!resumeData) {
@@ -49,6 +56,33 @@ export default function ResumePreview() {
         navigate(`/editor?template=${resume.templateId || "modern"}`, {
             state: { savedResume: resume, downloadFormat: format },
         });
+    };
+
+    const handleSave = async () => {
+        if (!user) {
+            setSaveMessage("Sign in to save");
+            return;
+        }
+
+        setBusy(true);
+        setSaveMessage("");
+
+        try {
+            const { resumeId: currentResumeId, ...resumeToSave } = resume;
+            if (currentResumeId) {
+                await updateResume(user.uid, currentResumeId, resumeToSave);
+            } else {
+                const newResumeId = await createResume(user.uid, resumeToSave);
+                setResumeId(newResumeId);
+            }
+            setSaveMessage("Saved");
+            navigate("/my-resumes", { state: { savedResume: { ...resume, resumeId: resumeId || currentResumeId } } });
+        } catch (error) {
+            console.error("Failed to save resume:", error);
+            setSaveMessage("Save failed");
+        } finally {
+            setBusy(false);
+        }
     };
 
     const handleDuplicate = async () => {
@@ -84,11 +118,17 @@ export default function ResumePreview() {
                     <h1>{resume.title || "Untitled Resume"}</h1>
                     <p>{selectedTemplate.name} template preview</p>
                 </div>
-                <div className="resume-preview-actions" aria-label="Resume actions">
-                    <button type="button" className="resume-preview-edit" onClick={handleEdit} disabled={busy}>Edit</button>
-                    <button type="button" onClick={() => setShowDownload(true)} disabled={busy}>Download</button>
-                    <button type="button" onClick={handleDuplicate} disabled={busy}>Duplicate</button>
-                    <button type="button" className="resume-preview-delete" onClick={() => setShowDelete(true)} disabled={busy}>Delete</button>
+                <div className="resume-preview-action-area">
+                    <div className="resume-preview-actions" aria-label="Resume actions">
+                        <button type="button" className="resume-preview-save" onClick={handleSave} disabled={busy}>
+                            {busy ? "Saving..." : "Save"}
+                        </button>
+                        <button type="button" className="resume-preview-edit" onClick={handleEdit} disabled={busy}>Edit</button>
+                        <button type="button" onClick={() => setShowDownload(true)} disabled={busy}>Download</button>
+                        <button type="button" onClick={handleDuplicate} disabled={busy}>Duplicate</button>
+                        <button type="button" className="resume-preview-delete" onClick={() => setShowDelete(true)} disabled={busy}>Delete</button>
+                    </div>
+                    {saveMessage && <span className="resume-preview-save-message" role="status">{saveMessage}</span>}
                 </div>
             </header>
 

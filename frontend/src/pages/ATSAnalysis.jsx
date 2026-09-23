@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../components/auth/AuthContext";
+import { createResume, getResume, updateResume } from "../services/resumeService";
 import "../styles/ATSAnalysis.css";
 
 const CATEGORY_CAPS = {
@@ -65,19 +67,82 @@ function CategoryBar({ label, score, max }) {
 export default function ATSAnalysisPage() {
     const location = useLocation();
     const navigate = useNavigate();
+    const { user } = useContext(AuthContext);
 
     const {
         resumeData,
         targetRole,
         jobDescription,
+        prompt,
         templateId,
     } = location.state || {};
 
     const [atsAnalysis, setAtsAnalysis] = useState(location.state?.atsAnalysis || null);
+    const [resumeId, setResumeId] = useState(location.state?.resumeId || null);
+    const [savedResultLoaded, setSavedResultLoaded] = useState(!location.state?.resumeId);
     const [status, setStatus] = useState("idle"); // "idle" | "loading" | "error"
     const [errorMsg, setErrorMsg] = useState("");
 
+    useEffect(() => {
+        if (!user || !resumeId) {
+            return undefined;
+        }
+
+        let active = true;
+
+        async function loadSavedResult() {
+            try {
+                const savedResume = await getResume(user.uid, resumeId);
+                if (active && savedResume?.atsAnalysis) {
+                    setAtsAnalysis(savedResume.atsAnalysis);
+                }
+            } catch (error) {
+                console.error("Failed to load saved ATS result:", error);
+                if (active) setErrorMsg("Unable to load the last saved ATS score.");
+            } finally {
+                if (active) setSavedResultLoaded(true);
+            }
+        }
+
+        loadSavedResult();
+
+        return () => {
+            active = false;
+        };
+    }, [resumeId, user]);
+
+    const saveAnalysis = async (analysis) => {
+        if (!user) {
+            throw new Error("You must be signed in to save ATS results.");
+        }
+
+        const candidateName = resumeData?.personalInfo?.name?.trim() || "Resume";
+        const resume = {
+            title: location.state?.title || `${candidateName} - ${targetRole || "Resume"}`,
+            resumeData,
+            templateId,
+            targetRole,
+            jobDescription,
+            prompt,
+            atsAnalysis: analysis,
+        };
+
+        if (resumeId) {
+            await updateResume(user.uid, resumeId, resume);
+            return;
+        }
+
+        const newResumeId = await createResume(user.uid, resume);
+        setResumeId(newResumeId);
+    };
+
     const handleAnalyze = async () => {
+        if (!resumeData) {
+            setErrorMsg("Resume data is unavailable. Return to the editor and try again.");
+            setStatus("error");
+            return;
+        }
+
         setStatus("loading");
         setErrorMsg("");
         try {
@@ -90,6 +155,7 @@ export default function ATSAnalysisPage() {
             if (!res.ok || !data.success) {
                 throw new Error(data.message || "Analysis failed.");
             }
+            await saveAnalysis(data.atsAnalysis);
             setAtsAnalysis(data.atsAnalysis);
             setStatus("idle");
         } catch (err) {
@@ -106,13 +172,16 @@ export default function ATSAnalysisPage() {
                 resumeData,
                 targetRole,
                 jobDescription,
+                prompt,
                 atsAnalysis,
                 templateId,
+                resumeId,
             },
         });
     };
 
-    const isLoading = status === "loading";
+    const isLoading = status === "loading" || (Boolean(user && resumeId) && !savedResultLoaded);
+    const lastScore = atsAnalysis?.overallScore;
 
     return (
         <main className="ats-page">
@@ -131,7 +200,15 @@ export default function ATSAnalysisPage() {
 
                 {/* ── Page heading ── */}
                 <header className="ats-page-header">
-                    <h1 className="ats-page-title">ATS Compatibility</h1>
+                    <div className="ats-page-title-row">
+                        <h1 className="ats-page-title">ATS Compatibility</h1>
+                        {lastScore != null && (
+                            <div className="ats-last-score" aria-label={`Last ATS score: ${lastScore} out of 100`}>
+                                <span>Last score</span>
+                                <strong>{lastScore}<small>/100</small></strong>
+                            </div>
+                        )}
+                    </div>
                     {targetRole && (
                         <p className="ats-page-subtitle">
                             Based on your selected role
@@ -191,7 +268,7 @@ export default function ATSAnalysisPage() {
                         <section className="ats-score-section" aria-labelledby="ats-score-heading">
                             <ScoreRing score={atsAnalysis.overallScore} />
                             <p className="ats-score-label" id="ats-score-heading">
-                                {atsAnalysis.scoreLabel || "Estimated ATS Compatibility"}
+                                Latest saved ATS result
                             </p>
                         </section>
 

@@ -13,9 +13,10 @@
 
 /* ── Centered content column ── */
 .ats-container {
+    width: calc(100% - 48px);
     max-width: 720px;
     margin: 0 auto;
-    padding: 40px 24px 80px;
+    padding: 40px 0 80px;
 }
 
 /* ── Back link ── */
@@ -44,6 +45,13 @@
     margin-bottom: 28px;
 }
 
+.ats-page-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
 .ats-page-title {
     margin: 0 0 8px;
     font-size: 1.75rem;
@@ -57,6 +65,34 @@
     font-size: 0.9rem;
     color: var(--clr-muted);
     line-height: 1.6;
+}
+
+.ats-last-score {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--clr-primary-border);
+    border-radius: var(--radius-md);
+    background: var(--clr-primary-light);
+    color: var(--clr-primary-darker);
+    white-space: nowrap;
+}
+
+.ats-last-score span {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.ats-last-score strong {
+    font-size: 1.05rem;
+}
+
+.ats-last-score small {
+    font-size: 0.7rem;
+    font-weight: 600;
 }
 
 /* ── Divider ── */
@@ -103,7 +139,9 @@
 }
 
 @keyframes ats-spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* ── Error icon ── */
@@ -132,10 +170,8 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background: conic-gradient(
-        var(--ats-color, var(--clr-primary)) var(--ats-deg, 0deg),
-        var(--clr-border2) var(--ats-deg, 0deg)
-    );
+    background: conic-gradient(var(--ats-color, var(--clr-primary)) var(--ats-deg, 0deg),
+            var(--clr-border2) var(--ats-deg, 0deg));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -387,11 +423,23 @@
 /* ── Responsive ── */
 @media (max-width: 640px) {
     .ats-container {
-        padding: 24px 16px 60px;
+        width: calc(100% - 32px);
+        padding: 24px 0 60px;
     }
 
     .ats-page-title {
         font-size: 1.4rem;
+    }
+
+    .ats-page-title-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .ats-last-score {
+        align-self: stretch;
+        justify-content: space-between;
     }
 
     .ats-ring-wrap {

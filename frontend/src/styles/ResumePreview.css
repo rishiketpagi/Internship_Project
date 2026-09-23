@@ -4,13 +4,14 @@
 
 .resume-preview-page {
     min-height: calc(100vh - var(--navbar-h));
-    padding: 32px 24px 64px;
+    padding: 32px clamp(24px, 5vw, 64px) 64px;
     background: var(--clr-bg2);
     color: var(--clr-ink);
 }
 
 .resume-preview-header {
-    max-width: 1100px;
+    width: 100%;
+    max-width: 1180px;
     margin: 0 auto 24px;
     display: flex;
     align-items: flex-end;
@@ -50,6 +51,13 @@
     gap: 8px;
 }
 
+.resume-preview-action-area {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+
 .resume-preview-actions button,
 .resume-preview-empty button {
     border: 1px solid var(--clr-border3);
@@ -66,6 +74,21 @@
 .resume-preview-empty button:hover {
     border-color: var(--clr-primary-border);
     background: var(--clr-primary-light);
+}
+
+.resume-preview-actions button {
+    padding: 7px 11px;
+    font-size: 0.82rem;
+}
+
+.resume-preview-actions .resume-preview-save {
+    border-color: var(--clr-primary-dark);
+    background: var(--clr-primary-light);
+    color: var(--clr-primary-darker);
+}
+
+.resume-preview-actions .resume-preview-save:hover {
+    background: var(--clr-primary-border);
 }
 
 .resume-preview-actions .resume-preview-edit {
@@ -95,6 +118,12 @@
 .resume-preview-actions button:disabled {
     cursor: wait;
     opacity: 0.6;
+}
+
+.resume-preview-save-message {
+    min-height: 1rem;
+    color: var(--clr-muted);
+    font-size: 0.75rem;
 }
 
 .resume-preview-canvas {
@@ -131,7 +160,7 @@
 
 @media (max-width: 760px) {
     .resume-preview-page {
-        padding: 24px 12px 40px;
+        padding: 24px 16px 40px;
     }
 
     .resume-preview-header {
@@ -141,15 +170,32 @@
     }
 
     .resume-preview-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         justify-content: stretch;
     }
 
     .resume-preview-actions button {
-        flex: 1 1 calc(50% - 8px);
+        width: 100%;
+    }
+
+    .resume-preview-action-area {
+        align-items: stretch;
+    }
+
+    .resume-preview-actions .resume-preview-delete {
+        grid-column: 1 / -1;
     }
 
     .resume-preview-canvas {
         min-height: 0;
-        padding: 16px;
+        padding: 10px;
+    }
+
+    .resume-preview-canvas>* {
+        transform-origin: top left;
+        transform: scale(0.72);
+        margin-bottom: -315px;
+        margin-right: -222px;
     }
 }

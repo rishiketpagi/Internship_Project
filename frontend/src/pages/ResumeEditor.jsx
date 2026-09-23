@@ -38,7 +38,7 @@ export default function ResumeEditor() {
         || location.state?.resumeData
         || sampleResumeData
     );
-    const [resumeId, setResumeId] = useState(savedResume?.resumeId || null);
+    const [resumeId, setResumeId] = useState(savedResume?.resumeId || location.state?.resumeId || null);
     const [resumeTitle, setResumeTitle] = useState(savedResume?.title || "");
     const [targetRole] = useState(
         savedResume?.targetRole || location.state?.targetRole || roleResumeData?.targetRole || ""
@@ -60,7 +60,8 @@ export default function ResumeEditor() {
 
     // ATS — only store score and job description for the chip + navigation
     const [atsAnalysis, setAtsAnalysis] = useState(location.state?.atsAnalysis || null);
-    const [jobDescription] = useState(location.state?.jobDescription || "");
+    const [jobDescription] = useState(savedResume?.jobDescription || location.state?.jobDescription || "");
+    const [prompt] = useState(location.state?.prompt || savedResume?.prompt || "");
 
     // Download / save states
     const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
@@ -148,6 +149,8 @@ export default function ResumeEditor() {
             resumeData,
             templateId,
             targetRole,
+            jobDescription,
+            prompt,
             atsAnalysis,
         };
 
@@ -174,8 +177,10 @@ export default function ResumeEditor() {
                 resumeData,
                 targetRole,
                 jobDescription,
+                prompt,
                 atsAnalysis,
                 templateId,
+                resumeId,
             },
         });
     };
@@ -188,6 +193,7 @@ export default function ResumeEditor() {
                 targetRole,
                 atsAnalysis,
                 jobDescription,
+                prompt,
             },
         });
     };
@@ -199,6 +205,8 @@ export default function ResumeEditor() {
                 targetRole,
                 templateId,
                 atsAnalysis,
+                jobDescription,
+                prompt,
             },
         });
     };
