@@ -1,4 +1,4 @@
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useContext, useState, useRef, useEffect } from "react";
 import html2pdf from "html2pdf.js";
 import { AuthContext } from "../components/auth/AuthContext";
@@ -7,12 +7,7 @@ import ResumeEditorHeader from "../components/editor/ResumeEditorHeader";
 import ResumePreviewPanel from "../components/editor/ResumePreviewPanel";
 import PersonalInfoEditor from "../components/editor/PersonalInfoEditor";
 import SummaryEditor from "../components/editor/SummaryEditor";
-import EducationEditor from "../components/editor/EducationEditor";
-import ExperienceEditor from "../components/editor/ExperienceEditor";
-import ProjectsEditor from "../components/editor/ProjectsEditor";
-import SkillsEditor from "../components/editor/SkillsEditor";
-import CertificationsEditor from "../components/editor/CertificationsEditor";
-import AchievementsEditor from "../components/editor/AchievementsEditor";
+import { createMovableResumeSections } from "../components/editor/resumeEditorSections";
 import { sampleResumeData } from "../data/sampleResumeData";
 import { createResume, updateResume } from "../services/resumeService";
 import { templates } from "../data/templates";
@@ -26,6 +21,7 @@ function safeFilename(name) {
 
 export default function ResumeEditor() {
     const location = useLocation();
+    const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const requestedTemplateId = searchParams.get("template");
     const templateIndex = Math.max(0, templates.findIndex((template) => template.id === requestedTemplateId));
@@ -62,7 +58,11 @@ export default function ResumeEditor() {
     ]);
     const [draggedSection, setDraggedSection] = useState(null);
 
-    // Download states
+    // ATS — only store score and job description for the chip + navigation
+    const [atsAnalysis, setAtsAnalysis] = useState(location.state?.atsAnalysis || null);
+    const [jobDescription] = useState(location.state?.jobDescription || "");
+
+    // Download / save states
     const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
     const [isDownloadingDocx, setIsDownloadingDocx] = useState(false);
     const [downloadError, setDownloadError] = useState("");
@@ -130,32 +130,7 @@ export default function ResumeEditor() {
         setDraggedSection(null);
     };
 
-    const movableSections = {
-        education: {
-            title: "Education",
-            content: <EducationEditor value={resumeData.education} onChange={(value) => updateSection("education", value)} />,
-        },
-        experience: {
-            title: "Work Experience",
-            content: <ExperienceEditor value={resumeData.workExperience} onChange={(value) => updateSection("workExperience", value)} />,
-        },
-        projects: {
-            title: "Projects",
-            content: <ProjectsEditor value={resumeData.projects} onChange={(value) => updateSection("projects", value)} />,
-        },
-        skills: {
-            title: "Skills",
-            content: <SkillsEditor value={resumeData.skills} onChange={(value) => updateSection("skills", value)} />,
-        },
-        certifications: {
-            title: "Certifications",
-            content: <CertificationsEditor value={resumeData.certifications} onChange={(value) => updateSection("certifications", value)} />,
-        },
-        achievements: {
-            title: "Achievements",
-            content: <AchievementsEditor value={resumeData.achievements} onChange={(value) => updateSection("achievements", value)} />,
-        },
-    };
+    const movableSections = createMovableResumeSections(resumeData, updateSection);
 
     const handleSave = async () => {
         if (!user) {
@@ -173,6 +148,7 @@ export default function ResumeEditor() {
             resumeData,
             templateId,
             targetRole,
+            atsAnalysis,
         };
 
         try {
@@ -190,6 +166,41 @@ export default function ResumeEditor() {
         } finally {
             setIsSaving(false);
         }
+    };
+
+    const handleGoToATS = () => {
+        navigate("/ats-analysis", {
+            state: {
+                resumeData,
+                targetRole,
+                jobDescription,
+                atsAnalysis,
+                templateId,
+            },
+        });
+    };
+
+    const handleBack = () => {
+        navigate("/my-resumes", {
+            state: {
+                roleResumeData,
+                resumeData,
+                targetRole,
+                atsAnalysis,
+                jobDescription,
+            },
+        });
+    };
+
+    const handlePreview = () => {
+        navigate("/resume-preview", {
+            state: {
+                resumeData,
+                targetRole,
+                templateId,
+                atsAnalysis,
+            },
+        });
     };
 
     // ── PDF Download ─────────────────────────────────────────────
@@ -288,95 +299,84 @@ export default function ResumeEditor() {
 
     return (
         <main className="resume-editor-page">
+            {/* ── Full-width top bar ── */}
             <ResumeEditorHeader
+                resumeTitle={resumeTitle}
+                onResumeTitleChange={setResumeTitle}
+                targetRole={targetRole}
                 isSaving={isSaving}
                 isDownloadingPdf={isDownloadingPdf}
                 isDownloadingDocx={isDownloadingDocx}
                 onSave={handleSave}
                 onDownloadPdf={handleDownloadPdf}
                 onDownloadDocx={handleDownloadDocx}
+                atsAnalysis={atsAnalysis}
+                onCheckATS={handleGoToATS}
+                onBack={handleBack}
+                onPreview={handlePreview}
+                saveMessage={saveMessage}
+                downloadError={downloadError}
             />
 
-            {downloadError && (
-                <div className="resume-editor-download-error" role="alert">
-                    {downloadError}
-                </div>
-            )}
-
-            {saveMessage && (
-                <div className="resume-editor-save-message" role="status">
-                    {saveMessage}
-                    {!user && (
-                        <Link to="/signin" state={{ from: location }}>
-                            Sign in
-                        </Link>
-                    )}
-                </div>
-            )}
-
             <div className="resume-editor-layout">
+
+                {/* ── Left: Editor panel ── */}
                 <section className="resume-editor-form-panel">
-                    <div className="resume-editor-form-intro">
-                        <div>
-                            <p className="resume-editor-eyebrow">Build your story</p>
-                            <h2 className="resume-editor-heading">Edit Resume</h2>
+                    <div className="resume-editor-sections-scroll">
+                        <div className="resume-editor-sections-label">
+                            <p className="resume-editor-sections-eyebrow">Edit Sections</p>
+                            <p className="resume-editor-sections-hint">Open a section to edit. Drag to rearrange.</p>
                         </div>
-                        <label className="resume-editor-title-field">
-                            <span className="resume-editor-label">Resume title</span>
-                            <input
-                                type="text"
-                                value={resumeTitle}
-                                onChange={(event) => setResumeTitle(event.target.value)}
-                                placeholder="e.g. Product Designer Resume"
-                                className="resume-editor-input"
+
+                        <EditorSection
+                            title="Personal Information"
+                            sectionKey="personalInfo"
+                            isOpen={openSections.personalInfo}
+                            onToggle={toggleSection}
+                        >
+                            <PersonalInfoEditor
+                                value={resumeData.personalInfo}
+                                onChange={(value) => updateSection("personalInfo", value)}
                             />
-                        </label>
-                    </div>
+                        </EditorSection>
 
-                    <p className="resume-editor-helper">Open a section to add or update details. Drag the handle or use the arrows to arrange sections.</p>
+                        <EditorSection
+                            title="Professional Summary"
+                            sectionKey="summary"
+                            isOpen={openSections.summary}
+                            onToggle={toggleSection}
+                        >
+                            <SummaryEditor
+                                value={resumeData.professionalSummary}
+                                onChange={(value) => updateSection("professionalSummary", value)}
+                            />
+                        </EditorSection>
 
-                    <EditorSection
-                        title="Personal Information"
-                        sectionKey="personalInfo"
-                        isOpen={openSections.personalInfo}
-                        onToggle={toggleSection}
-                    >
-                        <PersonalInfoEditor
-                            value={resumeData.personalInfo}
-                            onChange={(value) => updateSection("personalInfo", value)}
-                        />
-                    </EditorSection>
-
-                    <EditorSection title="Professional Summary" sectionKey="summary" isOpen={openSections.summary} onToggle={toggleSection}>
-                        <SummaryEditor
-                            value={resumeData.professionalSummary}
-                            onChange={(value) => updateSection("professionalSummary", value)}
-                        />
-                    </EditorSection>
-
-                    <div className="resume-editor-reorderable-sections" aria-label="Reorderable resume sections">
-                        {sectionOrder.map((sectionKey) => {
-                            const section = movableSections[sectionKey];
-                            return (
-                                <EditorSection
-                                    key={sectionKey}
-                                    title={section.title}
-                                    sectionKey={sectionKey}
-                                    isOpen={openSections[sectionKey]}
-                                    onToggle={toggleSection}
-                                    isMovable
-                                    onDragStart={() => setDraggedSection(sectionKey)}
-                                    onDragOver={(event) => event.preventDefault()}
-                                    onDrop={() => handleSectionDrop(sectionKey)}
-                                    onMove={moveSection}
-                                >
-                                    {section.content}
-                                </EditorSection>
-                            );
-                        })}
+                        <div className="resume-editor-reorderable-sections" aria-label="Reorderable resume sections">
+                            {sectionOrder.map((sectionKey) => {
+                                const section = movableSections[sectionKey];
+                                return (
+                                    <EditorSection
+                                        key={sectionKey}
+                                        title={section.title}
+                                        sectionKey={sectionKey}
+                                        isOpen={openSections[sectionKey]}
+                                        onToggle={toggleSection}
+                                        isMovable
+                                        onDragStart={() => setDraggedSection(sectionKey)}
+                                        onDragOver={(event) => event.preventDefault()}
+                                        onDrop={() => handleSectionDrop(sectionKey)}
+                                        onMove={moveSection}
+                                    >
+                                        {section.content}
+                                    </EditorSection>
+                                );
+                            })}
+                        </div>
                     </div>
                 </section>
 
+                {/* ── Right: Preview panel ── */}
                 <ResumePreviewPanel
                     selectedTemplate={selectedTemplate}
                     TemplateComponent={TemplateComponent}

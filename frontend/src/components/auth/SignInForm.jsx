@@ -61,55 +61,55 @@ export default function SignInForm() {
     };
 
     return (
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form className="w-full max-w-[28rem] grid gap-5" onSubmit={handleSubmit}>
             <div className="space-y-2">
-                <p className="auth-eyebrow">ResumeAI</p>
-                <h1>Welcome back</h1>
-                <p>Sign in to save and manage your resumes.</p>
+                <p className="text-indigo-600 text-xs font-extrabold tracking-[0.18em] uppercase">ResumeAI</p>
+                <h1 className="m-0 text-slate-900 text-3xl leading-tight">Welcome back</h1>
+                <p className="m-0 text-gray-500">Sign in to save and manage your resumes.</p>
             </div>
 
-            <div className="auth-fields">
-            <label className="auth-field">
-                <span>Email</span>
-                <input
-                    className="auth-input"
-                    type="email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    autoComplete="email"
-                    placeholder="you@example.com"
-                    required
-                />
-            </label>
+            <div className="grid gap-4">
+                <label className="grid gap-2 text-gray-700 text-sm font-semibold">
+                    <span>Email</span>
+                    <input
+                        className="w-full box-border px-3.5 py-3 border border-gray-300 rounded-md text-slate-900 outline-none transition-all duration-150 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+                        type="email"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                        autoComplete="email"
+                        placeholder="you@example.com"
+                        required
+                    />
+                </label>
 
-            <label className="auth-field">
-                <span>Password</span>
-                <input
-                    className="auth-input"
-                    type="password"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                    autoComplete="current-password"
-                    placeholder="Enter your password"
-                    required
-                />
-            </label>
+                <label className="grid gap-2 text-gray-700 text-sm font-semibold">
+                    <span>Password</span>
+                    <input
+                        className="w-full box-border px-3.5 py-3 border border-gray-300 rounded-md text-slate-900 outline-none transition-all duration-150 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+                        type="password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        autoComplete="current-password"
+                        placeholder="Enter your password"
+                        required
+                    />
+                </label>
             </div>
 
-            {error && <p className="auth-error" role="alert">{error}</p>}
+            {error && <p className="px-3.5 py-3 border border-red-200 rounded-md bg-red-50 text-red-600 text-sm" role="alert">{error}</p>}
 
-            <button className="auth-primary-button" type="submit" disabled={submitting || googleSubmitting}>
+            <button className="min-h-[46px] px-4 py-3 rounded-md font-bold cursor-pointer transition-all duration-150 border-0 bg-indigo-500 text-white hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-500/20 disabled:cursor-not-allowed disabled:opacity-60" type="submit" disabled={submitting || googleSubmitting}>
                 {submitting ? "Signing in..." : "Sign In"}
             </button>
 
-            <div className="auth-divider"><span>or</span></div>
+            <div className="flex items-center gap-3 text-slate-400 text-xs uppercase before:content-[''] before:h-px before:flex-1 before:bg-slate-200 after:content-[''] after:h-px after:flex-1 after:bg-slate-200"><span>or</span></div>
 
-            <button className="auth-google-button" type="button" onClick={handleGoogleSignIn} disabled={submitting || googleSubmitting}>
+            <button className="min-h-[46px] px-4 py-3 rounded-md font-bold cursor-pointer transition-all duration-150 border border-gray-300 bg-white text-gray-700 hover:border-indigo-300 hover:bg-indigo-50 disabled:cursor-not-allowed disabled:opacity-60" type="button" onClick={handleGoogleSignIn} disabled={submitting || googleSubmitting}>
                 {googleSubmitting ? "Connecting to Google..." : "Continue with Google"}
             </button>
 
-            <p className="auth-footer">
-                Don't have an account? <Link to="/signup">Create Account</Link>
+            <p className="text-center text-sm">
+                Don't have an account? <Link to="/signup" className="text-indigo-600 font-bold hover:text-indigo-800">Create Account</Link>
             </p>
         </form>
     );

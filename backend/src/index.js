@@ -9,6 +9,7 @@ import { extractTextFromImage } from "./parsers/imageParser.js";
 
 import { extractResumeData } from "./ai/resumeExtractor.js";
 import { generateRoleSpecificResume } from "./ai/resumeGenerator.js";
+import { analyzeResumeATS } from "./ai/atsAnalyzer.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
 
 const app = express();
@@ -124,14 +125,36 @@ app.post("/extract-resume", upload.fields([
         );
 
         // -------------------------
+        // ATS ANALYSIS (non-blocking)
+        // -------------------------
+
+        let atsAnalysis = null;
+        let atsAnalysisError;
+
+        try {
+            atsAnalysis = await analyzeResumeATS(
+                roleResumeData,
+                targetRole,
+                jobDescription
+            );
+            console.log("ATS analysis completed successfully.");
+        } catch (atsError) {
+            console.error("ATS analysis failed (resume still returned):", atsError.message);
+            atsAnalysisError = "ATS analysis is temporarily unavailable.";
+        }
+
+        // -------------------------
         // RESPONSE
         // -------------------------
 
         res.json({
             success: true,
             targetRole,
+            jobDescription: jobDescription || "",
             resumeData,
             roleResumeData,
+            atsAnalysis,
+            atsAnalysisError,
         });
 
         console.log("Resume extraction completed successfully.");

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { generateDocxBuffer } from "../services/docxService.js";
+import { analyzeResumeATS } from "../ai/atsAnalyzer.js";
 
 const router = Router();
 
@@ -37,6 +38,43 @@ router.post("/generate-docx", async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Failed to generate DOCX file.",
+        });
+    }
+});
+
+/**
+ * POST /api/resumes/analyze-ats
+ * Body: { resumeData: { ... }, targetRole: "...", jobDescription: "..." }
+ * Returns the ATS analysis result.
+ */
+router.post("/analyze-ats", async (req, res) => {
+    try {
+        const { resumeData, targetRole, jobDescription } = req.body;
+
+        if (!resumeData || typeof resumeData !== "object") {
+            return res.status(400).json({
+                success: false,
+                message: "resumeData is required and must be an object.",
+            });
+        }
+        
+        const roleToAnalyze = targetRole || "General Role";
+
+        const atsAnalysis = await analyzeResumeATS(
+            { candidateProfile: resumeData },
+            roleToAnalyze,
+            jobDescription || ""
+        );
+
+        res.json({
+            success: true,
+            atsAnalysis,
+        });
+    } catch (error) {
+        console.error("ATS re-analysis error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to analyze ATS compatibility.",
         });
     }
 });
