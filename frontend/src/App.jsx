@@ -11,6 +11,7 @@ import CreateResume from "./pages/CreateResume";
 import Templates from "./pages/Templates";
 import ResumeEditor from "./pages/ResumeEditor";
 import ResumePreview from "./pages/ResumePreview";
+import ATSAnalysis from "./pages/ATSAnalysis";
 import MyResumes from "./pages/MyResumes";
 import { ProtectedRoute } from "./components/auth/AuthRoute";
 
@@ -52,6 +53,7 @@ function App() {
         <Route path="/templates" element={<Templates />} />
         <Route path="/editor" element={<ResumeEditor />} />
         <Route path="/resume-preview" element={<ResumePreview />} />
+        <Route path="/ats-analysis" element={<ATSAnalysis />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

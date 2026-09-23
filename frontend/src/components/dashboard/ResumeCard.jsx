@@ -158,6 +158,11 @@ export default function ResumeCard({
                 >
                     {accent.label}
                 </span>
+                {resume.atsAnalysis?.overallScore != null && (
+                    <span className="my-resume-ats-score">
+                        ATS {resume.atsAnalysis.overallScore}/100
+                    </span>
+                )}
                 <span className="my-resume-date" title={resume.updatedAt?.toDate?.().toLocaleString?.()}>
                     {Icons.clock}
                     {relativeDate(resume.updatedAt)}

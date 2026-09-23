@@ -11,9 +11,9 @@
 }
 
 .dashboard-container {
-    max-width: 1100px;
+    width: calc(100% - 48px);
+    max-width: 1180px;
     margin: 0 auto;
-    padding: 0 24px;
 }
 
 /* ================================================
@@ -27,9 +27,9 @@
 }
 
 .dashboard-header-inner {
-    max-width: 1100px;
+    width: calc(100% - 48px);
+    max-width: 1180px;
     margin: 0 auto;
-    padding: 0 24px;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -318,6 +318,12 @@
    RESPONSIVE
    ================================================ */
 @media (max-width: 768px) {
+
+    .dashboard-container,
+    .dashboard-header-inner {
+        width: calc(100% - 32px);
+    }
+
     .dashboard-header-inner {
         flex-direction: column;
         gap: 16px;

@@ -70,7 +70,9 @@ function DataInput() {
                 state: {
                     roleResumeData: data.roleResumeData,
                     atsAnalysis: data.atsAnalysis,
+                    targetRole,
                     jobDescription: jobDescription.trim() || undefined,
+                    prompt: data.prompt || undefined,
                 },
             });
         } catch (error) {
