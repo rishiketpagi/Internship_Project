@@ -306,9 +306,9 @@
 }
 
 .ats-tag-missing {
-    background: #fef2f2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
+    background: var(--clr-danger-light);
+    color: var(--clr-danger);
+    border: 1px solid var(--clr-danger-border);
 }
 
 .ats-kw-note {
@@ -369,7 +369,7 @@
     border: 1px solid var(--clr-primary);
     border-radius: var(--radius-md);
     background: var(--clr-primary);
-    color: #fff;
+    color: var(--clr-surface);
     font: inherit;
     font-size: 0.875rem;
     font-weight: 600;

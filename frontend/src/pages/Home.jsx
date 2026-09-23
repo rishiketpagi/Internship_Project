@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { HomeHeroVisual, TemplateThumb } from "../components/common/HomeVisuals";
+import { TemplateThumb } from "../components/common/HomeVisuals";
 import { templates } from "../data/templates";
 import { features, steps } from "../data/homeData";
 import "../styles/Home.css";
@@ -42,17 +42,22 @@ export default function Home() {
         <main className="home-page">
             {/* Hero Section */}
             <section className="hero-section" aria-labelledby="hero-heading">
+                {/* Decorative background elements */}
+                <div className="hero-bg-glow glow-1" aria-hidden="true" />
+                <div className="hero-bg-glow glow-2" aria-hidden="true" />
+
                 <div className="home-container hero-inner">
                     <div className="hero-content">
-                        <span className="hero-badge">ROLE-SPECIFIC RESUME BUILDER</span>
+
                         <h1 id="hero-heading" className="hero-heading">
-                            Build a Resume That <span className="hero-heading-accent">Fits the Role</span>
+                            Build a Resume That <br />
+                            <span className="hero-heading-accent">Fits the Role</span>
                         </h1>
                         <p className="hero-subtext">
                             Create a professional, role-specific resume using the experience and information you already have.
                         </p>
                         <p className="hero-subtext-secondary">
-                            Upload your existing resume or paste your information, select a target role, and let ResumeAI organize and tailor your resume.
+                            Upload your existing resume or paste your information, select a target role, and let ResumeAI organize and tailor your resume for maximum impact.
                         </p>
                         <div className="hero-actions" aria-label="Primary actions">
                             <Link to="/create" className="btn-primary" aria-label="Create your resume">
@@ -100,26 +105,27 @@ export default function Home() {
 
             {/* Templates Preview Section */}
             <section className="templates-section" aria-labelledby="templates-heading">
+
                 <div className="home-container">
                     <div className="section-header">
                         <h2 id="templates-heading" className="section-heading">Choose Your Resume Style</h2>
                         <p className="section-subtext">Clean, professional templates designed to remain ATS-friendly.</p>
                     </div>
+                    <Link to="/templates" className="btn-secondary" aria-label="View all resume templates">
+                        View All Templates
+                    </Link>
                     <div className="templates-preview-grid">
                         {templates.map((template) => (
                             <TemplatePreviewCard key={template.id} template={template} />
                         ))}
                     </div>
                     <div className="templates-cta">
-                        <Link to="/templates" className="btn-secondary" aria-label="View all resume templates">
-                            View All Templates
-                        </Link>
                     </div>
                 </div>
             </section>
 
             {/* Final Call to Action */}
-            <section className="final-cta-section" aria-labelledby="final-cta-heading">
+            {/* <section className="final-cta-section" aria-labelledby="final-cta-heading">
                 <div className="home-container">
                     <h2 id="final-cta-heading" className="final-cta-heading">Ready to Build Your Resume?</h2>
                     <p className="final-cta-subtext">Start with the resume information you already have.</p>
@@ -127,7 +133,7 @@ export default function Home() {
                         Create My Resume
                     </Link>
                 </div>
-            </section>
+            </section> */}
         </main>
     );
 }
