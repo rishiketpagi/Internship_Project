@@ -55,15 +55,17 @@ export default function Navbar() {
                                 <NavLink to="/about" className={navLinkClass}>
                                     About
                                 </NavLink>
-                                <NavLink to="/signin" className={navLinkClass}>
-                                    Sign In
-                                </NavLink>
                             </>
                         )}
                     </div>
 
                     {/* Desktop CTA + Hamburger */}
                     <div className="navbar-actions">
+                        {!user && (
+                            <NavLink to="/signin" className="navbar-signin">
+                                Sign In
+                            </NavLink>
+                        )}
                         <NavLink to="/create" className="navbar-create">
                             Create Resume
                         </NavLink>
@@ -141,16 +143,18 @@ export default function Navbar() {
                         >
                             About
                         </NavLink>
-                        <NavLink
-                            to="/signin"
-                            className={mobileNavLinkClass}
-                            onClick={closeMenu}
-                        >
-                            Sign In
-                        </NavLink>
                     </>
                 )}
 
+                {!user && (
+                    <NavLink
+                        to="/signin"
+                        className="mobile-nav-link"
+                        onClick={closeMenu}
+                    >
+                        Sign In
+                    </NavLink>
+                )}
                 {/* Create Resume — always visible in mobile */}
                 <NavLink
                     to="/create"

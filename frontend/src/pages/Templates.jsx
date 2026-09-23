@@ -11,12 +11,14 @@ export default function Templates() {
         || location.state?.resumeData
         || sampleResumeData;
 
-    const handleUseTemplate = (templateId) => {
-        navigate(`/editor?template=${templateId}`, {
+    const handlePreviewTemplate = (templateId) => {
+        navigate(`/resume-preview?template=${templateId}`, {
             state: {
                 roleResumeData,
                 resumeData,
                 targetRole: roleResumeData?.targetRole || "",
+                atsAnalysis: location.state?.atsAnalysis,
+                jobDescription: location.state?.jobDescription,
             },
         });
     };
@@ -25,12 +27,24 @@ export default function Templates() {
         <main className="templates-page">
             <div className="templates-container">
                 <header className="templates-heading">
-                    <h1 className="templates-title">Choose a Resume Template</h1>
+                    <h1 className="templates-title">Explore Resume Templates</h1>
                 </header>
 
                 <div className="templates-grid">
                     {templates.map(({ id, name, component: TemplateComponent }) => (
-                        <article className="template-card" key={id}>
+                        <article
+                            className="template-card"
+                            key={id}
+                            onClick={() => handlePreviewTemplate(id)}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(event) => {
+                                if (event.key === "Enter" || event.key === " ") {
+                                    event.preventDefault();
+                                    handlePreviewTemplate(id);
+                                }
+                            }}
+                        >
                             <div className="template-preview-window">
                                 <div className="template-preview-content">
                                     <TemplateComponent
@@ -41,13 +55,6 @@ export default function Templates() {
                             </div>
                             <div className="template-card-content">
                                 <h2 className="template-card-title">{name}</h2>
-                                <button
-                                    type="button"
-                                    onClick={() => handleUseTemplate(id)}
-                                    className="template-use-button"
-                                >
-                                    Use Template
-                                </button>
                             </div>
                         </article>
                     ))}

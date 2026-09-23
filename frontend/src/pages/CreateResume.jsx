@@ -69,6 +69,8 @@ function DataInput() {
             navigate("/templates", {
                 state: {
                     roleResumeData: data.roleResumeData,
+                    atsAnalysis: data.atsAnalysis,
+                    jobDescription: jobDescription.trim() || undefined,
                 },
             });
         } catch (error) {

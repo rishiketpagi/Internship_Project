@@ -1,0 +1,120 @@
+/* ================================================
+   About.css — ResumeAI About Page Styles
+   ================================================ */
+
+.about-page {
+    font-family: var(--font-sans);
+    color: var(--clr-ink);
+    background-color: var(--clr-surface);
+    min-height: calc(100vh - var(--navbar-h));
+}
+
+.about-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* ================================================
+   HERO SECTION
+   ================================================ */
+.about-hero {
+    padding: 80px 0 60px;
+    background-color: var(--clr-primary-light);
+    border-bottom: 1px solid var(--clr-primary-border);
+    text-align: center;
+}
+
+.about-heading {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--clr-ink);
+    margin: 0 0 24px;
+}
+
+.about-subtext {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--clr-text);
+    margin: 0 auto;
+    max-width: 600px;
+}
+
+/* ================================================
+   CONTENT SECTION
+   ================================================ */
+.about-content {
+    padding: 80px 0;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    margin-bottom: 80px;
+}
+
+.about-card {
+    background-color: var(--clr-surface);
+    border: 1px solid var(--clr-border2);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--ease-base), box-shadow var(--ease-base), border-color var(--ease-base);
+}
+
+.about-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--clr-primary-border);
+}
+
+.about-card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--clr-primary-dark);
+    margin: 0 0 16px;
+}
+
+.about-card-desc {
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--clr-muted);
+    margin: 0;
+}
+
+/* ================================================
+   CTA SECTION
+   ================================================ */
+.about-cta {
+    text-align: center;
+    padding: 40px;
+    background-color: var(--clr-bg);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--clr-border2);
+}
+
+.about-cta h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--clr-ink);
+    margin: 0 0 24px;
+}
+
+/* ================================================
+   RESPONSIVE
+   ================================================ */
+@media (max-width: 768px) {
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-hero {
+        padding: 60px 0 40px;
+    }
+
+    .about-heading {
+        font-size: 2.4rem;
+    }
+}
