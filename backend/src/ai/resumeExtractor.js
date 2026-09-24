@@ -2,13 +2,15 @@ import Groq from "groq-sdk";
 import resumeSchema from "../data/resumeSchema.json" with { type: "json" };
 import { extractionSystemPrompt } from "../prompts/extractionPrompt.js";
 
+const groqModel = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
+
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY,
 });
 
 export async function extractResumeData(text) {
     const completion = await groq.chat.completions.create({
-        model: process.env.GROQ_MODEL,
+        model: groqModel,
 
         messages: [
             {

@@ -2,6 +2,8 @@ import Groq from "groq-sdk";
 import atsScoreSchema from "../data/atsScoreSchema.json" with { type: "json" };
 import { atsAnalysisSystemPrompt } from "../prompts/atsAnalysisPrompt.js";
 
+const groqModel = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
+
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY,
 });
@@ -128,7 +130,7 @@ export async function analyzeResumeATS(generatedResume, targetRole, jobDescripti
     });
 
     const completion = await groq.chat.completions.create({
-        model: process.env.GROQ_MODEL,
+        model: groqModel,
 
         messages: [
             {
@@ -142,6 +144,7 @@ export async function analyzeResumeATS(generatedResume, targetRole, jobDescripti
         ],
 
         temperature: 0,
+        max_completion_tokens: 2048,
 
         response_format: {
             type: "json_schema",

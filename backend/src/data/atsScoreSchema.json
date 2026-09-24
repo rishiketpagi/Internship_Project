@@ -41,24 +41,28 @@
         },
         "matchedKeywords": {
             "type": "array",
+            "maxItems": 20,
             "items": {
                 "type": "string"
             }
         },
         "missingKeywords": {
             "type": "array",
+            "maxItems": 20,
             "items": {
                 "type": "string"
             }
         },
         "strengths": {
             "type": "array",
+            "maxItems": 4,
             "items": {
                 "type": "string"
             }
         },
         "suggestions": {
             "type": "array",
+            "maxItems": 4,
             "items": {
                 "type": "string"
             }

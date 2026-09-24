@@ -14,8 +14,17 @@ import resumeRoutes from "./routes/resumeRoutes.js";
 
 const app = express();
 
+const configuredFrontendOrigin = process.env.FRONTEND_URL;
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin(origin, callback) {
+        const isLocalDevelopmentOrigin =
+            !origin
+            || origin === configuredFrontendOrigin
+            || /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin);
+
+        callback(null, isLocalDevelopmentOrigin);
+    },
 }));
 app.use(express.json({ limit: "1mb" }));
 app.use("/api/resumes", resumeRoutes);

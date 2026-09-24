@@ -19,6 +19,11 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        if (!auth) {
+            setLoading(false);
+            return undefined;
+        }
+
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
             if (currentUser) {
@@ -34,12 +39,20 @@ export function AuthProvider({ children }) {
         return unsubscribe;
     }, []);
 
+    const requireAuth = () => {
+        if (!auth) {
+            throw new Error("Firebase is not configured. Add the VITE_FIREBASE_* values to frontend/.env.");
+        }
+
+        return auth;
+    };
+
     const signIn = (email, password) =>
-        signInWithEmailAndPassword(auth, email, password);
+        signInWithEmailAndPassword(requireAuth(), email, password);
 
     const signUp = async (name, email, password) => {
         const credential = await createUserWithEmailAndPassword(
-            auth,
+            requireAuth(),
             email,
             password
         );
@@ -55,14 +68,14 @@ export function AuthProvider({ children }) {
 
     const signInWithGoogle = async () => {
         const credential = await signInWithPopup(
-            auth,
+            requireAuth(),
             new GoogleAuthProvider()
         );
         await ensureProfile(credential.user);
         return credential.user;
     };
 
-    const signOut = () => firebaseSignOut(auth);
+    const signOut = () => firebaseSignOut(requireAuth());
 
     const value = {
         user,
