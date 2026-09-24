@@ -13,7 +13,7 @@ import { createResume, updateResume } from "../services/resumeService";
 import { templates } from "../data/templates";
 import { useToast } from "../components/ui/ToastContext";
 import "../styles/ResumeEditor.css";
-
+ 
 /** Turn a candidate name into a safe filename prefix */
 function safeFilename(name) {
     if (!name) return "Resume";
