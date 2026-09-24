@@ -1,63 +1,99 @@
 import { useState } from "react";
+import EditableCard from "./EditableCard";
 
-function CertificationsEditor({ value = [], onChange = () => { } }) {
-    const [draft, setDraft] = useState("");
+const EMPTY = {
+    name: "",
+    issuer: "",
+    date: "",
+    url: "",
+};
 
-    const addCertification = () => {
-        const trimmed = draft.trim();
-        if (!trimmed) {
-            return;
-        }
+const FIELDS = [
+    ["name", "Certification Name"],
+    ["issuer", "Issuing Organization"],
+    ["date", "Date Issued"],
+    ["url", "Credential URL"],
+];
 
-        onChange([...value, trimmed]);
-        setDraft("");
-    };
-
-    const updateCertification = (index, nextValue) => {
-        onChange(value.map((certification, certificationIndex) =>
-            certificationIndex === index ? nextValue : certification
-        ));
-    };
-
+function summary(entry) {
+    const title = entry.name || "New Certification";
+    const sub = [entry.issuer, entry.date].filter(Boolean).join(" · ");
     return (
-        <div className="resume-editor-skills-list">
-            {value.map((certification, index) => (
-                <div key={index} className="resume-editor-skill-row">
-                    <input
-                        type="text"
-                        value={certification}
-                        onChange={(event) => updateCertification(index, event.target.value)}
-                        placeholder="Certification name"
-                        className="resume-editor-input"
-                    />
-                    <button
-                        type="button"
-                        onClick={() => onChange(value.filter((_, certificationIndex) => certificationIndex !== index))}
-                        className="resume-editor-delete-button"
-                    >
-                        Remove
-                    </button>
-                </div>
-            ))}
-
-            <div className="resume-editor-skill-row">
-                <input
-                    type="text"
-                    value={draft}
-                    onChange={(event) => setDraft(event.target.value)}
-                    placeholder="New certification"
-                    className="resume-editor-input"
-                />
-                <button
-                    type="button"
-                    onClick={addCertification}
-                    className="resume-editor-add-button"
-                >
-                    + Add Certification
-                </button>
-            </div>
+        <div>
+            <p className="editable-card-title">{title}</p>
+            {sub && <p className="editable-card-sub">{sub}</p>}
         </div>
     );
 }
 
-export default CertificationsEditor;
+export default function CertificationsEditor({ value = [], onChange = () => { } }) {
+    // Handle legacy string arrays (just in case they exist from old data)
+    const normalizedValue = value.map(v => typeof v === 'string' ? { ...EMPTY, name: v } : v);
+
+    const [drafts, setDrafts] = useState(() => normalizedValue.map((e) => ({ ...e })));
+    const [newFlags, setNewFlags] = useState(() => normalizedValue.map(() => false));
+
+    const updateDraft = (index, field, val) => {
+        setDrafts((prev) => prev.map((d, i) => i === index ? { ...d, [field]: val } : d));
+    };
+
+    const handleSave = (index) => {
+        onChange(normalizedValue.map((e, i) => i === index ? { ...drafts[i] } : e));
+        setNewFlags((f) => f.map((v, i) => i === index ? false : v));
+    };
+
+    const handleCancel = (index) => {
+        setDrafts((prev) => prev.map((d, i) => i === index ? { ...normalizedValue[i] } : d));
+        if (newFlags[index]) {
+            onChange(normalizedValue.filter((_, i) => i !== index));
+            setDrafts((prev) => prev.filter((_, i) => i !== index));
+            setNewFlags((f) => f.filter((_, i) => i !== index));
+        }
+    };
+
+    const handleDelete = (index) => {
+        onChange(normalizedValue.filter((_, i) => i !== index));
+        setDrafts((prev) => prev.filter((_, i) => i !== index));
+        setNewFlags((f) => f.filter((_, i) => i !== index));
+    };
+
+    const handleAdd = () => {
+        const blank = { ...EMPTY };
+        onChange([...normalizedValue, blank]);
+        setDrafts((prev) => [...prev, { ...blank }]);
+        setNewFlags((f) => [...f, true]);
+    };
+
+    return (
+        <div className="resume-editor-education-list">
+            {normalizedValue.map((entry, index) => (
+                <EditableCard
+                    key={index}
+                    summary={summary(entry)}
+                    onDelete={() => handleDelete(index)}
+                    onSave={() => handleSave(index)}
+                    onCancel={() => handleCancel(index)}
+                    openOnMount={newFlags[index] || false}
+                >
+                    <div className="resume-editor-fields">
+                        {FIELDS.map(([field, label]) => (
+                            <label key={field} className="resume-editor-field">
+                                <span className="resume-editor-label">{label}</span>
+                                <input
+                                    type="text"
+                                    value={drafts[index]?.[field] || ""}
+                                    onChange={(e) => updateDraft(index, field, e.target.value)}
+                                    className="resume-editor-input"
+                                />
+                            </label>
+                        ))}
+                    </div>
+                </EditableCard>
+            ))}
+
+            <button type="button" onClick={handleAdd} className="resume-editor-add-button">
+                + Add Certification
+            </button>
+        </div>
+    );
+}

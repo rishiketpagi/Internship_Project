@@ -1,36 +1,35 @@
 /* ================================================
-   Dashboard.css — ResumeAI Dashboard Styles
+   Dashboard.css — RoleResume Dashboard Styles
    ================================================ */
 
 .dashboard-page {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-        Oxygen, Ubuntu, sans-serif;
-    color: #0f172a;
-    background-color: #f8fafc;
-    min-height: calc(100vh - 68px);
+    font-family: var(--font-sans);
+    color: var(--clr-ink);
+    background-color: var(--clr-bg);
+    min-height: calc(100vh - var(--navbar-h));
     padding-bottom: 64px;
 }
 
 .dashboard-container {
-    max-width: 1100px;
+    width: calc(100% - 48px);
+    max-width: 1180px;
     margin: 0 auto;
-    padding: 0 24px;
 }
 
 /* ================================================
    HEADER BANNER
    ================================================ */
 .dashboard-header {
-    background-color: #ffffff;
-    border-bottom: 1px solid #e2e8f0;
-    padding: 36px 0 32px;
+    background: var(--gradient-primary);
+    padding: 48px 0 40px;
     margin-bottom: 40px;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
 }
 
 .dashboard-header-inner {
-    max-width: 1100px;
+    width: calc(100% - 48px);
+    max-width: 1180px;
     margin: 0 auto;
-    padding: 0 24px;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -39,41 +38,46 @@
 }
 
 .dashboard-greeting {
-    font-size: 1.75rem;
+    font-size: 2.1rem;
     font-weight: 800;
-    color: #0f172a;
-    margin: 0 0 6px;
+    color: #ffffff;
+    margin: 0 0 8px;
     line-height: 1.2;
+    letter-spacing: -0.02em;
 }
 
 .dashboard-subtext {
-    font-size: 0.95rem;
-    color: #64748b;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.85);
     margin: 0;
+    font-weight: 400;
 }
 
 .dashboard-create-btn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    background-color: #0ea5e9;
-    color: #ffffff;
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 10px 20px;
-    border-radius: 8px;
+    gap: 8px;
+    background-color: #ffffff;
+    color: var(--clr-primary-dark);
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: var(--radius-full);
     text-decoration: none;
     border: none;
     cursor: pointer;
-    transition: background-color 0.15s ease;
+    transition: all var(--ease-base);
     white-space: nowrap;
     flex-shrink: 0;
     align-self: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
 .dashboard-create-btn:hover {
-    background-color: #0284c7;
-    color: #ffffff;
+    background-color: #f8fafc;
+    color: var(--clr-primary-darker);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 /* ================================================
@@ -82,7 +86,7 @@
 .dash-section-label {
     font-size: 1.05rem;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--clr-ink);
     margin: 0 0 16px;
 }
 
@@ -96,9 +100,9 @@
 .stat-card {
     display: inline-flex;
     flex-direction: column;
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
+    background-color: var(--clr-surface);
+    border: 1px solid var(--clr-border2);
+    border-radius: var(--radius-lg);
     padding: 20px 28px;
     min-width: 160px;
 }
@@ -106,14 +110,14 @@
 .stat-number {
     font-size: 2.25rem;
     font-weight: 800;
-    color: #0284c7;
+    color: var(--clr-primary-dark);
     line-height: 1;
     margin-bottom: 4px;
 }
 
 .stat-label {
     font-size: 0.85rem;
-    color: #64748b;
+    color: var(--clr-muted);
     font-weight: 500;
 }
 
@@ -121,58 +125,73 @@
    EMPTY STATE
    ================================================ */
 .dashboard-empty-state {
-    background-color: #ffffff;
-    border: 1.5px dashed #bae6fd;
-    border-radius: 12px;
-    padding: 52px 32px;
+    background: var(--clr-surface);
+    border: 2px dashed var(--clr-border2);
+    border-radius: var(--radius-2xl);
+    padding: 64px 32px;
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 48px;
+    transition: all var(--ease-base);
+}
+
+.dashboard-empty-state:hover {
+    border-color: var(--clr-primary-muted);
+    background: var(--clr-primary-light);
+    transform: scale(1.01);
 }
 
 .empty-icon {
-    font-size: 2.5rem;
-    margin-bottom: 14px;
-    display: block;
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
 }
 
 .empty-heading {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #0f172a;
-    margin: 0 0 8px;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--clr-ink);
+    margin: 0 0 12px;
 }
 
 .empty-desc {
-    font-size: 0.9rem;
-    color: #64748b;
-    max-width: 400px;
-    margin: 0 auto 24px;
-    line-height: 1.65;
+    font-size: 1rem;
+    color: var(--clr-muted);
+    max-width: 440px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
 }
 
 .btn-empty-cta {
     display: inline-flex;
     align-items: center;
-    background-color: #0ea5e9;
+    background: var(--gradient-primary);
     color: #ffffff;
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 10px 22px;
-    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 14px 32px;
+    border-radius: var(--radius-full);
     text-decoration: none;
-    transition: background-color 0.15s ease;
+    transition: all var(--ease-base);
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
 }
 
 .btn-empty-cta:hover {
-    background-color: #0284c7;
-    color: #ffffff;
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+    transform: translateY(-2px);
 }
 
 /* ================================================
    RECENT RESUMES
    ================================================ */
 .dashboard-resumes-section {
-    margin-bottom: 40px;
+    margin-bottom: 48px;
 }
 
 .dashboard-section-heading {
@@ -180,130 +199,237 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
+    margin-bottom: 24px;
+}
+
+.dash-section-label {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--clr-ink);
+    letter-spacing: -0.01em;
+    margin: 0;
 }
 
 .dashboard-view-all {
-    color: #0369a1;
-    font-size: 0.9rem;
+    color: var(--clr-primary);
+    font-size: 0.95rem;
     font-weight: 700;
     text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color var(--ease-fast), transform var(--ease-fast);
 }
 
-.dashboard-view-all:hover,
-.dashboard-resume-link:hover {
-    color: #0284c7;
+.dashboard-view-all:hover {
+    color: var(--clr-primary-dark);
+    transform: translateX(2px);
 }
 
 .dashboard-resumes-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
+    gap: 24px;
 }
 
 .dashboard-resume-card {
+    position: relative;
     display: flex;
-    min-height: 168px;
+    min-height: 180px;
     flex-direction: column;
-    padding: 20px;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    background: #ffffff;
+    padding: 24px;
+    border: 1px solid var(--clr-border2);
+    border-radius: var(--radius-2xl);
+    background: var(--clr-surface);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: all var(--ease-base);
+}
+
+.dashboard-resume-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity var(--ease-base);
+}
+
+.dashboard-resume-card:hover {
+    border-color: transparent;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+}
+
+.dashboard-resume-card:hover::before {
+    opacity: 1;
 }
 
 .dashboard-resume-card-label {
-    color: #0284c7;
+    display: inline-block;
+    padding: 4px 10px;
+    background: var(--clr-primary-light);
+    color: var(--clr-primary-dark);
+    border-radius: var(--radius-full);
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
+    align-self: flex-start;
 }
 
 .dashboard-resume-card h3 {
-    margin: 10px 0 6px;
+    margin: 16px 0 8px;
     overflow: hidden;
-    color: #0f172a;
-    font-size: 1rem;
+    color: var(--clr-ink);
+    font-size: 1.15rem;
+    font-weight: 700;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .dashboard-resume-card p {
     margin: 0;
-    color: #64748b;
-    font-size: 0.82rem;
+    color: var(--clr-muted);
+    font-size: 0.85rem;
 }
 
 .dashboard-resume-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     align-self: flex-start;
     margin-top: auto;
-    padding-top: 18px;
-    color: #0369a1;
-    font-size: 0.84rem;
+    padding-top: 20px;
+    color: var(--clr-primary);
+    font-size: 0.9rem;
     font-weight: 700;
     text-decoration: none;
+    transition: color var(--ease-fast);
+}
+
+.dashboard-resume-link span {
+    transition: transform var(--ease-fast);
+}
+
+.dashboard-resume-card:hover .dashboard-resume-link {
+    color: var(--clr-primary-dark);
+}
+
+.dashboard-resume-card:hover .dashboard-resume-link span {
+    transform: translateX(4px);
 }
 
 /* ================================================
    QUICK ACTIONS
    ================================================ */
 .quick-actions-section {
-    margin-top: 12px;
+    margin-top: 24px;
 }
 
 .quick-actions-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: 24px;
 }
 
 .quick-action-card {
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 24px 20px;
+    background-color: var(--clr-surface);
+    border: 1px solid var(--clr-border2);
+    border-radius: var(--radius-2xl);
+    padding: 28px 24px;
     text-decoration: none;
     color: inherit;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: all var(--ease-base);
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.quick-action-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity var(--ease-base);
 }
 
 .quick-action-card:hover {
-    border-color: #7dd3fc;
-    box-shadow: 0 4px 14px rgba(14, 165, 233, 0.09);
+    border-color: transparent;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+}
+
+.quick-action-card:hover::before {
+    opacity: 1;
 }
 
 .qa-icon {
     font-size: 1.5rem;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--clr-primary-light);
+    color: var(--clr-primary-dark);
+    border-radius: var(--radius-lg);
+    margin-bottom: 8px;
+    transition: transform var(--ease-base), background var(--ease-base);
+}
+
+.quick-action-card:hover .qa-icon {
+    transform: scale(1.05);
+    background: var(--clr-primary-hover-bg);
 }
 
 .qa-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: #0f172a;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--clr-ink);
     margin: 0;
 }
 
 .qa-desc {
-    font-size: 0.85rem;
-    color: #64748b;
+    font-size: 0.9rem;
+    color: var(--clr-muted);
     margin: 0;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
 .qa-arrow {
-    font-size: 0.85rem;
-    color: #0284c7;
-    font-weight: 600;
-    margin-top: 4px;
+    font-size: 1rem;
+    color: var(--clr-primary);
+    font-weight: 700;
+    margin-top: auto;
+    padding-top: 12px;
+    transition: transform var(--ease-base), color var(--ease-base);
+}
+
+.quick-action-card:hover .qa-arrow {
+    transform: translateX(4px);
+    color: var(--clr-primary-dark);
 }
 
 /* ================================================
    RESPONSIVE
    ================================================ */
 @media (max-width: 768px) {
+
+    .dashboard-container,
+    .dashboard-header-inner {
+        width: calc(100% - 32px);
+    }
+
     .dashboard-header-inner {
         flex-direction: column;
         gap: 16px;

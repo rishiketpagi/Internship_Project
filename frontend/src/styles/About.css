@@ -1,0 +1,293 @@
+/* =====================================================
+   About.css — About Page Styles
+   ===================================================== */
+
+.about-page {
+    min-height: calc(100vh - var(--navbar-h));
+    background: var(--clr-bg);
+    color: var(--clr-ink);
+    font-family: var(--font-sans);
+    padding-bottom: 80px;
+}
+
+.about-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* ── Typography & Globals ── */
+.text-center {
+    text-align: center;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+.about-page h2 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--clr-ink);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0 0 16px;
+}
+
+.about-page h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--clr-primary-dark);
+    margin: 0 0 12px;
+}
+
+/* ── Hero Section ── */
+.about-hero {
+    padding: 80px 0 60px;
+    text-align: center;
+}
+
+.about-eyebrow {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--clr-primary);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.about-heading {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: var(--clr-ink);
+    line-height: 1.1;
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+}
+
+.about-subtext {
+    font-size: 1.15rem;
+    color: var(--clr-muted);
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ── General Sections ── */
+.about-section {
+    padding: 60px 0;
+}
+
+.about-centered {
+    text-align: center;
+}
+
+.about-text-constrained {
+    font-size: 1.1rem;
+    color: var(--clr-muted);
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ── Boxes ── */
+.about-box {
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border2);
+    border-radius: var(--radius-xl);
+    padding: 40px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+}
+
+.about-box-highlight {
+    background: var(--gradient-primary);
+    border: none;
+    color: white;
+}
+
+.about-box-highlight h2,
+.about-box-highlight p {
+    color: white;
+}
+
+.about-box p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.about-box p:last-child {
+    margin-bottom: 0;
+}
+
+/* ── How It Works (Steps) ── */
+.about-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 32px;
+}
+
+.about-step-card {
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border2);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    text-align: center;
+    width: 140px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--ease-base), box-shadow var(--ease-base);
+}
+
+.about-step-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--clr-primary-border);
+}
+
+.about-step-num {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--clr-primary);
+    margin-bottom: 8px;
+}
+
+.about-step-card p {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--clr-ink);
+    margin: 0;
+}
+
+.about-step-arrow {
+    font-size: 1.5rem;
+    color: var(--clr-muted);
+}
+
+.about-step-arrow-down {
+    display: none;
+    font-size: 1.5rem;
+    color: var(--clr-muted);
+}
+
+.about-step-card-final {
+    width: 200px;
+}
+
+@media (max-width: 768px) {
+    .about-steps {
+        flex-direction: column;
+    }
+    
+    .about-step-arrow {
+        display: none;
+    }
+
+    .about-step-arrow-down {
+        display: block;
+    }
+
+    .about-step-card, .about-step-card-final {
+        width: 100%;
+        max-width: 250px;
+        height: auto;
+        padding: 24px;
+    }
+}
+
+/* ── Features Grid ── */
+.about-grid-2x3 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.about-feature-box {
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border2);
+    border-radius: var(--radius-lg);
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: border-color var(--ease-base);
+}
+
+.about-feature-box:hover {
+    border-color: var(--clr-primary-muted);
+}
+
+.about-feature-box p {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--clr-ink);
+    margin: 0;
+    line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+    .about-grid-2x3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Built With (Tech Stack) ── */
+.about-tech-stack {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 24px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--clr-ink);
+}
+
+.about-tech-stack-secondary {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--clr-muted);
+}
+
+/* ── CTA Section ── */
+.about-cta-section {
+    padding: 80px 0;
+    text-align: center;
+}
+
+.about-cta-section p {
+    font-size: 1.2rem;
+    color: var(--clr-muted);
+    margin-bottom: 32px;
+}
+
+.about-btn-primary {
+    display: inline-block;
+    padding: 16px 32px;
+    background: var(--clr-primary);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--ease-fast), box-shadow var(--ease-fast), background var(--ease-fast);
+}
+
+.about-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    background: var(--clr-primary-dark);
+}

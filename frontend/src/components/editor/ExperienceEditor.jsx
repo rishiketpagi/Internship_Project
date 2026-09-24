@@ -1,71 +1,109 @@
-function ExperienceEditor({ value = [], onChange = () => { } }) {
-    const emptyExperience = {
-        jobTitle: "",
-        company: "",
-        location: "",
-        startDate: "",
-        endDate: "",
-        description: "",
-        responsibilities: [],
+import { useState } from "react";
+import EditableCard from "./EditableCard";
+
+const EMPTY = {
+    jobTitle: "",
+    company: "",
+    location: "",
+    startDate: "",
+    endDate: "",
+    description: "",
+    responsibilities: [],
+};
+
+const TEXT_FIELDS = [
+    ["jobTitle", "Job Title"],
+    ["company", "Company"],
+    ["location", "Location"],
+    ["startDate", "Start Date"],
+    ["endDate", "End Date"],
+];
+
+function summary(entry) {
+    const title = entry.jobTitle || "New Experience Entry";
+    const sub = [entry.company, entry.startDate && entry.endDate ? `${entry.startDate} – ${entry.endDate}` : (entry.startDate || entry.endDate || ""), entry.location].filter(Boolean).join(" · ");
+    return (
+        <div>
+            <p className="editable-card-title">{title}</p>
+            {sub && <p className="editable-card-sub">{sub}</p>}
+        </div>
+    );
+}
+
+export default function ExperienceEditor({ value = [], onChange = () => { } }) {
+    const [drafts, setDrafts] = useState(() => value.map((e) => ({ ...e })));
+    const [newFlags, setNewFlags] = useState(() => value.map(() => false));
+
+    const updateDraft = (index, field, val) => {
+        setDrafts((prev) => prev.map((d, i) => i === index ? { ...d, [field]: val } : d));
+    };
+
+    const handleSave = (index) => {
+        onChange(value.map((e, i) => i === index ? { ...drafts[i] } : e));
+        setNewFlags((f) => f.map((v, i) => i === index ? false : v));
+    };
+
+    const handleCancel = (index) => {
+        setDrafts((prev) => prev.map((d, i) => i === index ? { ...value[i] } : d));
+        if (newFlags[index]) {
+            onChange(value.filter((_, i) => i !== index));
+            setDrafts((prev) => prev.filter((_, i) => i !== index));
+            setNewFlags((f) => f.filter((_, i) => i !== index));
+        }
+    };
+
+    const handleDelete = (index) => {
+        onChange(value.filter((_, i) => i !== index));
+        setDrafts((prev) => prev.filter((_, i) => i !== index));
+        setNewFlags((f) => f.filter((_, i) => i !== index));
+    };
+
+    const handleAdd = () => {
+        const blank = { ...EMPTY };
+        onChange([...value, blank]);
+        setDrafts((prev) => [...prev, { ...blank }]);
+        setNewFlags((f) => [...f, true]);
     };
 
     return (
         <div className="resume-editor-education-list">
             {value.map((entry, index) => (
-                <div key={index} className="resume-editor-education-card">
+                <EditableCard
+                    key={index}
+                    summary={summary(entry)}
+                    onDelete={() => handleDelete(index)}
+                    onSave={() => handleSave(index)}
+                    onCancel={() => handleCancel(index)}
+                    openOnMount={newFlags[index] || false}
+                >
                     <div className="resume-editor-fields">
-                        {[
-                            ["jobTitle", "Job Title"],
-                            ["company", "Company"],
-                            ["location", "Location"],
-                            ["startDate", "Start Date"],
-                            ["endDate", "End Date"],
-                        ].map(([field, label]) => (
+                        {TEXT_FIELDS.map(([field, label]) => (
                             <label key={field} className="resume-editor-field">
                                 <span className="resume-editor-label">{label}</span>
                                 <input
                                     type="text"
-                                    value={entry[field] || ""}
-                                    onChange={(event) => updateEntry(value, onChange, index, field, event.target.value)}
+                                    value={drafts[index]?.[field] || ""}
+                                    onChange={(e) => updateDraft(index, field, e.target.value)}
                                     className="resume-editor-input"
                                 />
                             </label>
                         ))}
-
                         <label className="resume-editor-field">
                             <span className="resume-editor-label">Description</span>
                             <textarea
-                                value={entry.description || ""}
-                                onChange={(event) => updateEntry(value, onChange, index, "description", event.target.value)}
+                                value={drafts[index]?.description || ""}
+                                onChange={(e) => updateDraft(index, "description", e.target.value)}
                                 className="resume-editor-textarea resume-editor-experience-description"
                                 rows={4}
                             />
                         </label>
                     </div>
-
-                    <button
-                        type="button"
-                        onClick={() => onChange(value.filter((_, entryIndex) => entryIndex !== index))}
-                        className="resume-editor-delete-button"
-                    >
-                        Delete
-                    </button>
-                </div>
+                </EditableCard>
             ))}
 
-            <button
-                type="button"
-                onClick={() => onChange([...value, { ...emptyExperience }])}
-                className="resume-editor-add-button"
-            >
+            <button type="button" onClick={handleAdd} className="resume-editor-add-button">
                 + Add Experience
             </button>
         </div>
     );
 }
-
-function updateEntry(entries, onChange, index, field, fieldValue) {
-    onChange(entries.map((entry, entryIndex) => entryIndex === index ? { ...entry, [field]: fieldValue } : entry));
-}
-
-export default ExperienceEditor;

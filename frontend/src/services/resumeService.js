@@ -3,6 +3,7 @@ import {
     collection,
     deleteDoc,
     doc,
+    getDoc,
     getDocs,
     serverTimestamp,
     updateDoc,
@@ -18,26 +19,40 @@ function resumeDocument(userId, resumeId) {
     return doc(db, "users", userId, "resumes", resumeId);
 }
 
+function resumeRecord(resume) {
+    return {
+        title: resume.title || "Untitled Resume",
+        resumeData: resume.resumeData || {},
+        templateId: resume.templateId || "modern",
+        targetRole: resume.targetRole || "",
+        jobDescription: resume.jobDescription || "",
+        prompt: resume.prompt || "",
+        atsAnalysis: resume.atsAnalysis || null,
+    };
+}
+
 export async function createResume(userId, resume) {
+    const record = resumeRecord(resume);
     const reference = await addDoc(resumesCollection(userId), {
-        ...resume,
+        ...record,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
     });
 
     const profile = await getProfile(userId);
-    await mergeResumeIntoProfile(userId, resume.resumeData, profile);
+    await mergeResumeIntoProfile(userId, record.resumeData, profile);
 
     return reference.id;
 }
 
 export function updateResume(userId, resumeId, resume) {
+    const record = resumeRecord(resume);
     return updateDoc(resumeDocument(userId, resumeId), {
-        ...resume,
+        ...record,
         updatedAt: serverTimestamp(),
     }).then(async () => {
         const profile = await getProfile(userId);
-        await mergeResumeIntoProfile(userId, resume.resumeData, profile);
+        await mergeResumeIntoProfile(userId, record.resumeData, profile);
     });
 }
 
@@ -77,4 +92,15 @@ export async function duplicateResume(userId, resume) {
 
 export function deleteResume(userId, resumeId) {
     return deleteDoc(resumeDocument(userId, resumeId));
+}
+
+export async function getResume(userId, resumeId) {
+    const snapshot = await getDoc(resumeDocument(userId, resumeId));
+
+    if (!snapshot.exists()) return null;
+
+    return {
+        resumeId: snapshot.id,
+        ...snapshot.data(),
+    };
 }

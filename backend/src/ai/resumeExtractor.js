@@ -1,7 +1,6 @@
 import Groq from "groq-sdk";
 import resumeSchema from "../data/resumeSchema.json" with { type: "json" };
 import { extractionSystemPrompt } from "../prompts/extractionPrompt.js";
-import { groqModel } from "../config/aiConfig.js";
 
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY,
@@ -9,7 +8,7 @@ const groq = new Groq({
 
 export async function extractResumeData(text) {
     const completion = await groq.chat.completions.create({
-        model: groqModel,
+        model: process.env.GROQ_MODEL || "llama3-8b-8192",
 
         messages: [
             {

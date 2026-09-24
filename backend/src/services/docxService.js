@@ -211,79 +211,97 @@ export async function generateDocxBuffer(resumeData) {
         children.push(body(professionalSummary, { spacingAfter: 120 }));
     }
 
-    // ── Work Experience ──────────────────────────────────
-    if (workExperience.length > 0) {
-        children.push(sectionHeading("Work Experience"));
-        for (const exp of workExperience) {
-            const dateStr = [exp.startDate, exp.endDate].filter(Boolean).join(" – ");
-            children.push(twoCol(exp.jobTitle || "", dateStr));
-            children.push(body(`${exp.company || ""}${exp.location ? " · " + exp.location : ""}`, { italic: true, color: COLOR_MUTED, spacingAfter: 60 }));
-            if (exp.description) children.push(body(exp.description, { spacingAfter: 60 }));
-            for (const r of (exp.responsibilities || [])) children.push(bullet(r));
-            children.push(gap(100));
+    const experiences = [...workExperience, ...internships];
+
+    const sectionGenerators = {
+        experience: () => {
+            const els = [];
+            if (experiences.length > 0) {
+                els.push(sectionHeading("Work Experience"));
+                for (const exp of experiences) {
+                    const dateStr = [exp.startDate, exp.endDate].filter(Boolean).join(" – ");
+                    els.push(twoCol(exp.jobTitle || "", dateStr));
+                    els.push(body(`${exp.company || ""}${exp.location ? " · " + exp.location : ""}`, { italic: true, color: COLOR_MUTED, spacingAfter: 60 }));
+                    if (exp.description) els.push(body(exp.description, { spacingAfter: 60 }));
+                    for (const r of (exp.responsibilities || [])) els.push(bullet(r));
+                    els.push(gap(100));
+                }
+            }
+            return els;
+        },
+        projects: () => {
+            const els = [];
+            if (projects.length > 0) {
+                els.push(sectionHeading("Projects"));
+                for (const proj of projects) {
+                    const techStr = (proj.technologies || []).join(", ");
+                    els.push(twoCol(proj.name || "", techStr));
+                    if (proj.url) els.push(body(proj.url, { italic: true, color: COLOR_MUTED, spacingAfter: 40 }));
+                    if (proj.description) els.push(body(proj.description, { spacingAfter: 60 }));
+                    els.push(gap(80));
+                }
+            }
+            return els;
+        },
+        education: () => {
+            const els = [];
+            if (education.length > 0) {
+                els.push(sectionHeading("Education"));
+                for (const edu of education) {
+                    const dateStr = [edu.startDate, edu.endDate].filter(Boolean).join(" – ");
+                    els.push(twoCol(edu.institution || "", dateStr));
+                    const degreeStr = [edu.degree, edu.field ? `in ${edu.field}` : null].filter(Boolean).join(" ");
+                    els.push(body(degreeStr, { spacingAfter: 40 }));
+                    if (edu.grade) els.push(body(`Grade: ${edu.grade}`, { color: COLOR_MUTED, spacingAfter: 40 }));
+                    els.push(gap(80));
+                }
+            }
+            return els;
+        },
+        skills: () => {
+            const els = [];
+            if (skills.length > 0) {
+                const skillsText = skills.map(s => typeof s === "string" ? s : s.name || "").filter(Boolean).join("  ·  ");
+                els.push(sectionHeading("Skills"));
+                els.push(body(skillsText, { spacingAfter: 120 }));
+            }
+            return els;
+        },
+        certifications: () => {
+            const els = [];
+            if (certifications.length > 0) {
+                els.push(sectionHeading("Certifications"));
+                for (const cert of certifications) {
+                    const certName = typeof cert === "string" ? cert : cert.name || "";
+                    const certIssuer = typeof cert === "string" ? "" : cert.issuer || "";
+                    const text = certIssuer ? `${certName} — ${certIssuer}` : certName;
+                    if (text) els.push(bullet(text));
+                }
+                els.push(gap(80));
+            }
+            return els;
+        },
+        achievements: () => {
+            const els = [];
+            if (achievements.length > 0) {
+                els.push(sectionHeading("Achievements"));
+                for (const ach of achievements) {
+                    els.push(bullet(typeof ach === "string" ? ach : String(ach.name || ach)));
+                }
+            }
+            return els;
         }
-    }
+    };
 
-    // ── Internships ──────────────────────────────────────
-    if (internships.length > 0) {
-        children.push(sectionHeading("Internships"));
-        for (const exp of internships) {
-            const dateStr = [exp.startDate, exp.endDate].filter(Boolean).join(" – ");
-            children.push(twoCol(exp.jobTitle || "", dateStr));
-            children.push(body(`${exp.company || ""}${exp.location ? " · " + exp.location : ""}`, { italic: true, color: COLOR_MUTED, spacingAfter: 60 }));
-            if (exp.description) children.push(body(exp.description, { spacingAfter: 60 }));
-            for (const r of (exp.responsibilities || [])) children.push(bullet(r));
-            children.push(gap(100));
-        }
-    }
+    const DEFAULT_ORDER = ["education", "experience", "projects", "skills", "certifications", "achievements"];
+    const sectionOrder = resumeData.sectionOrder && resumeData.sectionOrder.length > 0 
+        ? resumeData.sectionOrder 
+        : DEFAULT_ORDER;
 
-    // ── Projects ─────────────────────────────────────────
-    if (projects.length > 0) {
-        children.push(sectionHeading("Projects"));
-        for (const proj of projects) {
-            const techStr = (proj.technologies || []).join(", ");
-            children.push(twoCol(proj.name || "", techStr));
-            if (proj.url) children.push(body(proj.url, { italic: true, color: COLOR_MUTED, spacingAfter: 40 }));
-            if (proj.description) children.push(body(proj.description, { spacingAfter: 60 }));
-            children.push(gap(80));
-        }
-    }
-
-    // ── Education ────────────────────────────────────────
-    if (education.length > 0) {
-        children.push(sectionHeading("Education"));
-        for (const edu of education) {
-            const dateStr = [edu.startDate, edu.endDate].filter(Boolean).join(" – ");
-            children.push(twoCol(edu.institution || "", dateStr));
-            const degreeStr = [edu.degree, edu.field ? `in ${edu.field}` : null]
-                .filter(Boolean).join(" ");
-            children.push(body(degreeStr, { spacingAfter: 40 }));
-            if (edu.grade) children.push(body(`Grade: ${edu.grade}`, { color: COLOR_MUTED, spacingAfter: 40 }));
-            children.push(gap(80));
-        }
-    }
-
-    // ── Skills ───────────────────────────────────────────
-    if (skills.length > 0) {
-        children.push(sectionHeading("Skills"));
-        children.push(body(skills.join("  ·  "), { spacingAfter: 120 }));
-    }
-
-    // ── Certifications ───────────────────────────────────
-    if (certifications.length > 0) {
-        children.push(sectionHeading("Certifications"));
-        for (const cert of certifications) {
-            const text = cert.issuer ? `${cert.name} — ${cert.issuer}` : cert.name;
-            children.push(bullet(text));
-        }
-        children.push(gap(80));
-    }
-
-    // ── Achievements ─────────────────────────────────────
-    if (achievements.length > 0) {
-        children.push(sectionHeading("Achievements"));
-        for (const ach of achievements) {
-            children.push(bullet(typeof ach === "string" ? ach : String(ach)));
+    for (const key of sectionOrder) {
+        if (sectionGenerators[key]) {
+            const els = sectionGenerators[key]();
+            children.push(...els);
         }
     }
 

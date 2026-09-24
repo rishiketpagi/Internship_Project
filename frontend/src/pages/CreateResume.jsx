@@ -1,18 +1,35 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ResumeTextInput from "../components/input/TextInput";
-import ResumeFileUpload from "../components/input/FileUpload";
+import Step1SelectRole from "../components/create-resume/Step1SelectRole";
+import Step2Information from "../components/create-resume/Step2Information";
+import Step3JobDescription from "../components/create-resume/Step3JobDescription";
+import Step4Generate from "../components/create-resume/Step4Generate";
 import "../styles/CreateResume.css";
-import { roles } from "../data/roles";
 
-function DataInput() {
+function CreateResume() {
     const navigate = useNavigate();
-    const [rawText, setRawText] = useState("");
+    const [step, setStep] = useState(1);
+    const [targetRole, setTargetRole] = useState("");
+
+    // State for Step 2
     const [selectedFile, setSelectedFile] = useState(null);
-    const [targetRole, setTargetRole] = useState(roles[0]);
+    const [rawText, setRawText] = useState("");
+
+    // State for Step 3
     const [jobDescription, setJobDescription] = useState("");
+    const [jobDescriptionImage, setJobDescriptionImage] = useState(null);
+
+    // State for Generation
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+
+    const handleNextStep = () => {
+        setStep(prev => prev + 1);
+    };
+
+    const handlePrevStep = () => {
+        setStep(prev => prev - 1);
+    };
 
     const handleGenerate = async () => {
         if (!targetRole) {
@@ -31,20 +48,22 @@ function DataInput() {
 
             let response;
 
-            if (selectedFile) {
-                const formData = new FormData();
-                formData.append("resume", selectedFile);
-                formData.append("targetRole", targetRole);
-                if (jobDescription.trim()) {
-                    formData.append("jobDescription", jobDescription.trim());
-                }
+            let useFormData = selectedFile || jobDescriptionImage;
 
-                response = await fetch("http://localhost:5000/extract-resume", {
+            if (useFormData) {
+                const formData = new FormData();
+                if (selectedFile) formData.append("resume", selectedFile);
+                if (!selectedFile && rawText.trim()) formData.append("text", rawText);
+                formData.append("targetRole", targetRole);
+                if (jobDescription.trim()) formData.append("jobDescription", jobDescription.trim());
+                if (jobDescriptionImage) formData.append("jobDescriptionImage", jobDescriptionImage);
+
+                response = await fetch("http://localhost:5000/api/resumes/extract-resume", {
                     method: "POST",
                     body: formData,
                 });
             } else {
-                response = await fetch("http://localhost:5000/extract-resume", {
+                response = await fetch("http://localhost:5000/api/resumes/extract-resume", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -62,9 +81,13 @@ function DataInput() {
                 throw new Error(data.message || "Something went wrong");
             }
 
-            navigate("/templates", {
+            navigate("/editor", {
                 state: {
                     roleResumeData: data.roleResumeData,
+                    atsAnalysis: data.atsAnalysis,
+                    targetRole,
+                    jobDescription: jobDescription.trim() || undefined,
+                    prompt: data.prompt || undefined,
                 },
             });
         } catch (error) {
@@ -75,66 +98,81 @@ function DataInput() {
     };
 
     return (
-        <div className="data-input-container">
-            <h1>Create Resume</h1>
+        <main className="create-resume-page">
+            <div className="create-resume-container">
+                <div className="create-resume-header">
+                    <h1>Create Your Resume</h1>
+                    <p>Build a resume tailored to the role you're targeting.</p>
+                </div>
 
-            <label className="input-label">
-                <span>Target Role</span>
-                <select
-                    value={targetRole}
-                    onChange={(event) => setTargetRole(event.target.value)}
-                >
-                    {roles.map((role) => (
-                        <option key={role} value={role}>
-                            {role}
-                        </option>
-                    ))}
-                </select>
-            </label>
+                {/* Progress Bar */}
+                <div className="create-resume-progress">
+                    <div className="progress-line">
+                        <div
+                            className="progress-line-fill"
+                            style={{ width: `${((step - 1) / 3) * 100}%` }}
+                        ></div>
+                    </div>
 
-            <label className="input-label">
-                <span>Job Description (Optional)</span>
-                <textarea
-                    value={jobDescription}
-                    onChange={(event) => setJobDescription(event.target.value)}
-                    placeholder="Paste the job description here..."
-                    rows={4}
-                />
-            </label>
+                    <div className={`progress-step ${step >= 1 ? 'completed' : ''} ${step === 1 ? 'active' : ''}`} title="Step 1: Role">
+                        <div className="progress-dot"></div>
+                    </div>
+                    <div className={`progress-step ${step >= 2 ? 'completed' : ''} ${step === 2 ? 'active' : ''}`} title="Step 2: Information">
+                        <div className="progress-dot"></div>
+                    </div>
+                    <div className={`progress-step ${step >= 3 ? 'completed' : ''} ${step === 3 ? 'active' : ''}`} title="Step 3: Job Match">
+                        <div className="progress-dot"></div>
+                    </div>
+                    <div className={`progress-step ${step >= 4 ? 'completed' : ''} ${step === 4 ? 'active' : ''}`} title="Step 4: Generate">
+                        <div className="progress-dot"></div>
+                    </div>
+                </div>
 
-            <label className="input-label">
-                <span>Your Existing Resume</span>
-                <ResumeFileUpload
-                    file={selectedFile}
-                    onFileChange={setSelectedFile}
-                />
-            </label>
-
-            <div className="divider">
-                <hr />
-                <p>OR</p>
+                {/* Step Content */}
+                <div className="create-resume-content">
+                    {step === 1 && (
+                        <Step1SelectRole
+                            selectedRole={targetRole}
+                            onSelectRole={setTargetRole}
+                            onNext={handleNextStep}
+                        />
+                    )}
+                    {step === 2 && (
+                        <Step2Information
+                            selectedRole={targetRole}
+                            selectedFile={selectedFile}
+                            onFileSelect={setSelectedFile}
+                            rawText={rawText}
+                            onTextChange={setRawText}
+                            onNext={handleNextStep}
+                            onBack={handlePrevStep}
+                        />
+                    )}
+                    {step === 3 && (
+                        <Step3JobDescription
+                            jobDescription={jobDescription}
+                            onJobDescriptionChange={setJobDescription}
+                            jobDescriptionImage={jobDescriptionImage}
+                            onJobDescriptionImageChange={setJobDescriptionImage}
+                            onNext={handleNextStep}
+                            onBack={handlePrevStep}
+                        />
+                    )}
+                    {step === 4 && (
+                        <Step4Generate
+                            selectedRole={targetRole}
+                            hasResumeInfo={!!selectedFile || !!rawText.trim()}
+                            hasJobDescription={!!jobDescription.trim() || !!jobDescriptionImage}
+                            onGenerate={handleGenerate}
+                            onBack={handlePrevStep}
+                            loading={loading}
+                            error={error}
+                        />
+                    )}
+                </div>
             </div>
-
-            <label className="input-label">
-                <span>Paste Resume Text</span>
-                <ResumeTextInput
-                    value={rawText}
-                    onChange={setRawText}
-                />
-            </label>
-
-            <button
-                className="generate-button"
-                onClick={handleGenerate}
-                disabled={loading || (!selectedFile && !rawText.trim())}
-            >
-                {loading ? "Generating..." : "Generate Resume"}
-            </button>
-
-            {loading && <p className="status-loading">Sending your information...</p>}
-            {error && <p className="status-error">{error}</p>}
-        </div>
+        </main>
     );
 }
 
-export default DataInput;
+export default CreateResume;

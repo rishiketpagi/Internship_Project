@@ -1,28 +1,11 @@
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../components/auth/AuthContext";
-import PersonalInfoEditor from "../components/editor/PersonalInfoEditor";
-import SummaryEditor from "../components/editor/SummaryEditor";
-import EducationEditor from "../components/editor/EducationEditor";
-import ExperienceEditor from "../components/editor/ExperienceEditor";
-import ProjectsEditor from "../components/editor/ProjectsEditor";
-import SkillsEditor from "../components/editor/SkillsEditor";
-import CertificationsEditor from "../components/editor/CertificationsEditor";
-import AchievementsEditor from "../components/editor/AchievementsEditor";
-import { emptyProfile, getProfile, saveProfile } from "../services/profileService";
+import { ProfileSectionList } from "../components/profile/profileSections";
+import { PROFILE_SECTIONS } from "../components/profile/profileSectionConfig";
+import { useProfile } from "../hooks/useProfile";
 import "../styles/Profile.css";
 import "../styles/ResumeEditor.css";
-
-const sections = [
-  ["personalInfo", "Personal Information", PersonalInfoEditor],
-  ["professionalSummary", "Professional Summary", SummaryEditor],
-  ["education", "Education", EducationEditor],
-  ["workExperience", "Work Experience", ExperienceEditor],
-  ["projects", "Projects", ProjectsEditor],
-  ["skills", "Skills", SkillsEditor],
-  ["certifications", "Certifications", CertificationsEditor],
-  ["achievements", "Achievements", AchievementsEditor],
-];
 
 function initials(user) {
   return (user.displayName || user.email || "U")
@@ -33,115 +16,164 @@ function initials(user) {
     .toUpperCase();
 }
 
+function ProfileSkeleton() {
+  return (
+    <main className="profile-page">
+      <div className="profile-container">
+        <div className="profile-hero-card skeleton-hero">
+          <div className="profile-skeleton-avatar" />
+          <div className="profile-skeleton-lines">
+            <div className="profile-skel profile-skel-eyebrow" />
+            <div className="profile-skel profile-skel-name" />
+            <div className="profile-skel profile-skel-email" />
+          </div>
+        </div>
+        {[1, 2, 3].map((n) => (
+          <div key={n} className="profile-section-card profile-skeleton-card">
+            <div className="profile-skel profile-skel-section-title" />
+            <div className="profile-skel profile-skel-section-body" />
+          </div>
+        ))}
+      </div>
+    </main>
+  );
+}
+
+// save status: "idle" | "pending" | "saving" | "saved" | "error"
 export default function Profile() {
   const { user, signOut } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [profile, setProfile] = useState(emptyProfile);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    let active = true;
-
-    getProfile(user.uid)
-      .then((savedProfile) => {
-        if (active) setProfile(savedProfile);
-      })
-      .catch((loadError) => {
-        console.error("Failed to load profile:", loadError);
-        if (active) setError("Unable to load your profile. Please try again.");
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [user.uid]);
-
-  const updateSection = (section, value) => {
-    setProfile((currentProfile) => ({ ...currentProfile, [section]: value }));
-    setMessage("");
-  };
-
-  const handleSave = async () => {
-    setSaving(true);
-    setError("");
-    setMessage("");
-    try {
-      await saveProfile(user.uid, profile);
-      setMessage("Changes saved.");
-    } catch (saveError) {
-      console.error("Failed to save profile:", saveError);
-      setError("Unable to save your profile. Please try again.");
-    } finally {
-      setSaving(false);
-    }
-  };
+  const {
+    profile,
+    loading,
+    saveStatus,
+    openSections,
+    updateSection,
+    toggleSection,
+  } = useProfile(user.uid, PROFILE_SECTIONS);
 
   const handleSignOut = async () => {
     try {
       await signOut();
       navigate("/", { replace: true });
-    } catch (signOutError) {
-      console.error("Failed to sign out:", signOutError);
-      setError("Unable to sign out. Please try again.");
+    } catch (err) {
+      console.error("Failed to sign out:", err);
     }
   };
 
-  if (loading) {
-    return <main className="profile-page"><p className="profile-status">Loading profile...</p></main>;
-  }
+  if (loading) return <ProfileSkeleton />;
 
   return (
     <main className="profile-page">
       <div className="profile-container">
-        <header className="profile-header">
-          {user.photoURL ? (
-            <img className="profile-avatar" src={user.photoURL} alt="" />
-          ) : (
-            <div className="profile-avatar profile-avatar-initials">{initials(user)}</div>
-          )}
-          <div>
-            <p className="profile-eyebrow">Account profile</p>
-            <h1>{user.displayName || "Your Profile"}</h1>
-            <p>{user.email}</p>
+
+        <header className="profile-hero-card">
+          <div className="profile-hero-bg" aria-hidden="true" />
+          <div className="profile-hero-body">
+            {user.photoURL ? (
+              <img className="profile-avatar" src={user.photoURL} alt="" />
+            ) : (
+              <div className="profile-avatar profile-avatar-initials">{initials(user)}</div>
+            )}
+            <div className="profile-hero-info">
+              <p className="profile-eyebrow">Account Profile</p>
+              <h1>{user.displayName || "Your Profile"}</h1>
+              <p className="profile-hero-email">{user.email}</p>
+            </div>
+            <div className="profile-hero-actions">
+              <Link
+                to="/about"
+                className="profile-signout-button"
+                style={{ 
+                  color: 'var(--clr-primary-dark)', 
+                  borderColor: 'var(--clr-primary-border)',
+                  background: 'var(--clr-primary-light)' 
+                }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                About Us
+              </Link>
+              <button
+                type="button"
+                className="profile-signout-button"
+                onClick={handleSignOut}
+                id="profile-signout-btn"
+                style={{ margin: 0 }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Sign Out
+              </button>
+            </div>
           </div>
         </header>
 
-        <div className="profile-heading-row">
-          <div>
-            <h2>Your Information</h2>
-            <p>Manage the information used to create your resumes.</p>
+        {/* <section className="profile-overview" aria-label="Profile overview">
+          <div className="profile-overview-heading">
+            <p className="profile-eyebrow">Your profile</p>
+            <h2>Your professional baseline</h2>
+            <p>Your first saved resume is the source for this profile. Add or refine details here and they will be saved automatically.</p>
           </div>
-          <button type="button" className="profile-signout-button" onClick={handleSignOut}>
-            Sign Out
-          </button>
-        </div>
+          <div className="profile-overview-actions">
+            <button type="button" className="profile-refresh-button" onClick={handleRefresh} disabled={syncing}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 5v4h4" />
+                <path d="M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4" />
+              </svg>
+              {syncing ? "Loading" : "Reload first resume"}
+            </button>
+            <div className="profile-autosave-status" aria-live="polite">
+              {saveStatus === "pending" && (
+                <span className="autosave-dot autosave-pending" title="Unsaved changes" />
+              )}
+              {saveStatus === "saving" && (
+                <span className="autosave-saving">
+                  <span className="profile-spinner" aria-hidden="true" />
+                  Saving…
+                </span>
+              )}
+              {saveStatus === "saved" && (
+                <span className="autosave-saved">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  Saved
+                </span>
+              )}
+              {saveStatus === "error" && (
+                <span className="autosave-error">Failed to save</span>
+              )}
+            </div>
+          </div>
+          <div className="profile-stats">
+            <div><strong>{savedResumeCount > 0 ? "First" : "Manual"}</strong><span>Profile source</span></div>
+            <div><strong>{totalItems}</strong><span>Career entries</span></div>
+            <div><strong>{profile.professionalSummary ? "Ready" : "Start"}</strong><span>Summary</span></div>
+          </div>
+        </section> */}
 
-        {error && <p className="profile-error" role="alert">{error}</p>}
-        {message && <p className="profile-success" role="status">{message}</p>}
+        {saveStatus === "error" && (
+          <div className="profile-alert profile-alert-error" role="alert">
+            We could not sync your profile. Your changes will be retried when you edit or refresh.
+          </div>
+        )}
 
-        <div className="profile-sections">
-          {sections.map(([section, title, Editor]) => (
-            <section className="profile-section" key={section}>
-              <h2>{title}</h2>
-              <Editor
-                value={profile[section]}
-                onChange={(value) => updateSection(section, value)}
-              />
-            </section>
-          ))}
-        </div>
+        <ProfileSectionList
+          profile={profile}
+          openSections={openSections}
+          onToggle={toggleSection}
+          onChange={updateSection}
+        />
 
-        <div className="profile-save-row">
-          <button type="button" className="profile-save-button" onClick={handleSave} disabled={saving}>
-            {saving ? "Saving changes..." : "Save Changes"}
-          </button>
-        </div>
       </div>
     </main>
   );

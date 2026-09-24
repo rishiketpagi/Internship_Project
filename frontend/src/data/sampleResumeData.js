@@ -1,24 +1,24 @@
 export const sampleResumeData = {
     personalInfo: {
-        name: "Rishiket Pagi",
-        email: "rishiket@example.com",
-        phone: "+91 9876543210",
-        location: "Goa, India",
-        linkedin: "linkedin.com/in/rishiketpagi",
-        github: "github.com/rishiketpagi",
-        portfolio: "",
+        name: "John Doe",
+        email: "john.doe@example.com",
+        phone: "+1 555-123-4567",
+        location: "Austin, Texas, USA",
+        linkedin: "linkedin.com/in/johndoe",
+        github: "github.com/johndoe",
+        portfolio: "johndoe.dev",
     },
 
     professionalSummary:
-        "Final year Computer Engineering student interested in backend and full-stack development.",
+        "Computer Science graduate interested in frontend and full-stack development with experience building web applications and working with modern JavaScript technologies.",
 
     education: [
         {
-            institution: "Goa College of Engineering",
-            degree: "Bachelor of Engineering",
-            field: "Computer Engineering",
-            startDate: "2022",
-            endDate: "2026",
+            institution: "University of Texas at Austin",
+            degree: "Bachelor of Science",
+            field: "Computer Science",
+            startDate: "2021",
+            endDate: "2025",
             grade: "",
         },
     ],
@@ -26,22 +26,22 @@ export const sampleResumeData = {
     workExperience: [
         {
             jobTitle: "Software Development Intern",
-            company: "ABC Technologies",
-            location: "Goa, India",
-            startDate: "June 2026",
-            endDate: "August 2026",
+            company: "TechNova Solutions",
+            location: "Austin, Texas, USA",
+            startDate: "June 2024",
+            endDate: "August 2024",
             description:
-                "Worked on React applications and implemented REST API integrations.",
+                "Worked on web applications using React and implemented REST API integrations.",
             responsibilities: [],
         },
     ],
 
     projects: [
         {
-            name: "Resume Generator",
+            name: "Task Management Platform",
             description:
-                "Built a web application that allows users to create job-specific resumes.",
-            technologies: ["React", "Firebase", "Node.js"],
+                "Built a web application that allows users to create, organize, and track tasks.",
+            technologies: ["React", "Node.js", "Express.js", "MongoDB"],
             url: "",
             startDate: "",
             endDate: "",
@@ -53,7 +53,7 @@ export const sampleResumeData = {
         "React",
         "Node.js",
         "Express.js",
-        "Firebase",
+        "MongoDB",
         "Git",
     ],
 

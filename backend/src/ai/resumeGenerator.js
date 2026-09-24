@@ -1,8 +1,8 @@
 import "dotenv/config";
 import Groq from "groq-sdk";
 import roleResumeSchema from "../data/roleResumeSchema.json" with { type: "json" };
+import roles from "../data/roles.json" with { type: "json" };
 import { resumeGenerationSystemPrompt } from "../prompts/resumeGenerationPrompt.js";
-import { groqModel } from "../config/aiConfig.js";
 
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY,
@@ -13,14 +13,16 @@ export async function generateRoleSpecificResume(
     targetRole,
     jobDescription
 ) {
+    const roleRequirements = roles[targetRole] || { skills: [] };
     const userInput = JSON.stringify({
         targetRole,
         jobDescription,
+        roleRequirements,
         resumeData,
     });
 
     const completion = await groq.chat.completions.create({
-        model: groqModel,
+        model: process.env.GROQ_MODEL || "llama3-8b-8192",
 
         messages: [
             {

@@ -3,54 +3,62 @@ import { useState } from "react";
 function SkillsEditor({ value = [], onChange = () => { } }) {
     const [draft, setDraft] = useState("");
 
-    const addSkill = () => {
+    const addSkill = (e) => {
+        if (e) e.preventDefault();
         const trimmedSkill = draft.trim();
-        if (!trimmedSkill) {
-            return;
+        if (!trimmedSkill) return;
+        
+        // Prevent duplicates
+        if (!value.includes(trimmedSkill)) {
+            onChange([...value, trimmedSkill]);
         }
-
-        onChange([...value, trimmedSkill]);
         setDraft("");
     };
 
-    const updateSkill = (index, nextValue) => {
-        onChange(value.map((skill, skillIndex) => skillIndex === index ? nextValue : skill));
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addSkill();
+        }
+    };
+
+    const removeSkill = (index) => {
+        onChange(value.filter((_, skillIndex) => skillIndex !== index));
     };
 
     return (
-        <div className="resume-editor-skills-list">
-            {value.map((skill, index) => (
-                <div key={index} className="resume-editor-skill-row">
-                    <input
-                        type="text"
-                        value={skill}
-                        onChange={(event) => updateSkill(index, event.target.value)}
-                        className="resume-editor-input"
-                    />
-                    <button
-                        type="button"
-                        onClick={() => onChange(value.filter((_, skillIndex) => skillIndex !== index))}
-                        className="resume-editor-delete-button"
-                    >
-                        Remove
-                    </button>
-                </div>
-            ))}
+        <div className="resume-editor-skills-chips-container">
+            <div className="resume-editor-skills-chips">
+                {value.map((skill, index) => (
+                    <div key={index} className="resume-editor-skill-chip">
+                        <span>{skill}</span>
+                        <button
+                            type="button"
+                            onClick={() => removeSkill(index)}
+                            className="resume-editor-chip-remove"
+                            aria-label={`Remove ${skill}`}
+                        >
+                            &times;
+                        </button>
+                    </div>
+                ))}
+            </div>
 
-            <div className="resume-editor-skill-row">
+            <div className="resume-editor-skill-draft">
                 <input
                     type="text"
                     value={draft}
                     onChange={(event) => setDraft(event.target.value)}
-                    placeholder="New skill"
-                    className="resume-editor-input"
+                    onKeyDown={handleKeyDown}
+                    placeholder="Type a skill and press Enter"
+                    className="resume-editor-chip-input"
                 />
                 <button
                     type="button"
                     onClick={addSkill}
                     className="resume-editor-add-button"
                 >
-                    + Add Skill
+                    Add
                 </button>
             </div>
         </div>

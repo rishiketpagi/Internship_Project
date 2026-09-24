@@ -1,173 +1,125 @@
-/* Container & Base Styles */
-.data-input-container {
-    max-width: 560px;
-    margin: 40px auto;
-    padding: 32px;
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: #1f2937;
+/* =====================================================
+   CreateResume.css — Multi-step wizard wrapper styles
+   ===================================================== */
+
+.create-resume-page {
+    min-height: calc(100vh - var(--navbar-h));
+    background: var(--clr-bg);
+    color: var(--clr-ink);
+    font-family: var(--font-sans);
+    padding: 20px 24px 40px;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Header */
-.data-input-container h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0 0 24px 0;
+.create-resume-container {
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.create-resume-header {
     text-align: center;
-    color: #111827;
-}
-
-/* Input Labels */
-.input-label {
-    display: block;
     margin-bottom: 20px;
 }
 
-.input-label > span {
-    display: block;
-    margin-bottom: 8px;
-    color: #374151;
-    font-size: 0.875rem;
-    font-weight: 600;
+.create-resume-header h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--clr-ink);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 6px;
 }
 
-.input-label select,
-.input-label textarea {
-    box-sizing: border-box;
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    background-color: #ffffff;
-    color: #1f2937;
-    font: inherit;
-    font-size: 0.875rem;
-}
-
-.input-label textarea {
-    resize: vertical;
-}
-
-.input-label select:focus,
-.input-label textarea:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-/* File Upload Styles */
-.file-upload-wrapper input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px dashed #d1d5db;
-    border-radius: 6px;
-    background-color: #f9fafb;
-    cursor: pointer;
-    font-size: 0.875rem;
-    color: #4b5563;
-}
-
-.file-upload-wrapper input[type="file"]:hover {
-    border-color: #9ca3af;
-}
-
-.file-details {
-    margin-top: 8px;
-    font-size: 0.8125rem;
-    color: #6b7280;
-}
-.file-details p {
-    margin: 4px 0;
-}
-
-/* Text Input Styles */
-.char-count {
-    font-size: 0.75rem;
-    color: #6b7280;
-    text-align: right;
-    margin: 4px 0 0 0;
-}
-
-/* Divider (Replaces basic hr) */
-.divider {
-    position: relative;
-    text-align: center;
-    margin: 24px 0;
-}
-
-.divider hr {
-    border: none;
-    border-top: 1px solid #e5e7eb;
+.create-resume-header p {
+    font-size: 0.95rem;
+    color: var(--clr-muted);
     margin: 0;
 }
 
-.divider p {
+/* ── Progress Bar ── */
+.create-resume-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto 24px;
+    padding: 0 40px;
+}
+
+.progress-line {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #ffffff;
-    padding: 0 12px;
-    margin: 0;
-    font-size: 0.75rem;
+    transform: translateY(-50%);
+    left: 52px;
+    right: 52px;
+    height: 2px;
+    background: var(--clr-border2);
+    z-index: 1;
+}
+
+.progress-line-fill {
+    height: 100%;
+    background: var(--clr-primary);
+    transition: width var(--ease-base);
+}
+
+.progress-step {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.progress-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--clr-surface);
+    border: 2px solid var(--clr-border3);
+    transition: all var(--ease-base);
+}
+
+.progress-step.active .progress-dot {
+    border-color: var(--clr-primary);
+    background: var(--clr-primary);
+    box-shadow: 0 0 0 4px var(--clr-primary-light);
+}
+
+.progress-step.completed .progress-dot {
+    border-color: var(--clr-primary);
+    background: var(--clr-primary);
+}
+
+.progress-label {
+    font-size: 0.85rem;
     font-weight: 600;
-    color: #9ca3af;
+    color: var(--clr-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
-/* Button */
-.generate-button {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    margin-top: 32px;
-    background-color: #111827;
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
+.progress-step.active .progress-label {
+    color: var(--clr-ink);
+    font-weight: 700;
 }
 
-.generate-button:hover {
-    background-color: #374151;
-}
-
-.generate-button:disabled {
-    background-color: #9ca3af;
-    cursor: not-allowed;
-}
-
-/* Feedback States */
-.status-loading {
-    margin-top: 20px;
-    padding: 12px;
-    background-color: #eff6ff;
-    color: #2563eb;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    text-align: center;
-    animation: pulse 1.5s infinite;
-}
-
-.status-error {
-    margin-top: 20px;
-    padding: 12px;
-    background-color: #fef2f2;
-    color: #dc2626;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    text-align: center;
-}
-
-/* Pulse animation for loading */
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+/* ── Content Area ── */
+.create-resume-content {
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border2);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }

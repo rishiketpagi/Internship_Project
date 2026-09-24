@@ -36,9 +36,12 @@ STRICT RULES:
    For example, do not say a project used Node.js just because Node.js
    appears in the user's general skills.
 
-9. Use the target role and job description to prioritize relevant content.
+9. Use the target role, roleRequirements, and job description to prioritize relevant content.
 
-10. Do not add skills, qualifications, or requirements from the job
+10. Treat roleRequirements as prioritization guidance only. They are not
+    evidence that the user possesses those skills.
+
+11. Do not add skills, qualifications, or requirements from the job
     description unless they are present in the provided resume data.
 
 11. Do not remove factual information merely because it is not a required
