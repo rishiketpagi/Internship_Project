@@ -200,14 +200,8 @@ export default function ATSAnalysisPage() {
             <div className="ats-container">
 
                 {/* ── Back link ── */}
-                <button type="button" className="ats-back-link" onClick={handleBackToEditor}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                        aria-hidden="true">
-                        <line x1="19" y1="12" x2="5" y2="12" />
-                        <polyline points="12 19 5 12 12 5" />
-                    </svg>
-                    Back to Resume Editor
+                <button type="button" className="ats-back-link" onClick={handleBackToEditor} title="Back to Resume Editor">
+                    ← Back to Resume Editor
                 </button>
 
                 {/* ── Page heading ── */}
@@ -368,14 +362,8 @@ export default function ATSAnalysisPage() {
 
                         {/* Bottom actions */}
                         <div className="ats-actions">
-                            <button type="button" className="ats-btn-secondary" onClick={handleBackToEditor}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                                    aria-hidden="true">
-                                    <line x1="19" y1="12" x2="5" y2="12" />
-                                    <polyline points="12 19 5 12 12 5" />
-                                </svg>
-                                Back to Editor
+                            <button type="button" className="ats-btn-secondary" onClick={handleBackToEditor} title="Back to Editor">
+                                ← Back to Editor
                             </button>
                             <button type="button" className="ats-btn-primary" onClick={handleAnalyze} disabled={isLoading}>
                                 Re-analyze Resume

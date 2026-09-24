@@ -76,6 +76,20 @@ export default function MyResumes() {
         });
     };
 
+    const handleAnalyze = (resume) => {
+        navigate(`/ats-analysis`, {
+            state: {
+                resumeId: resume.resumeId,
+                resumeData: resume.resumeData,
+                targetRole: resume.targetRole,
+                jobDescription: resume.jobDescription,
+                prompt: resume.prompt,
+                templateId: resume.templateId,
+                atsAnalysis: resume.atsAnalysis,
+            }
+        });
+    };
+
     const handleDelete = async () => {
         if (!deleteTarget) return;
         const { resumeId } = deleteTarget;
@@ -193,6 +207,7 @@ export default function MyResumes() {
                                 onDownload={() => setDownloadResume(resume)}
                                 onDuplicate={() => handleDuplicate(resume)}
                                 onDelete={() => setDeleteTarget(resume)}
+                                onAnalyze={() => handleAnalyze(resume)}
                             />
                         ))}
                     </section>

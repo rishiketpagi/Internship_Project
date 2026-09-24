@@ -53,14 +53,31 @@
 }
 
 .resume-preview-header h1 {
-    margin: 0 0 4px;
-    font-size: 1.8rem;
-    word-break: break-word;
+    margin: 0;
+    font-size: 1.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .resume-preview-header p {
     margin: 0;
     color: var(--clr-muted);
+}
+
+.resume-preview-template-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    color: var(--card-accent);
 }
 
 .resume-preview-actions {

@@ -3,6 +3,8 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { AuthContext } from "../components/auth/AuthContext";
 import DownloadResumeDialog from "../components/dashboard/DownloadResumeDialog";
 import DeleteConfirmDialog from "../components/dashboard/DeleteConfirmDialog";
+import ResumePreviewHeader from "../components/preview/ResumePreviewHeader";
+import ResumePreviewCanvas from "../components/preview/ResumePreviewCanvas";
 import { useToast } from "../components/ui/ToastContext";
 import { createResume, deleteResume, updateResume } from "../services/resumeService";
 import { templates } from "../data/templates";
@@ -103,34 +105,22 @@ export default function ResumePreview() {
 
     return (
         <main className="resume-preview-page">
-            <header className="resume-preview-header">
-                <div className="resume-preview-title-group">
-                    <button type="button" className="resume-preview-back" onClick={() => navigate("/my-resumes")} title="Back to My Resumes">
-                        ←
-                    </button>
-                    <div>
-                        <h1>{resume.title || "Untitled Resume"}</h1>
-                        <p>{selectedTemplate.name} template preview</p>
-                    </div>
-                </div>
-                <div className="resume-preview-action-area">
-                    <div className="resume-preview-actions" aria-label="Resume actions">
-                        <button type="button" className="resume-preview-ats" onClick={() => navigate("/ats-analysis", { state: { ...resume } })} disabled={busy}>ATS Score</button>
-                        <button type="button" className="resume-preview-edit" onClick={handleEdit} disabled={busy}>Edit</button>
-                        <button type="button" onClick={() => setShowDownload(true)} disabled={busy}>Download</button>
-                        <button type="button" className="resume-preview-save" onClick={handleSave} disabled={busy}>
-                            {busy ? "Saving..." : "Save"}
-                        </button>
-                        {resume.resumeId && (
-                            <button type="button" className="resume-preview-delete" onClick={() => setShowDelete(true)} disabled={busy}>Delete</button>
-                        )}
-                    </div>
-                </div>
-            </header>
+            <ResumePreviewHeader
+                resume={resume}
+                templateName={selectedTemplate.name}
+                busy={busy}
+                onBack={() => navigate("/my-resumes")}
+                onAtsScore={() => navigate("/ats-analysis", { state: { ...resume } })}
+                onEdit={handleEdit}
+                onDownload={() => setShowDownload(true)}
+                onSave={handleSave}
+                onDelete={() => setShowDelete(true)}
+            />
 
-            <section className="resume-preview-canvas" aria-label="Resume preview">
-                <TemplateComponent resumeData={resume.resumeData} />
-            </section>
+            <ResumePreviewCanvas
+                TemplateComponent={TemplateComponent}
+                resumeData={resume.resumeData}
+            />
 
             {showDownload && (
                 <DownloadResumeDialog

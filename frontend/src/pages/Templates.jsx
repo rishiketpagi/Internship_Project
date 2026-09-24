@@ -26,11 +26,16 @@ export default function Templates() {
 
     return (
         <main className="templates-page">
-            <div className="templates-container">
-                <header className="templates-heading">
-                    <h1 className="templates-title">Explore Resume Templates</h1>
-                </header>
+            <header className="templates-header">
+                <div className="templates-header-inner">
+                    <div>
+                        <h1 className="templates-greeting">Explore Resume Templates</h1>
+                        <p className="templates-subtext">Find the perfect design for your next career move.</p>
+                    </div>
+                </div>
+            </header>
 
+            <div className="templates-container">
                 <div className="templates-grid">
                     {templates.map(({ id, name, component: TemplateComponent }) => (
                         <article

@@ -1,3 +1,6 @@
+import React, { useState, useRef, useEffect } from "react";
+import { templates } from "../../data/templates";
+
 const TEMPLATE_ACCENTS = {
     modern: { color: "#0ea5e9", label: "Modern" },
     professional: { color: "#6366f1", label: "Professional" },
@@ -82,6 +85,14 @@ const Icons = {
             <polyline points="20 6 9 17 4 12" />
         </svg>
     ),
+    kebab: (
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="12" cy="5" r="1.5" />
+            <circle cx="12" cy="12" r="1.5" />
+            <circle cx="12" cy="19" r="1.5" />
+        </svg>
+    ),
 };
 
 export default function ResumeCard({
@@ -96,125 +107,192 @@ export default function ResumeCard({
     onDownload,
     onDuplicate,
     onDelete,
+    onAnalyze,
 }) {
     const accent = getAccent(resume.templateId);
+    const selectedTemplate = templates.find((t) => t.id === (resume.templateId || "modern")) || templates[0];
+    const TemplateComponent = selectedTemplate.component;
+
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const menuRef = useRef(null);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setIsMenuOpen(false);
+            }
+        }
+        if (isMenuOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [isMenuOpen]);
 
     return (
         <article
             className="my-resume-card"
             style={{ "--card-accent": accent.color }}
             onClick={(event) => {
-                if (!event.target.closest("button, input")) onPreview();
+                if (!event.target.closest("button, input, .my-resume-dropdown")) onPreview();
             }}
             onKeyDown={(event) => {
                 if (event.key === "Enter" && event.target === event.currentTarget) onPreview();
             }}
             tabIndex={0}
         >
-            {/* Accent bar */}
-            <div className="my-resume-accent-bar" aria-hidden="true" />
-
-            {/* Title row */}
-            {isEditing ? (
-                <div className="my-resume-title-editor">
-                    <input
-                        value={editingTitle}
-                        onChange={(e) => onEditingTitleChange(e.target.value)}
-                        aria-label="Resume title"
-                        autoFocus
-                        onKeyDown={(e) => e.key === "Enter" && onSaveTitle()}
-                    />
-                    <button type="button" className="my-resume-save-title-btn" onClick={onSaveTitle} aria-label="Save title">
-                        {Icons.check}
-                    </button>
+            <div className="my-resume-card-content">
+                {/* Left side: Thumbnail */}
+                <div className="my-resume-card-left">
+                    <div className="my-resume-card-thumbnail" aria-hidden="true">
+                        <div className="my-resume-card-preview-scale">
+                            <TemplateComponent resumeData={resume.resumeData} />
+                        </div>
+                    </div>
                 </div>
-            ) : (
-                <div className="my-resume-title-row">
-                    <button type="button" className="my-resume-title-button" onClick={onPreview}>
-                        <h2 title={resume.title || "Untitled Resume"}>
-                            {resume.title || "Untitled Resume"}
-                        </h2>
+
+                {/* Right side: Info */}
+                <div className="my-resume-card-right">
+                    <h3 className="my-resume-target-role" title="Target Role">
+                        {resume.targetRole || "General Resume"}
+                    </h3>
+
+                    {isEditing ? (
+                        <div className="my-resume-title-editor">
+                            <input
+                                value={editingTitle}
+                                onChange={(e) => onEditingTitleChange(e.target.value)}
+                                aria-label="Resume title"
+                                autoFocus
+                                onKeyDown={(e) => e.key === "Enter" && onSaveTitle()}
+                            />
+                            <button type="button" className="my-resume-save-title-btn" onClick={onSaveTitle} aria-label="Save title">
+                                {Icons.check}
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="my-resume-title-row">
+                            <span className="my-resume-custom-title" title={resume.title || "Untitled Resume"}>
+                                {resume.title || "Untitled Resume"}
+                            </span>
+                            <button
+                                type="button"
+                                className="my-resume-icon-btn"
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    onStartRename();
+                                }}
+                                aria-label="Rename resume"
+                                title="Rename"
+                            >
+                                {Icons.pencil}
+                            </button>
+                        </div>
+                    )}
+
+                    {resume.atsAnalysis?.overallScore != null ? (
+                        <button
+                            type="button"
+                            className="my-resume-ats-score"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onAnalyze?.();
+                            }}
+                            title="View ATS Analysis"
+                        >
+                            ATS {resume.atsAnalysis.overallScore}
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            className="my-resume-ats-score unanalyzed"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onAnalyze?.();
+                            }}
+                            title="Analyze this resume"
+                        >
+                            Not analyzed yet
+                        </button>
+                    )}
+
+                    <div className="my-resume-meta-bottom">
+                        <span className="my-resume-template-text" style={{ color: accent.color }}>
+                            {accent.label} Template
+                        </span>
+                        <span className="my-resume-date" title={resume.updatedAt?.toDate?.().toLocaleString?.()}>
+                            {relativeDate(resume.updatedAt)}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="my-resume-divider" />
+
+            {/* Actions Footer */}
+            <div className="my-resume-card-footer">
+                <div className="my-resume-main-actions">
+                    <button
+                        type="button"
+                        className="my-resume-action-btn my-resume-action-primary"
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            onEdit();
+                        }}
+                    >
+                        {Icons.edit} Edit Resume
                     </button>
                     <button
                         type="button"
-                        className="my-resume-icon-btn"
+                        className="my-resume-action-btn my-resume-action-secondary"
                         onClick={(event) => {
                             event.stopPropagation();
-                            onStartRename();
+                            onDownload();
                         }}
-                        aria-label="Rename resume"
-                        title="Rename"
                     >
-                        {Icons.pencil}
+                        {Icons.download} Download
                     </button>
                 </div>
-            )}
 
-            {/* Meta */}
-            <div className="my-resume-meta">
-                <span
-                    className="my-resume-template-badge"
-                    style={{ background: accent.color + "18", color: accent.color }}
-                >
-                    {accent.label}
-                </span>
-                {resume.atsAnalysis?.overallScore != null && (
-                    <span className="my-resume-ats-score">
-                        ATS {resume.atsAnalysis.overallScore}/100
-                    </span>
-                )}
-                <span className="my-resume-date" title={resume.updatedAt?.toDate?.().toLocaleString?.()}>
-                    {Icons.clock}
-                    {relativeDate(resume.updatedAt)}
-                </span>
-            </div>
+                <div className="my-resume-options-container" ref={menuRef}>
+                    <button
+                        type="button"
+                        className="my-resume-options-btn"
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            setIsMenuOpen(!isMenuOpen);
+                        }}
+                        aria-label="Options"
+                    >
+                        {Icons.kebab}
+                    </button>
 
-            {/* Actions */}
-            <div className="my-resume-actions">
-                <button
-                    type="button"
-                    className="my-resume-action-btn my-resume-action-primary"
-                    onClick={(event) => {
-                        event.stopPropagation();
-                        onEdit();
-                    }}
-                    id={`edit-resume-${resume.resumeId}`}
-                >
-                    {Icons.edit} Edit
-                </button>
-                <button
-                    type="button"
-                    className="my-resume-action-btn my-resume-action-secondary"
-                    onClick={(event) => {
-                        event.stopPropagation();
-                        onDownload();
-                    }}
-                    id={`download-resume-${resume.resumeId}`}
-                >
-                    {Icons.download} Download
-                </button>
-                <button
-                    type="button"
-                    className="my-resume-action-btn my-resume-action-ghost"
-                    onClick={(event) => {
-                        event.stopPropagation();
-                        onDuplicate();
-                    }}
-                    id={`duplicate-resume-${resume.resumeId}`}
-                >
-                    {Icons.duplicate} Duplicate
-                </button>
-                <button
-                    type="button"
-                    className="my-resume-action-btn my-resume-action-danger"
-                    onClick={(event) => {
-                        event.stopPropagation();
-                        onDelete();
-                    }}
-                    id={`delete-resume-${resume.resumeId}`}
-                >
-                    {Icons.trash} Delete
-                </button>
+                    {isMenuOpen && (
+                        <div className="my-resume-dropdown">
+                            <button
+                                type="button"
+                                className="my-resume-dropdown-item"
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    setIsMenuOpen(false);
+                                    onDuplicate();
+                                }}
+                            >
+                                {Icons.duplicate} Duplicate
+                            </button>
+                            <button
+                                type="button"
+                                className="my-resume-dropdown-item danger"
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    setIsMenuOpen(false);
+                                    onDelete();
+                                }}
+                            >
+                                {Icons.trash} Delete
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
         </article>
     );
