@@ -4,38 +4,50 @@
 
 .resume-preview-page {
     min-height: calc(100vh - var(--navbar-h));
-    padding: 32px clamp(24px, 5vw, 64px) 64px;
+    padding: 16px clamp(16px, 5vw, 64px) 64px;
     background: var(--clr-bg2);
     color: var(--clr-ink);
 }
 
 .resume-preview-header {
     width: 100%;
-    max-width: 1180px;
-    margin: 0 auto 24px;
+    max-width: 850px;
+    margin: 0 auto 16px;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     gap: 24px;
 }
 
+.resume-preview-title-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
 .resume-preview-back {
-    border: 0;
-    padding: 0;
-    background: transparent;
-    color: var(--clr-primary-dark);
-    font-size: 0.85rem;
-    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--clr-border3);
+    border-radius: var(--radius-sm);
+    background: var(--clr-surface);
+    color: var(--clr-text);
+    font-size: 1.2rem;
     cursor: pointer;
-    transition: color var(--ease-fast);
+    transition: all var(--ease-fast);
 }
 
 .resume-preview-back:hover {
-    color: var(--clr-primary-darker);
+    background: var(--clr-primary-light);
+    border-color: var(--clr-primary-border);
+    color: var(--clr-primary-dark);
 }
 
 .resume-preview-header h1 {
-    margin: 10px 0 4px;
+    margin: 0 0 4px;
     font-size: 1.8rem;
 }
 

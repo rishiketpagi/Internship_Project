@@ -105,7 +105,7 @@ function validateAnalysis(analysis, candidateProfile) {
         strengths: analysis.strengths || [],
         suggestions: analysis.suggestions || [],
         disclaimer:
-            "This score is an estimate based on ResumeAI's evaluation criteria. Actual ATS results may vary depending on the employer's system.",
+            "This score is an estimate based on RoleResume's evaluation criteria. Actual ATS results may vary depending on the employer's system.",
     };
 }
 

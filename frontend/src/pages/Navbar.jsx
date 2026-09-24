@@ -22,7 +22,7 @@ export default function Navbar() {
                 <div className="navbar-container">
                     {/* Logo */}
                     <NavLink to="/" className="navbar-logo" onClick={closeMenu}>
-                        ResumeAI
+                        ◉ RoleResume
                     </NavLink>
 
                     {/* Desktop navigation links */}

@@ -63,7 +63,7 @@ export default function SignInForm() {
     return (
         <form className="auth-form" onSubmit={handleSubmit}>
             <div className="auth-header">
-                <p className="auth-eyebrow">ResumeAI</p>
+                <p className="auth-eyebrow">RoleResume</p>
                 <h1 className="auth-title">Welcome back</h1>
                 <p className="auth-subtitle">Sign in to save and manage your resumes.</p>
             </div>

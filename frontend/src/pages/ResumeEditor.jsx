@@ -11,6 +11,7 @@ import { createMovableResumeSections } from "../components/editor/resumeEditorSe
 import { sampleResumeData } from "../data/sampleResumeData";
 import { createResume, updateResume } from "../services/resumeService";
 import { templates } from "../data/templates";
+import { useToast } from "../components/ui/ToastContext";
 import "../styles/ResumeEditor.css";
 
 /** Turn a candidate name into a safe filename prefix */
@@ -31,6 +32,7 @@ export default function ResumeEditor() {
     const roleResumeData = location.state?.roleResumeData;
     const savedResume = location.state?.savedResume;
     const { user } = useContext(AuthContext);
+    const { success, error: toastError, requireAuth } = useToast();
 
     const [resumeData, setResumeData] = useState(
         savedResume?.resumeData
@@ -48,14 +50,17 @@ export default function ResumeEditor() {
         personalInfo: true,
         summary: true,
     });
-    const [sectionOrder, setSectionOrder] = useState([
+    const DEFAULT_SECTION_ORDER = [
         "education",
         "experience",
         "projects",
         "skills",
         "certifications",
         "achievements",
-    ]);
+    ];
+    const [sectionOrder, setSectionOrder] = useState(
+        resumeData?.sectionOrder || DEFAULT_SECTION_ORDER
+    );
     const [draggedSection, setDraggedSection] = useState(null);
 
     // ATS — only store score and job description for the chip + navigation
@@ -66,9 +71,7 @@ export default function ResumeEditor() {
     // Download / save states
     const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
     const [isDownloadingDocx, setIsDownloadingDocx] = useState(false);
-    const [downloadError, setDownloadError] = useState("");
     const [isSaving, setIsSaving] = useState(false);
-    const [saveMessage, setSaveMessage] = useState("");
 
     // Ref that points to the raw resume template element (NOT the scaled wrapper)
     const resumeRef = useRef(null);
@@ -111,6 +114,7 @@ export default function ResumeEditor() {
 
             const nextOrder = [...currentOrder];
             [nextOrder[currentIndex], nextOrder[nextIndex]] = [nextOrder[nextIndex], nextOrder[currentIndex]];
+            updateSection("sectionOrder", nextOrder);
             return nextOrder;
         });
     };
@@ -126,6 +130,7 @@ export default function ResumeEditor() {
             const nextOrder = [...currentOrder];
             nextOrder.splice(fromIndex, 1);
             nextOrder.splice(toIndex, 0, draggedSection);
+            updateSection("sectionOrder", nextOrder);
             return nextOrder;
         });
         setDraggedSection(null);
@@ -135,12 +140,11 @@ export default function ResumeEditor() {
 
     const handleSave = async () => {
         if (!user) {
-            setSaveMessage("You need to sign in to save your resume.");
+            requireAuth("You need to sign in to save your resume.");
             return;
         }
 
         setIsSaving(true);
-        setSaveMessage("");
 
         const candidateName = resumeData.personalInfo?.name?.trim() || "Resume";
         const title = resumeTitle || `${candidateName} - ${targetRole || "Resume"}`;
@@ -162,10 +166,10 @@ export default function ResumeEditor() {
                 setResumeId(newResumeId);
                 setResumeTitle(title);
             }
-            setSaveMessage("Saved");
+            success("Resume saved successfully!");
         } catch (saveError) {
             console.error("Resume save error:", saveError);
-            setSaveMessage("Unable to save your resume. Please try again.");
+            toastError("Unable to save your resume. Please try again.");
         } finally {
             setIsSaving(false);
         }
@@ -198,18 +202,7 @@ export default function ResumeEditor() {
         });
     };
 
-    const handlePreview = () => {
-        navigate("/resume-preview", {
-            state: {
-                resumeData,
-                targetRole,
-                templateId,
-                atsAnalysis,
-                jobDescription,
-                prompt,
-            },
-        });
-    };
+
 
     // ── PDF Download ─────────────────────────────────────────────
     const handleDownloadPdf = async () => {
@@ -252,9 +245,10 @@ export default function ResumeEditor() {
                 })
                 .from(el)
                 .save();
+            success("PDF downloaded successfully!");
         } catch (err) {
             console.error("PDF generation error:", err);
-            setDownloadError("Unable to generate the PDF. Please try again.");
+            toastError("Unable to generate the PDF. Please try again.");
         } finally {
             // Restore zoom
             el.style.zoom = previousZoom;
@@ -265,7 +259,6 @@ export default function ResumeEditor() {
     // ── DOCX Download ────────────────────────────────────────────
     const handleDownloadDocx = async () => {
         setIsDownloadingDocx(true);
-        setDownloadError("");
 
         try {
             const response = await fetch("http://localhost:5000/api/resumes/generate-docx", {
@@ -287,9 +280,10 @@ export default function ResumeEditor() {
             a.click();
             a.remove();
             URL.revokeObjectURL(url);
+            success("DOCX downloaded successfully!");
         } catch (err) {
             console.error("DOCX generation error:", err);
-            setDownloadError("Unable to generate the DOCX. Please try again.");
+            toastError("Unable to generate the DOCX. Please try again.");
         } finally {
             setIsDownloadingDocx(false);
         }
@@ -321,9 +315,6 @@ export default function ResumeEditor() {
                 atsAnalysis={atsAnalysis}
                 onCheckATS={handleGoToATS}
                 onBack={handleBack}
-                onPreview={handlePreview}
-                saveMessage={saveMessage}
-                downloadError={downloadError}
             />
 
             <div className="resume-editor-layout">

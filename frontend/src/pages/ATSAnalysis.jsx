@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../components/auth/AuthContext";
 import { createResume, getResume, updateResume } from "../services/resumeService";
+import { useToast } from "../components/ui/ToastContext";
 import "../styles/ATSAnalysis.css";
 
 const CATEGORY_CAPS = {
@@ -82,6 +83,7 @@ export default function ATSAnalysisPage() {
     const [savedResultLoaded, setSavedResultLoaded] = useState(!location.state?.resumeId);
     const [status, setStatus] = useState("idle"); // "idle" | "loading" | "error"
     const [errorMsg, setErrorMsg] = useState("");
+    const { warning } = useToast();
 
     useEffect(() => {
         if (!user || !resumeId) {
@@ -155,7 +157,17 @@ export default function ATSAnalysisPage() {
             if (!res.ok || !data.success) {
                 throw new Error(data.message || "Analysis failed.");
             }
-            await saveAnalysis(data.atsAnalysis);
+            
+            if (user) {
+                try {
+                    await saveAnalysis(data.atsAnalysis);
+                } catch (saveErr) {
+                    console.error("Failed to save analysis:", saveErr);
+                }
+            } else {
+                warning("Sign in to save your ATS analysis for later.");
+            }
+            
             setAtsAnalysis(data.atsAnalysis);
             setStatus("idle");
         } catch (err) {
@@ -373,7 +385,7 @@ export default function ATSAnalysisPage() {
                         {/* Disclaimer */}
                         <p className="ats-disclaimer">
                             {atsAnalysis.disclaimer ||
-                                "This score is an estimate based on ResumeAI's evaluation criteria. Actual ATS results may vary depending on the employer's system."}
+                                "This score is an estimate based on RoleResume's evaluation criteria. Actual ATS results may vary depending on the employer's system."}
                         </p>
                     </>
                 )}

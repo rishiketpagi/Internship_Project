@@ -14,11 +14,13 @@ import ResumePreview from "./pages/ResumePreview";
 import ATSAnalysis from "./pages/ATSAnalysis";
 import MyResumes from "./pages/MyResumes";
 import { ProtectedRoute } from "./components/auth/AuthRoute";
+import { ToastProvider } from "./components/ui/ToastContext";
 
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
+      <ToastProvider>
+        <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -56,6 +58,7 @@ function App() {
         <Route path="/ats-analysis" element={<ATSAnalysis />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </ToastProvider>
     </BrowserRouter>
   );
 }
