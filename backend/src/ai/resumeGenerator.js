@@ -5,8 +5,6 @@ import roles from "../data/roles.json" with { type: "json" };
 import { resumeGenerationSystemPrompt } from "../prompts/resumeGenerationPrompt.js";
 import { groqModel } from "../config/aiConfig.js";
 
-const groqModel = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
-
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY,
 });

@@ -3,8 +3,6 @@ import resumeSchema from "../data/resumeSchema.json" with { type: "json" };
 import { extractionSystemPrompt } from "../prompts/extractionPrompt.js";
 import { groqModel } from "../config/aiConfig.js";
 
-const groqModel = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
-
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY,
 });
