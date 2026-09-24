@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
+import { createResume } from "../../services/resumeService";
 
 const firebaseMessages = {
     "auth/email-already-in-use": "An account already exists for this email.",
@@ -45,7 +46,22 @@ export default function SignUpForm() {
 
         try {
             setSubmitting(true);
-            await signUp(name, email.trim(), password);
+            const userObj = await signUp(name, email.trim(), password);
+            
+            // Check for pending resume save
+            const pendingSave = sessionStorage.getItem("pendingResumeSave");
+            if (pendingSave) {
+                const resumeToSave = JSON.parse(pendingSave);
+                sessionStorage.removeItem("pendingResumeSave");
+                try {
+                    await createResume(userObj.uid, resumeToSave);
+                } catch (e) {
+                    console.error("Failed to save pending resume:", e);
+                }
+                navigate("/my-resumes", { replace: true });
+                return;
+            }
+
             navigate("/", { replace: true });
         } catch (authError) {
             setError(getAuthErrorMessage(authError));
@@ -58,7 +74,21 @@ export default function SignUpForm() {
         setError("");
         try {
             setGoogleSubmitting(true);
-            await signInWithGoogle();
+            const userObj = await signInWithGoogle();
+            
+            const pendingSave = sessionStorage.getItem("pendingResumeSave");
+            if (pendingSave) {
+                const resumeToSave = JSON.parse(pendingSave);
+                sessionStorage.removeItem("pendingResumeSave");
+                try {
+                    await createResume(userObj.uid, resumeToSave);
+                } catch (e) {
+                    console.error("Failed to save pending resume:", e);
+                }
+                navigate("/my-resumes", { replace: true });
+                return;
+            }
+
             navigate("/", { replace: true });
         } catch (authError) {
             setError(authError.code === "auth/popup-closed-by-user"

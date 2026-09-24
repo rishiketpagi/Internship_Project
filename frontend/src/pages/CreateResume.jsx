@@ -58,12 +58,12 @@ function CreateResume() {
                 if (jobDescription.trim()) formData.append("jobDescription", jobDescription.trim());
                 if (jobDescriptionImage) formData.append("jobDescriptionImage", jobDescriptionImage);
 
-                response = await fetch("http://localhost:5000/extract-resume", {
+                response = await fetch("http://localhost:5000/api/resumes/extract-resume", {
                     method: "POST",
                     body: formData,
                 });
             } else {
-                response = await fetch("http://localhost:5000/extract-resume", {
+                response = await fetch("http://localhost:5000/api/resumes/extract-resume", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

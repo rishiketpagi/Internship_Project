@@ -61,7 +61,9 @@ export default function ResumePreview() {
 
     const handleSave = async () => {
         if (!user) {
-            requireAuth("Sign in to save your resume");
+            const { resumeId: _, ...resumeToSave } = resume;
+            sessionStorage.setItem("pendingResumeSave", JSON.stringify(resumeToSave));
+            navigate("/signup", { state: { message: "Create an account to save your resume!" } });
             return;
         }
 
@@ -113,6 +115,7 @@ export default function ResumePreview() {
                 </div>
                 <div className="resume-preview-action-area">
                     <div className="resume-preview-actions" aria-label="Resume actions">
+                        <button type="button" className="resume-preview-ats" onClick={() => navigate("/ats-analysis", { state: { ...resume } })} disabled={busy}>ATS Score</button>
                         <button type="button" className="resume-preview-edit" onClick={handleEdit} disabled={busy}>Edit</button>
                         <button type="button" onClick={() => setShowDownload(true)} disabled={busy}>Download</button>
                         <button type="button" className="resume-preview-save" onClick={handleSave} disabled={busy}>

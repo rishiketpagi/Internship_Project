@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
+import { createResume } from "../../services/resumeService";
 
 const firebaseMessages = {
     "auth/invalid-credential": "The email or password is incorrect.",
@@ -34,7 +35,22 @@ export default function SignInForm() {
 
         try {
             setSubmitting(true);
-            await signIn(email.trim(), password);
+            const userCredential = await signIn(email.trim(), password);
+
+            // Check for pending resume save
+            const pendingSave = sessionStorage.getItem("pendingResumeSave");
+            if (pendingSave) {
+                const resumeToSave = JSON.parse(pendingSave);
+                sessionStorage.removeItem("pendingResumeSave");
+                try {
+                    await createResume(userCredential.user.uid, resumeToSave);
+                } catch (e) {
+                    console.error("Failed to save pending resume:", e);
+                }
+                navigate("/my-resumes", { replace: true });
+                return;
+            }
+
             const destination = location.state?.from?.pathname || "/";
             navigate(destination, { replace: true });
         } catch (authError) {
@@ -48,7 +64,21 @@ export default function SignInForm() {
         setError("");
         try {
             setGoogleSubmitting(true);
-            await signInWithGoogle();
+            const userObj = await signInWithGoogle();
+            
+            const pendingSave = sessionStorage.getItem("pendingResumeSave");
+            if (pendingSave) {
+                const resumeToSave = JSON.parse(pendingSave);
+                sessionStorage.removeItem("pendingResumeSave");
+                try {
+                    await createResume(userObj.uid, resumeToSave);
+                } catch (e) {
+                    console.error("Failed to save pending resume:", e);
+                }
+                navigate("/my-resumes", { replace: true });
+                return;
+            }
+
             const destination = location.state?.from?.pathname || "/";
             navigate(destination, { replace: true });
         } catch (authError) {

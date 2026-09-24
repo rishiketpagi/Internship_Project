@@ -23,6 +23,8 @@
     display: flex;
     align-items: center;
     gap: 16px;
+    min-width: 0;
+    flex: 1;
 }
 
 .resume-preview-back {
@@ -46,9 +48,14 @@
     color: var(--clr-primary-dark);
 }
 
+.resume-preview-title-group > div {
+    min-width: 0;
+}
+
 .resume-preview-header h1 {
     margin: 0 0 4px;
     font-size: 1.8rem;
+    word-break: break-word;
 }
 
 .resume-preview-header p {
@@ -86,6 +93,16 @@
 .resume-preview-empty button:hover {
     border-color: var(--clr-primary-border);
     background: var(--clr-primary-light);
+}
+
+.resume-preview-actions .resume-preview-ats {
+    border-color: var(--clr-primary-dark);
+    background: var(--clr-primary-light);
+    color: var(--clr-primary-darker);
+}
+
+.resume-preview-actions .resume-preview-ats:hover {
+    background: var(--clr-primary-border);
 }
 
 .resume-preview-actions button {

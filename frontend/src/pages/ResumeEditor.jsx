@@ -40,11 +40,13 @@ export default function ResumeEditor() {
         || location.state?.resumeData
         || sampleResumeData
     );
+
     const [resumeId, setResumeId] = useState(savedResume?.resumeId || location.state?.resumeId || null);
     const [resumeTitle, setResumeTitle] = useState(savedResume?.title || "");
     const [targetRole] = useState(
         savedResume?.targetRole || location.state?.targetRole || roleResumeData?.targetRole || ""
     );
+
     const [previewScale, setPreviewScale] = useState(0.55);
     const [openSections, setOpenSections] = useState({
         personalInfo: true,
@@ -139,13 +141,6 @@ export default function ResumeEditor() {
     const movableSections = createMovableResumeSections(resumeData, updateSection);
 
     const handleSave = async () => {
-        if (!user) {
-            requireAuth("You need to sign in to save your resume.");
-            return;
-        }
-
-        setIsSaving(true);
-
         const candidateName = resumeData.personalInfo?.name?.trim() || "Resume";
         const title = resumeTitle || `${candidateName} - ${targetRole || "Resume"}`;
         const resume = {
@@ -157,6 +152,14 @@ export default function ResumeEditor() {
             prompt,
             atsAnalysis,
         };
+
+        if (!user) {
+            sessionStorage.setItem("pendingResumeSave", JSON.stringify(resume));
+            navigate("/signup", { state: { message: "Create an account to save your resume!" } });
+            return;
+        }
+
+        setIsSaving(true);
 
         try {
             if (resumeId) {
