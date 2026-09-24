@@ -1,3 +1,5 @@
+import { useToast } from "../ui/ToastContext";
+
 function ResumeFileUpload({
     file,
     onFileChange,
@@ -11,6 +13,8 @@ function ResumeFileUpload({
     ],
     invalidMessage = "Please upload a PDF, DOCX, PNG, JPG, or WEBP file.",
 }) {
+    const { warning } = useToast();
+
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
 
@@ -19,7 +23,7 @@ function ResumeFileUpload({
         }
 
         if (!allowedTypes.includes(selectedFile.type)) {
-            alert(invalidMessage);
+            warning(invalidMessage);
             event.target.value = "";
             return;
         }

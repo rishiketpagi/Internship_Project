@@ -57,7 +57,7 @@ export default function Home() {
                             Create a professional, role-specific resume using the experience and information you already have.
                         </p>
                         <p className="hero-subtext-secondary">
-                            Upload your existing resume or paste your information, select a target role, and let ResumeAI organize and tailor your resume for maximum impact.
+                            Upload your existing resume or paste your information, select a target role, and let RoleResume organize and tailor your resume for maximum impact.
                         </p>
                         <div className="hero-actions" aria-label="Primary actions">
                             <Link to="/create" className="btn-primary" aria-label="Create your resume">
@@ -75,7 +75,7 @@ export default function Home() {
             <section className="how-section" aria-labelledby="how-heading">
                 <div className="home-container">
                     <div className="section-header">
-                        <h2 id="how-heading" className="section-heading">How ResumeAI Works</h2>
+                        <h2 id="how-heading" className="section-heading">How RoleResume Works</h2>
                         <p className="section-subtext">Create your role-specific resume through a simple guided workflow.</p>
                     </div>
                     <ol className="steps-row" aria-label="Steps to create a resume">

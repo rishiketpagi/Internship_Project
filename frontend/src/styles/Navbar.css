@@ -1,5 +1,5 @@
 /* ================================================
-   Navbar.css — ResumeAI Navbar Styles
+   Navbar.css — RoleResume Navbar Styles
    ================================================ */
 
 /* ---- Base navbar ---- */
@@ -44,8 +44,10 @@
 .navbar-links {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 4px;
     flex: 1;
+    margin-right: 8px;
 }
 
 .nav-link {

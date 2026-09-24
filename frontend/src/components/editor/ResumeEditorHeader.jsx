@@ -13,9 +13,6 @@ export default function ResumeEditorHeader({
     atsAnalysis,
     onCheckATS,
     onBack,
-    onPreview,
-    saveMessage,
-    downloadError,
 }) {
     const [downloadOpen, setDownloadOpen] = useState(false);
     const dropdownRef = useRef(null);
@@ -62,19 +59,22 @@ export default function ResumeEditorHeader({
                     />
                 </div>
 
-                {/* Inline status */}
-                {saveMessage && (
-                    <span className={`editor-topbar-status ${saveMessage === "Saved" ? "ok" : "err"}`} role="status">
-                        {saveMessage}
-                    </span>
-                )}
-                {downloadError && (
-                    <span className="editor-topbar-status err" role="alert">{downloadError}</span>
-                )}
             </div>
 
             {/* Right: action buttons */}
             <div className="editor-topbar-actions">
+                {/* Check ATS / score */}
+                <button
+                    type="button"
+                    className={`editor-action-btn editor-action-btn--ats-long ${hasAtsScore ? "scored" : ""}`}
+                    onClick={onCheckATS}
+                >
+                    <span className="editor-ats-text">
+                        {hasAtsScore ? `ATS Score: ${atsAnalysis.overallScore}/100` : "ATS not analyzed yet"}
+                    </span>
+                    <span className="editor-ats-arrow">→</span>
+                </button>
+
                 {/* Save */}
                 <button
                     type="button"
@@ -83,15 +83,6 @@ export default function ResumeEditorHeader({
                     disabled={isSaving || isBusy}
                 >
                     {isSaving ? "Saving…" : "Save"}
-                </button>
-
-                {/* Check ATS / score */}
-                <button
-                    type="button"
-                    className={`editor-action-btn ${hasAtsScore ? "editor-action-btn--ats" : ""}`}
-                    onClick={onCheckATS}
-                >
-                    {hasAtsScore ? `ATS: ${atsAnalysis.overallScore}/100` : "Check ATS"}
                 </button>
 
                 {/* Download dropdown */}
@@ -126,22 +117,6 @@ export default function ResumeEditorHeader({
                         </div>
                     )}
                 </div>
-
-                {/* Preview */}
-                <button
-                    type="button"
-                    className="editor-action-btn editor-action-btn--outline"
-                    onClick={onPreview}
-                >
-                    Preview
-                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                        aria-hidden="true">
-                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                        <polyline points="15 3 21 3 21 9" />
-                        <line x1="10" y1="14" x2="21" y2="3" />
-                    </svg>
-                </button>
             </div>
         </header>
     );

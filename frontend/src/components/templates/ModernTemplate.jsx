@@ -38,20 +38,28 @@ function ResumeContent({ data, className }) {
                 skills={skills}
                 certifications={certifications}
                 achievements={achievements}
+                sectionOrder={data.sectionOrder}
             />
         </article>
     );
 }
 
-function ResumeSections({ professionalSummary, experiences, projects, education, skills, certifications, achievements }) {
+function ResumeSections({ professionalSummary, experiences, projects, education, skills, certifications, achievements, sectionOrder }) {
+    const DEFAULT_ORDER = ["education", "experience", "projects", "skills", "certifications", "achievements"];
+    const orderToUse = sectionOrder && sectionOrder.length > 0 ? sectionOrder : DEFAULT_ORDER;
+
+    const sectionsMap = {
+        skills: skills.length > 0 ? <section key="skills" className="resume-section"><h2 className="resume-section-heading">Skills</h2><p className="resume-skills">{skills.map(getText).filter(Boolean).join(" | ")}</p></section> : null,
+        experience: experiences.length > 0 ? <section key="experience" className="resume-section"><h2 className="resume-section-heading">Work Experience</h2>{experiences.map((entry, index) => <Entry key={`${entry.company}-${entry.jobTitle}-${index}`} entry={entry} />)}</section> : null,
+        projects: projects.length > 0 ? <section key="projects" className="resume-section"><h2 className="resume-section-heading">Projects</h2>{projects.map((project, index) => <Entry key={`${project.name}-${index}`} entry={project} project />)}</section> : null,
+        education: education.length > 0 ? <section key="education" className="resume-section"><h2 className="resume-section-heading">Education</h2>{education.map((entry, index) => <Entry key={`${entry.institution}-${index}`} entry={entry} education />)}</section> : null,
+        certifications: certifications.length > 0 ? <section key="certifications" className="resume-section"><h2 className="resume-section-heading">Certifications</h2><ul className="resume-list">{certifications.map((item, index) => <li key={`${getText(item)}-${index}`}>{getText(item)}</li>)}</ul></section> : null,
+        achievements: achievements.length > 0 ? <section key="achievements" className="resume-section"><h2 className="resume-section-heading">Achievements</h2><ul className="resume-list">{achievements.map((item, index) => <li key={`${getText(item)}-${index}`}>{getText(item)}</li>)}</ul></section> : null
+    };
+
     return <>
         {professionalSummary && <section className="resume-section"><h2 className="resume-section-heading">Professional Summary</h2><p>{professionalSummary}</p></section>}
-        {skills.length > 0 && <section className="resume-section"><h2 className="resume-section-heading">Skills</h2><p className="resume-skills">{skills.map(getText).filter(Boolean).join(" | ")}</p></section>}
-        {experiences.length > 0 && <section className="resume-section"><h2 className="resume-section-heading">Work Experience</h2>{experiences.map((entry, index) => <Entry key={`${entry.company}-${entry.jobTitle}-${index}`} entry={entry} />)}</section>}
-        {projects.length > 0 && <section className="resume-section"><h2 className="resume-section-heading">Projects</h2>{projects.map((project, index) => <Entry key={`${project.name}-${index}`} entry={project} project />)}</section>}
-        {education.length > 0 && <section className="resume-section"><h2 className="resume-section-heading">Education</h2>{education.map((entry, index) => <Entry key={`${entry.institution}-${index}`} entry={entry} education />)}</section>}
-        {certifications.length > 0 && <section className="resume-section"><h2 className="resume-section-heading">Certifications</h2><ul className="resume-list">{certifications.map((item, index) => <li key={`${getText(item)}-${index}`}>{getText(item)}</li>)}</ul></section>}
-        {achievements.length > 0 && <section className="resume-section"><h2 className="resume-section-heading">Achievements</h2><ul className="resume-list">{achievements.map((item, index) => <li key={`${getText(item)}-${index}`}>{getText(item)}</li>)}</ul></section>}
+        {orderToUse.map(key => sectionsMap[key])}
     </>;
 }
 

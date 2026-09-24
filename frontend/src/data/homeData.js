@@ -45,7 +45,7 @@ export const steps = [
     {
         num: "03",
         title: "Generate Resume",
-        desc: "ResumeAI organizes and tailors your information for the selected role.",
+        desc: "RoleResume organizes and tailors your information for the selected role.",
     },
     {
         num: "04",
