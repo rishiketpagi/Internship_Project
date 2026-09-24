@@ -4,7 +4,7 @@ import { AuthContext } from "../components/auth/AuthContext";
 import DownloadResumeDialog from "../components/dashboard/DownloadResumeDialog";
 import DeleteConfirmDialog from "../components/dashboard/DeleteConfirmDialog";
 import { useToast } from "../components/ui/ToastContext";
-import { createResume, deleteResume, duplicateResume, updateResume } from "../services/resumeService";
+import { createResume, deleteResume, updateResume } from "../services/resumeService";
 import { templates } from "../data/templates";
 import "../styles/ResumePreview.css";
 
@@ -85,16 +85,7 @@ export default function ResumePreview() {
         }
     };
 
-    const handleDuplicate = async () => {
-        setBusy(true);
-        try {
-            await duplicateResume(user.uid, resume);
-            navigate("/my-resumes");
-        } catch (error) {
-            console.error("Failed to duplicate resume:", error);
-            setBusy(false);
-        }
-    };
+
 
     const handleDelete = async () => {
         setBusy(true);

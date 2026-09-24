@@ -46,20 +46,11 @@ export default function Profile() {
   const {
     profile,
     loading,
-    syncing,
-    savedResumeCount,
     saveStatus,
     openSections,
-    loadProfile,
     updateSection,
     toggleSection,
   } = useProfile(user.uid, PROFILE_SECTIONS);
-  const totalItems = Object.entries(profile).reduce((count, [key, value]) => {
-    if (key === "personalInfo" || key === "professionalSummary") return count;
-    return count + (Array.isArray(value) ? value.length : 0);
-  }, 0);
-
-  const handleRefresh = () => loadProfile(false);
 
   const handleSignOut = async () => {
     try {

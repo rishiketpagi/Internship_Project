@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useContext, useState, useRef, useEffect } from "react";
 import html2pdf from "html2pdf.js";
 import { AuthContext } from "../components/auth/AuthContext";
@@ -64,7 +64,7 @@ export default function ResumeEditor() {
     const [draggedSection, setDraggedSection] = useState(null);
 
     // ATS — only store score and job description for the chip + navigation
-    const [atsAnalysis, setAtsAnalysis] = useState(location.state?.atsAnalysis || null);
+    const [atsAnalysis] = useState(location.state?.atsAnalysis || null);
     const [jobDescription] = useState(savedResume?.jobDescription || location.state?.jobDescription || "");
     const [prompt] = useState(location.state?.prompt || savedResume?.prompt || "");
 
@@ -208,7 +208,7 @@ export default function ResumeEditor() {
     const handleDownloadPdf = async () => {
         if (!resumeRef.current) return;
         setIsDownloadingPdf(true);
-        setDownloadError("");
+
 
         // Temporarily remove the CSS zoom so html2pdf captures at full scale
         const el = resumeRef.current;

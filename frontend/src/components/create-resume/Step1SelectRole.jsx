@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { rolesData, generalRole } from "../../data/roles";
 
 export default function Step1SelectRole({ selectedRole, onSelectRole, onNext }) {

@@ -18,7 +18,7 @@ export function createEmptyProfile() {
     };
 }
 
-export const emptyProfile = createEmptyProfile();
+const emptyProfile = createEmptyProfile();
 
 function profileDocument(userId) {
     return doc(db, "users", userId, "profile", "data");
@@ -96,7 +96,7 @@ function normalizeResumeData(resumeData = {}) {
     };
 }
 
-export function mergeResumeDataIntoProfile(existingProfile, resumeData) {
+function mergeResumeDataIntoProfile(existingProfile, resumeData) {
     const incoming = normalizeResumeData(resumeData);
     const current = { ...createEmptyProfile(), ...existingProfile };
     const personalInfo = { ...(current.personalInfo || {}) };
