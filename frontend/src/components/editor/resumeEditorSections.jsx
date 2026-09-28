@@ -17,7 +17,12 @@ export function createMovableResumeSections(resumeData, updateSection) {
         },
         projects: {
             title: "Projects",
-            content: <ProjectsEditor value={resumeData.projects} onChange={(value) => updateSection("projects", value)} />,
+            content: <ProjectsEditor 
+                        value={resumeData.projects} 
+                        onChange={(value) => updateSection("projects", value)} 
+                        globalSkills={resumeData.skills}
+                        onGlobalSkillsChange={(value) => updateSection("skills", value)}
+                    />,
         },
         skills: {
             title: "Skills",

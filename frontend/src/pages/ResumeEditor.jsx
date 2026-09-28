@@ -259,15 +259,31 @@ export default function ResumeEditor() {
         }
     };
 
+    const filterHiddenItems = (data) => {
+        if (!data) return data;
+        const filtered = { ...data };
+        const arrayFields = ["education", "experience", "projects", "certifications", "achievements"];
+        arrayFields.forEach(field => {
+            if (filtered[field] && Array.isArray(filtered[field])) {
+                filtered[field] = filtered[field].filter(item => !item.isHidden);
+            }
+        });
+        if (filtered.skills && Array.isArray(filtered.skills)) {
+            filtered.skills = filtered.skills.filter(item => typeof item === 'object' ? !item.isHidden : true);
+        }
+        return filtered;
+    };
+
     // ── DOCX Download ────────────────────────────────────────────
     const handleDownloadDocx = async () => {
         setIsDownloadingDocx(true);
 
         try {
+            const visibleResumeData = filterHiddenItems(resumeData);
             const response = await fetch("http://localhost:5000/api/resumes/generate-docx", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ resumeData }),
+                body: JSON.stringify({ resumeData: visibleResumeData }),
             });
 
             if (!response.ok) {
@@ -383,7 +399,7 @@ export default function ResumeEditor() {
                     selectedTemplate={selectedTemplate}
                     TemplateComponent={TemplateComponent}
                     roleResumeData={roleResumeData}
-                    resumeData={resumeData}
+                    resumeData={filterHiddenItems(resumeData)}
                     resumeRef={resumeRef}
                     previewScale={previewScale}
                     onPreviewWheel={handlePreviewWheel}

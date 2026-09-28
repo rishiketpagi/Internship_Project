@@ -147,11 +147,27 @@ export default function ATSAnalysisPage() {
 
         setStatus("loading");
         setErrorMsg("");
+        
+        const filterHiddenItems = (data) => {
+            if (!data) return data;
+            const filtered = { ...data };
+            const arrayFields = ["education", "experience", "projects", "certifications", "achievements"];
+            arrayFields.forEach(field => {
+                if (filtered[field] && Array.isArray(filtered[field])) {
+                    filtered[field] = filtered[field].filter(item => !item.isHidden);
+                }
+            });
+            if (filtered.skills && Array.isArray(filtered.skills)) {
+                filtered.skills = filtered.skills.filter(item => typeof item === 'object' ? !item.isHidden : true);
+            }
+            return filtered;
+        };
+
         try {
             const res = await fetch("http://localhost:5000/api/resumes/analyze-ats", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ resumeData, targetRole, jobDescription }),
+                body: JSON.stringify({ resumeData: filterHiddenItems(resumeData), targetRole, jobDescription }),
             });
             const data = await res.json();
             if (!res.ok || !data.success) {

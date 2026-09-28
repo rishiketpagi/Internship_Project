@@ -62,11 +62,16 @@ export default function DashboardResumeCard({ resume }) {
     }, []);
     
     return (
-        <article className="dashboard-resume-card" style={{ "--card-accent": accent.color }}>
+        <Link 
+            to={`/resume-preview?template=${resume.templateId || "modern"}`}
+            state={{ savedResume: resume }}
+            className="dashboard-resume-card" 
+            style={{ "--card-accent": accent.color }}
+        >
             <div className="dashboard-resume-card-preview" ref={containerRef}>
                 <div 
                     className="dashboard-resume-card-canvas"
-                    style={{ transform: `scale(${scale})` }}
+                    style={{ transform: `translateX(-50%) scale(${scale})` }}
                 >
                     <TemplateComponent resumeData={resume.resumeData} />
                 </div>
@@ -89,15 +94,7 @@ export default function DashboardResumeCard({ resume }) {
                 </div>
 
                 <p className="dashboard-resume-updated">Updated {formatUpdatedAt(resume.updatedAt)}</p>
-                
-                <Link
-                    to={`/resume-preview?template=${resume.templateId || "modern"}`}
-                    state={{ savedResume: resume }}
-                    className="dashboard-resume-link"
-                >
-                    Open Resume <span>→</span>
-                </Link>
             </div>
-        </article>
+        </Link>
     );
 }

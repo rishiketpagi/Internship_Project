@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 function SkillsEditor({ value = [], onChange = () => { } }) {
+    const normalizedValue = value.map(v => typeof v === 'string' ? { name: v, isHidden: false } : v);
     const [draft, setDraft] = useState("");
 
     const addSkill = (e) => {
@@ -9,8 +10,8 @@ function SkillsEditor({ value = [], onChange = () => { } }) {
         if (!trimmedSkill) return;
         
         // Prevent duplicates
-        if (!value.includes(trimmedSkill)) {
-            onChange([...value, trimmedSkill]);
+        if (!normalizedValue.find(s => s.name === trimmedSkill)) {
+            onChange([...normalizedValue, { name: trimmedSkill, isHidden: false }]);
         }
         setDraft("");
     };
@@ -23,20 +24,32 @@ function SkillsEditor({ value = [], onChange = () => { } }) {
     };
 
     const removeSkill = (index) => {
-        onChange(value.filter((_, skillIndex) => skillIndex !== index));
+        onChange(normalizedValue.filter((_, skillIndex) => skillIndex !== index));
+    };
+
+    const toggleHide = (index) => {
+        onChange(normalizedValue.map((skill, skillIndex) => 
+            skillIndex === index ? { ...skill, isHidden: !skill.isHidden } : skill
+        ));
     };
 
     return (
         <div className="resume-editor-skills-chips-container">
             <div className="resume-editor-skills-chips">
-                {value.map((skill, index) => (
-                    <div key={index} className="resume-editor-skill-chip">
-                        <span>{skill}</span>
+                {normalizedValue.map((skill, index) => (
+                    <div key={index} className="resume-editor-skill-chip" style={{ opacity: skill.isHidden ? 0.5 : 1, transition: 'all 0.2s', border: skill.isHidden ? '1px dashed #ef4444' : '' }}>
+                        <span 
+                            onClick={() => toggleHide(index)} 
+                            title={skill.isHidden ? "Click to show on resume" : "Click to hide from resume"}
+                            style={{ cursor: 'pointer', textDecoration: skill.isHidden ? 'line-through' : 'none' }}
+                        >
+                            {skill.name}
+                        </span>
                         <button
                             type="button"
                             onClick={() => removeSkill(index)}
                             className="resume-editor-chip-remove"
-                            aria-label={`Remove ${skill}`}
+                            aria-label={`Remove ${skill.name}`}
                         >
                             &times;
                         </button>
@@ -61,6 +74,9 @@ function SkillsEditor({ value = [], onChange = () => { } }) {
                     Add
                 </button>
             </div>
+            <p style={{ fontSize: '0.7rem', color: 'var(--clr-muted)', marginTop: '0.5rem', textAlign: 'center' }}>
+                Tip: Click on a skill's text to hide it from your resume without deleting it.
+            </p>
         </div>
     );
 }

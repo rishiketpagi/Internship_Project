@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { extractResume, generateDocx, analyzeAts } from "../controllers/resumeController.js";
+import { extractResume, generateDocx, analyzeAts, analyzeGithubProject } from "../controllers/resumeController.js";
 import { uploadFields } from "../middleware/uploadMiddleware.js";
 
 const router = Router();
@@ -23,5 +23,12 @@ router.post("/generate-docx", generateDocx);
  * Returns the ATS analysis result.
  */
 router.post("/analyze-ats", analyzeAts);
+
+/**
+ * POST /api/resumes/analyze-github
+ * Body: { githubUrl: "..." }
+ * Analyzes the GitHub repository and returns a structured project description.
+ */
+router.post("/analyze-github", analyzeGithubProject);
 
 export default router;

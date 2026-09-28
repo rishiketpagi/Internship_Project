@@ -243,6 +243,9 @@
     box-shadow: var(--shadow-sm);
     overflow: hidden;
     transition: all var(--ease-base);
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
 }
 
 .dashboard-resume-card::before {
@@ -288,6 +291,7 @@
     transform-origin: top center;
     position: absolute;
     top: 0;
+    left: 50%;
     pointer-events: none;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
@@ -350,31 +354,7 @@
     font-size: 0.8rem;
 }
 
-.dashboard-resume-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    align-self: flex-start;
-    margin-top: auto;
-    padding-top: 20px;
-    color: var(--clr-primary);
-    font-size: 0.95rem;
-    font-weight: 700;
-    text-decoration: none;
-    transition: color var(--ease-fast);
-}
 
-.dashboard-resume-link span {
-    transition: transform var(--ease-fast);
-}
-
-.dashboard-resume-card:hover .dashboard-resume-link {
-    color: var(--clr-primary-dark);
-}
-
-.dashboard-resume-card:hover .dashboard-resume-link span {
-    transform: translateX(4px);
-}
 
 /* ================================================
    QUICK ACTIONS

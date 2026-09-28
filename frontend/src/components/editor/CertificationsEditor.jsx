@@ -51,6 +51,12 @@ export default function CertificationsEditor({ value = [], onChange = () => { } 
         }
     };
 
+    const handleToggleHide = (index) => {
+        const isHidden = !normalizedValue[index].isHidden;
+        onChange(normalizedValue.map((e, i) => i === index ? { ...e, isHidden } : e));
+        setDrafts((prev) => prev.map((d, i) => i === index ? { ...d, isHidden } : d));
+    };
+
     const handleDelete = (index) => {
         onChange(normalizedValue.filter((_, i) => i !== index));
         setDrafts((prev) => prev.filter((_, i) => i !== index));
@@ -74,6 +80,8 @@ export default function CertificationsEditor({ value = [], onChange = () => { } 
                     onSave={() => handleSave(index)}
                     onCancel={() => handleCancel(index)}
                     openOnMount={newFlags[index] || false}
+                    isHidden={entry.isHidden}
+                    onToggleHide={() => handleToggleHide(index)}
                 >
                     <div className="resume-editor-fields">
                         {FIELDS.map(([field, label]) => (

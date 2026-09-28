@@ -126,17 +126,20 @@
     border-radius: var(--radius-sm);
     overflow: hidden;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: flex-start;
     box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    position: relative;
 }
 
 .my-resume-card-preview-scale {
-    width: 210mm;
-    height: 297mm;
-    transform: scale(0.113); /* 90px / 794px ~ 0.113 */
+    width: 794px;
+    height: 1123px;
+    transform: scale(0.11335); /* 90px / 794px ~ 0.11335 */
     transform-origin: top left;
     pointer-events: none;
     background: #fff;
+    flex-shrink: 0;
 }
 
 .my-resume-card-right {

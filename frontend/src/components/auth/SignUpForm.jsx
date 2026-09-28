@@ -62,7 +62,7 @@ export default function SignUpForm() {
                 return;
             }
 
-            navigate("/", { replace: true });
+            navigate("/dashboard", { replace: true });
         } catch (authError) {
             setError(getAuthErrorMessage(authError));
         } finally {
@@ -89,7 +89,7 @@ export default function SignUpForm() {
                 return;
             }
 
-            navigate("/", { replace: true });
+            navigate("/dashboard", { replace: true });
         } catch (authError) {
             setError(authError.code === "auth/popup-closed-by-user"
                 ? "Google sign-in was cancelled."

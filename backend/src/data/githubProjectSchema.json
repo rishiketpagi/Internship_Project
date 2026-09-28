@@ -1,0 +1,22 @@
+{
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "The formatted name of the project based on the repository name."
+        },
+        "description": {
+            "type": "string",
+            "description": "A professional, resume-ready description of the project summarizing its purpose, features, and technical accomplishments. Use bullet points (•) if appropriate."
+        },
+        "technologies": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "A list of technologies, frameworks, and languages used in the project."
+        }
+    },
+    "required": ["name", "description", "technologies"],
+    "additionalProperties": false
+}

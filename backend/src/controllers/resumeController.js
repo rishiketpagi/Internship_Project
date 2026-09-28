@@ -202,3 +202,60 @@ export const analyzeAts = async (req, res) => {
         });
     }
 };
+
+import { analyzeGithubRepo } from "../ai/repoAnalyzer.js";
+
+export const analyzeGithubProject = async (req, res) => {
+    try {
+        const { githubUrl } = req.body;
+        if (!githubUrl) {
+            return res.status(400).json({ success: false, message: "githubUrl is required." });
+        }
+
+        const match = githubUrl.match(/github\.com\/([^/]+)\/([^/]+)/);
+        if (!match) {
+            return res.status(400).json({ success: false, message: "Invalid GitHub URL." });
+        }
+
+        const owner = match[1];
+        const repo = match[2];
+
+        // 1. Fetch Repo Metadata
+        const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
+        if (!repoRes.ok) {
+            return res.status(404).json({ success: false, message: "Repository not found." });
+        }
+        const repoData = await repoRes.json();
+
+        // 2. Fetch Languages
+        const langRes = await fetch(repoData.languages_url);
+        const langData = await langRes.ok ? await langRes.json() : {};
+        repoData.languages = Object.keys(langData);
+
+        // 3. Fetch README
+        let readmeContent = "";
+        const readmeRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/readme`);
+        if (readmeRes.ok) {
+            const readmeData = await readmeRes.json();
+            // Decode base64 readme
+            readmeContent = Buffer.from(readmeData.content, 'base64').toString('utf8');
+        }
+
+        // 4. Analyze with AI
+        const analysis = await analyzeGithubRepo(repoData, readmeContent);
+        
+        // Ensure URL is populated
+        analysis.url = repoData.html_url;
+
+        res.json({
+            success: true,
+            project: analysis,
+        });
+    } catch (error) {
+        console.error("GitHub Analysis error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to analyze GitHub project.",
+        });
+    }
+};

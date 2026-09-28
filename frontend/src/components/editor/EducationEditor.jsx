@@ -59,6 +59,12 @@ export default function EducationEditor({ value = [], onChange = () => { } }) {
         }
     };
 
+    const handleToggleHide = (index) => {
+        const isHidden = !value[index].isHidden;
+        onChange(value.map((e, i) => i === index ? { ...e, isHidden } : e));
+        setDrafts((prev) => prev.map((d, i) => i === index ? { ...d, isHidden } : d));
+    };
+
     const handleDelete = (index) => {
         onChange(value.filter((_, i) => i !== index));
         setDrafts((prev) => prev.filter((_, i) => i !== index));
@@ -82,6 +88,8 @@ export default function EducationEditor({ value = [], onChange = () => { } }) {
                     onSave={() => handleSave(index)}
                     onCancel={() => handleCancel(index)}
                     openOnMount={newFlags[index] || false}
+                    isHidden={entry.isHidden}
+                    onToggleHide={() => handleToggleHide(index)}
                 >
                     <div className="resume-editor-fields">
                         {FIELDS.map(([field, label]) => (

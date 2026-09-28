@@ -51,7 +51,7 @@ export default function SignInForm() {
                 return;
             }
 
-            const destination = location.state?.from?.pathname || "/";
+            const destination = location.state?.from?.pathname || "/dashboard";
             navigate(destination, { replace: true });
         } catch (authError) {
             setError(getAuthErrorMessage(authError));
@@ -79,7 +79,7 @@ export default function SignInForm() {
                 return;
             }
 
-            const destination = location.state?.from?.pathname || "/";
+            const destination = location.state?.from?.pathname || "/dashboard";
             navigate(destination, { replace: true });
         } catch (authError) {
             setError(authError.code === "auth/popup-closed-by-user"
