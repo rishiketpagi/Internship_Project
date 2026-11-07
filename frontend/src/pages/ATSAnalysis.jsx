@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../components/auth/AuthContext";
 import { createResume, getResume, updateResume } from "../services/resumeService";
 import { useToast } from "../components/ui/ToastContext";
+import { API_BASE_URL } from "../config/api";
 import "../styles/ATSAnalysis.css";
 
 const CATEGORY_CAPS = {
@@ -164,7 +165,7 @@ export default function ATSAnalysisPage() {
         };
 
         try {
-            const res = await fetch("http://localhost:5000/api/resumes/analyze-ats", {
+            const res = await fetch(`${API_BASE_URL}/api/resumes/analyze-ats`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ resumeData: filterHiddenItems(resumeData), targetRole, jobDescription }),

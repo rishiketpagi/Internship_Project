@@ -13,7 +13,6 @@ function getAccent(templateId) {
 
 export default function ResumePreviewHeader({
     resume,
-    templateName,
     busy,
     onBack,
     onAtsScore,

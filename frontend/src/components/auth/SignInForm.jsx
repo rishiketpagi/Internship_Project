@@ -11,7 +11,8 @@ const firebaseMessages = {
 };
 
 function getAuthErrorMessage(error) {
-    return firebaseMessages[error.code] || "Unable to sign in. Please try again.";
+    console.error("Firebase auth error:", error.code, error.message);
+    return firebaseMessages[error.code] || error.message || "Unable to sign in. Please try again.";
 }
 
 export default function SignInForm() {

@@ -2,6 +2,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useContext, useState, useRef, useEffect } from "react";
 import html2pdf from "html2pdf.js";
 import { AuthContext } from "../components/auth/AuthContext";
+import { API_BASE_URL } from "../config/api";
 import EditorSection from "../components/editor/EditorSection";
 import ResumeEditorHeader from "../components/editor/ResumeEditorHeader";
 import ResumePreviewPanel from "../components/editor/ResumePreviewPanel";
@@ -32,7 +33,7 @@ export default function ResumeEditor() {
     const roleResumeData = location.state?.roleResumeData;
     const savedResume = location.state?.savedResume;
     const { user } = useContext(AuthContext);
-    const { success, error: toastError, requireAuth } = useToast();
+    const { success, error: toastError } = useToast();
 
     const [resumeData, setResumeData] = useState(
         savedResume?.resumeData
@@ -280,7 +281,7 @@ export default function ResumeEditor() {
 
         try {
             const visibleResumeData = filterHiddenItems(resumeData);
-            const response = await fetch("http://localhost:5000/api/resumes/generate-docx", {
+            const response = await fetch(`${API_BASE_URL}/api/resumes/generate-docx`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ resumeData: visibleResumeData }),

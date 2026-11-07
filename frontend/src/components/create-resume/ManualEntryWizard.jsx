@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../../config/api";
 
-export default function ManualEntryWizard({ targetRole, onBack, onFinish, onChangeMethod }) {
-    const navigate = useNavigate();
+export default function ManualEntryWizard({ onBack, onFinish, onChangeMethod }) {
     const [currentStep, setCurrentStep] = useState(1);
     
     const [resumeData, setResumeData] = useState({
@@ -45,7 +44,7 @@ export default function ManualEntryWizard({ targetRole, onBack, onFinish, onChan
         setAddedSkills([]);
 
         try {
-            const res = await fetch("http://localhost:5000/api/resumes/analyze-github", {
+            const res = await fetch(`${API_BASE_URL}/api/resumes/analyze-github`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ githubUrl }),

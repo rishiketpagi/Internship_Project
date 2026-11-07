@@ -16,11 +16,10 @@ export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(Boolean(auth));
 
     useEffect(() => {
         if (!auth) {
-            setLoading(false);
             return undefined;
         }
 
@@ -41,7 +40,19 @@ export function AuthProvider({ children }) {
 
     const requireFirebase = () => {
         if (!auth) {
-            throw new Error("Firebase is not configured. Add the VITE_FIREBASE_* values to frontend/.env.");
+            const missing = Object.entries({
+                VITE_FIREBASE_API_KEY: import.meta.env.VITE_FIREBASE_API_KEY,
+                VITE_FIREBASE_AUTH_DOMAIN: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+                VITE_FIREBASE_PROJECT_ID: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+                VITE_FIREBASE_STORAGE_BUCKET: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+                VITE_FIREBASE_MESSAGING_SENDER_ID: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+                VITE_FIREBASE_APP_ID: import.meta.env.VITE_FIREBASE_APP_ID,
+            }).filter(([, v]) => !v).map(([k]) => k);
+            throw new Error(
+                missing.length
+                    ? `Firebase is not configured. Missing env vars: ${missing.join(", ")}`
+                    : "Firebase is not configured. Add the VITE_FIREBASE_* values to frontend/.env."
+            );
         }
     };
 

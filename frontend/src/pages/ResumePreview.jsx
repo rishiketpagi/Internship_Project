@@ -14,7 +14,7 @@ export default function ResumePreview() {
     const location = useLocation();
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
-    const { success, error: toastError, requireAuth } = useToast();
+    const { success, error: toastError } = useToast();
     const [searchParams] = useSearchParams();
     const savedResume = location.state?.savedResume;
     const resumeData = savedResume?.resumeData || location.state?.resumeData;
@@ -63,7 +63,8 @@ export default function ResumePreview() {
 
     const handleSave = async () => {
         if (!user) {
-            const { resumeId: _, ...resumeToSave } = resume;
+            const resumeToSave = { ...resume };
+            delete resumeToSave.resumeId;
             sessionStorage.setItem("pendingResumeSave", JSON.stringify(resumeToSave));
             navigate("/signup", { state: { message: "Create an account to save your resume!" } });
             return;

@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 
 export default function Step2Information({ 
     selectedRole, 
@@ -13,11 +13,12 @@ export default function Step2Information({
 }) {
     const fileInputRef = useRef(null);
     const [mode, setMode] = useState(initialMode || null);
+    const [prevInitialMode, setPrevInitialMode] = useState(initialMode);
 
-    // If there is already data, set the mode so it doesn't show the menu again if going back
-    useEffect(() => {
-        if (initialMode) setMode(initialMode);
-    }, [initialMode]);
+    if (initialMode && initialMode !== prevInitialMode) {
+        setPrevInitialMode(initialMode);
+        setMode(initialMode);
+    }
 
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files[0]) {

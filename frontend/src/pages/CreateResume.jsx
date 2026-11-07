@@ -5,6 +5,7 @@ import Step2Information from "../components/create-resume/Step2Information";
 import Step3JobDescription from "../components/create-resume/Step3JobDescription";
 import Step4Generate from "../components/create-resume/Step4Generate";
 import ManualEntryWizard from "../components/create-resume/ManualEntryWizard";
+import { API_BASE_URL } from "../config/api";
 import "../styles/CreateResume.css";
 
 function CreateResume() {
@@ -68,12 +69,12 @@ function CreateResume() {
                 if (jobDescription.trim()) formData.append("jobDescription", jobDescription.trim());
                 if (jobDescriptionImage) formData.append("jobDescriptionImage", jobDescriptionImage);
 
-                response = await fetch("http://localhost:5000/api/resumes/extract-resume", {
+                response = await fetch(`${API_BASE_URL}/api/resumes/extract-resume`, {
                     method: "POST",
                     body: formData,
                 });
             } else {
-                response = await fetch("http://localhost:5000/api/resumes/extract-resume", {
+                response = await fetch(`${API_BASE_URL}/api/resumes/extract-resume`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

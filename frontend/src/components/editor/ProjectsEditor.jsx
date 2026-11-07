@@ -1,5 +1,6 @@
 import { useState } from "react";
 import EditableCard from "./EditableCard";
+import { API_BASE_URL } from "../../config/api";
 
 const EMPTY = {
     name: "",
@@ -51,7 +52,7 @@ export default function ProjectsEditor({ value = [], onChange = () => {}, global
         setAddedSkills([]);
         
         try {
-            const res = await fetch("http://localhost:5000/api/resumes/analyze-github", {
+            const res = await fetch(`${API_BASE_URL}/api/resumes/analyze-github`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ githubUrl }),
