@@ -38,7 +38,8 @@ export default function ManualEntryWizard({ onBack, onFinish, onChangeMethod }) 
     const [addedSkills, setAddedSkills] = useState([]);
 
     const handleFetchGithub = async () => {
-        if (!githubUrl) return;
+        const repositoryUrl = githubUrl.trim();
+        if (!repositoryUrl) return;
         setFetchingProject(true);
         setDetectedSkills([]);
         setAddedSkills([]);
@@ -47,7 +48,7 @@ export default function ManualEntryWizard({ onBack, onFinish, onChangeMethod }) 
             const res = await fetch(`${API_BASE_URL}/api/resumes/analyze-github`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ githubUrl }),
+                body: JSON.stringify({ githubUrl: repositoryUrl }),
             });
             const data = await res.json();
             
@@ -83,7 +84,12 @@ export default function ManualEntryWizard({ onBack, onFinish, onChangeMethod }) 
     };
 
     const handleAddSkillFromGithub = (skill) => {
-        setResumeData(prev => ({ ...prev, skills: [...prev.skills, skill] }));
+        setResumeData(prev => {
+            const alreadyAdded = prev.skills.some(existingSkill =>
+                (typeof existingSkill === "string" ? existingSkill : existingSkill.name || "").toLowerCase() === skill.toLowerCase()
+            );
+            return alreadyAdded ? prev : { ...prev, skills: [...prev.skills, skill] };
+        });
         setAddedSkills([...addedSkills, skill]);
         setTimeout(() => {
             setDetectedSkills(prev => prev.filter(s => s !== skill));
@@ -120,8 +126,14 @@ export default function ManualEntryWizard({ onBack, onFinish, onChangeMethod }) 
     const removeExperience = (idx) => setResumeData(p => ({ ...p, workExperience: p.workExperience.filter((_, i) => i !== idx) }));
 
     const addSkill = () => {
-        if (skillInput.trim()) {
-            setResumeData(prev => ({ ...prev, skills: [...prev.skills, skillInput.trim()] }));
+        const skill = skillInput.trim();
+        if (skill) {
+            setResumeData(prev => {
+                const alreadyAdded = prev.skills.some(existingSkill =>
+                    (typeof existingSkill === "string" ? existingSkill : existingSkill.name || "").toLowerCase() === skill.toLowerCase()
+                );
+                return alreadyAdded ? prev : { ...prev, skills: [...prev.skills, skill] };
+            });
             setSkillInput("");
         }
     };
